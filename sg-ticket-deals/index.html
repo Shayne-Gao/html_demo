@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新加坡限时强促销雷达</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #162033;
+      --muted: #65708a;
+      --line: #dbe2ee;
+      --accent: #2b6ef2;
+      --accent-soft: #eaf1ff;
+      --good: #0f9f6e;
+      --good-soft: #e9f8f2;
+      --warn: #c97a00;
+      --warn-soft: #fff3db;
+      --danger: #c23d3d;
+      --danger-soft: #fdecec;
+      --chip: #eef2f8;
+      --shadow: 0 10px 30px rgba(25, 45, 80, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .hero, .filters, .summary, .tips, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 24px 26px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 6px 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .filters {
+      padding: 18px;
+      position: sticky;
+      top: 16px;
+    }
+
+    .filters h2, .main h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .filter-block + .filter-block {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .filter-label {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .search {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(43, 110, 242, 0.12);
+    }
+
+    .summary {
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 14px;
+      border-radius: 14px;
+      background: #f9fbff;
+      border: 1px solid var(--line);
+    }
+
+    .metric b {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status {
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status.active { background: var(--good-soft); color: var(--good); }
+    .status.verify { background: var(--warn-soft); color: var(--warn); }
+    .status.ended { background: var(--danger-soft); color: var(--danger); }
+
+    .tag-row, .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .price-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+    }
+
+    .price-cell small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .price-cell strong {
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .price-cell .dim {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .detail {
+      padding: 12px;
+      border-radius: 12px;
+      background: #fcfdff;
+      border: 1px solid var(--line);
+    }
+
+    .detail small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .detail div {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .tips {
+      margin-top: 18px;
+      padding: 18px;
+    }
+
+    .tips h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .tips ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .empty {
+      display: none;
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+    }
+
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr; }
+      .filters { position: static; }
+      .list { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: 16px; }
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .details, .price-box { grid-template-columns: 1fr; }
+      .card-head { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>新加坡限时强促销雷达</h1>
+      <p>这一版重新抓了社媒线索，再用官网反查。优先保留更像“现在不买可能会后悔”的活动：有明确截止日、1-for-1、5 折级、库存限量、或整档活动临近结束。</p>
+      <p>小红书公开可复核链接很少，所以我没有把未核实帖子直接算进来；凡是由社媒或华文媒体先发现、再被官网确认的，我都会单独打上“社媒发现已回查”。</p>
+      <div class="hero-meta">
+        <span class="pill">检索基准日：2026-06-15</span>
+        <span class="pill">信息源：官方页 / 官方合作页</span>
+        <span class="pill">重点字段：折前折后 / 截止时间 / 为什么现在买</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="filters">
+        <h2>筛选与排序</h2>
+
+        <div class="filter-block">
+          <p class="filter-label">关键词</p>
+          <input id="searchInput" class="search" type="text" placeholder="搜活动名、场馆、强促销类型、身份条件" />
+        </div>
+
+        <div class="filter-block">
+          <p class="filter-label">活动类型</p>
+          <div class="chips" id="typeFilter"></div>
+        </div>
+
+        <div class="filter-block">
+          <p class="filter-label">优惠方式</p>
+          <div class="chips" id="dealFilter"></div>
+        </div>
+
+        <div class="filter-block">
+          <p class="filter-label">适用身份</p>
+          <div class="chips" id="audienceFilter"></div>
+        </div>
+
+        <div class="filter-block">
+          <p class="filter-label">高准标签</p>
+          <div class="chips" id="precisionFilter"></div>
+        </div>
+
+        <div class="filter-block">
+          <p class="filter-label">状态</p>
+          <div class="chips" id="statusFilter"></div>
+        </div>
+
+        <div class="filter-block">
+          <p class="filter-label">排序</p>
+          <div class="chips" id="sortFilter"></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="summary" id="summary"></section>
+        <div class="empty" id="emptyState">当前筛选条件下没有匹配项，建议切回“全部”或改看别的身份门槛。</div>
+        <section class="list" id="cardList"></section>
+        <section class="tips">
+          <h2>怎么挑更值</h2>
+          <ul>
+            <li>优先看“本周截止”“月底截止”“库存敏感”这三类，它们最接近真正的限时促销，而不是长期挂着的会员价。</li>
+            <li>金额能明确到单票或双人价的，我会直接写出折前和折后；如果官方只给折扣规则，就保留为“票面价 x 0.8”这类写法。</li>
+            <li>“社媒发现已回查”代表它最初是从华文媒体、公开社媒或活动聚合页发现，但我已经用官方页面做过二次确认。</li>
+            <li>“为什么现在买”这一栏是帮你做 FOMO 判断：截止近、票种限量、只剩几场、或活动本身即将结束的，会排得更靠前。</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const deals = [
+      {
+        name: "Cultural Playground 2026",
+        venue: "Singapore Chinese Cultural Centre",
+        type: "亲子活动",
+        subtype: "儿童节庆 / 演出工作坊",
+        dealType: ["限时 8折"],
+        audience: ["SAFRA会员", "亲子", "普通用户"],
+        precisionTags: ["官方活动页", "时间明确", "优惠需二次确认", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "本周截止",
+        activeWindow: "活动时间：2026-06-19 至 2026-06-21",
+        deadlineNote: "活动页能确认活动时间；优惠来自 SAFRA promotions 搜索结果，属于高可信但建议付款页再核一遍。",
+        beforePrice: "票面价因节目 / 工作坊不同而变动",
+        afterPrice: "票面价 8折",
+        savings: "20% off；短窗口节庆活动。",
+        fit: "适合这周末就想带娃去，行程能立刻落地的家庭。",
+        whyNow: "整档只做 3 天，错过就是整场节庆一起错过。",
+        tags: ["强时效", "亲子", "6/21 截止"],
+        link: "https://singaporeccc.org.sg/events/cultural-playground-2026/",
+        urgency: 98,
+        impact: 78
+      },
+      {
+        name: "Pixar in Concert",
+        venue: "Esplanade Concert Hall",
+        type: "演出",
+        subtype: "音乐会",
+        dealType: ["临演出折扣", "8折级", "85折"],
+        audience: ["Disney+用户", "SAFRA会员", "亲子", "普通用户"],
+        precisionTags: ["官方票务页", "价格明确", "优惠规则明确", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "本周截止",
+        activeWindow: "演出时间：2026-06-26 至 2026-06-27",
+        deadlineNote: "SISTIC 写明票价为 S$58 - S$168；Disney+ 有 20% off，SAFRA 页有 15% off。",
+        beforePrice: "S$58 - S$168",
+        afterPrice: "Disney+ 8折；SAFRA 85折",
+        savings: "同一场里能拿到 20% off，力度明显高于普通会员 9 折。",
+        fit: "适合近期有看演出计划、还想保留较好座位选择的人。",
+        whyNow: "折扣跟演出档期一起消失，而且越临近越容易只剩边缘票位。",
+        tags: ["临开演", "价格明确", "6/27 截止"],
+        link: "https://www.sistic.com.sg/events/pixar0626",
+        urgency: 96,
+        impact: 84
+      },
+      {
+        name: "Metaphor: ReFantazio Orchestra Concert",
+        venue: "Singapore",
+        type: "演出",
+        subtype: "游戏交响音乐会",
+        dealType: ["SISTIC 早鸟"],
+        audience: ["普通用户", "游戏粉丝"],
+        precisionTags: ["官方票务页", "价格明确", "硬截止日"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "早鸟进行中",
+        activeWindow: "早鸟截止：2026-07-05 11:59pm",
+        deadlineNote: "SISTIC 页面直接列出早鸟票档和截止时间，信息完整度很高。",
+        beforePrice: "常规价未在同页完整列出",
+        afterPrice: "早鸟 S$88 - S$178；限制视线 S$78 - S$128",
+        savings: "属于明确倒计时的早鸟档，至少现在能锁定更低入场价。",
+        fit: "适合愿意提前为下半年演出占坑的人。",
+        whyNow: "这是标准早鸟模型，过了 7/5 通常只会变贵，不会变便宜。",
+        tags: ["硬截止日", "早鸟", "价格明确"],
+        link: "https://www.sistic.com.sg/events/metaphor1126",
+        urgency: 87,
+        impact: 76
+      },
+      {
+        name: "Batu Bo Makan Gegat (The Impossible)",
+        venue: "Singapore",
+        type: "演出",
+        subtype: "戏剧",
+        dealType: ["SISTIC 早鸟", "9折"],
+        audience: ["普通用户", "戏剧观众"],
+        precisionTags: ["官方票务页", "价格明确", "硬截止日"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "早鸟进行中",
+        activeWindow: "早鸟截止：2026-07-31 11:59pm",
+        deadlineNote: "页面写明全票 S$88 - S$99，早鸟全票档 9 折，可直接换算。",
+        beforePrice: "S$88 - S$99",
+        afterPrice: "约 S$79.20 - S$89.10",
+        savings: "虽然力度不是最大，但规则干净透明，适合稳妥下单。",
+        fit: "适合偏好高信息确定性的演出用户。",
+        whyNow: "这是典型“拖到月底就失去早鸟”的票，不会突然出现更低公开价。",
+        tags: ["7/31 截止", "9折", "价格可换算"],
+        link: "https://www.sistic.com.sg/events/impossible0926",
+        urgency: 76,
+        impact: 62
+      },
+      {
+        name: "Jewel Canopy Bridge Mastercard 1-for-1",
+        venue: "Jewel Changi Airport",
+        type: "景点",
+        subtype: "高空步道",
+        dealType: ["1-for-1", "近 5 折"],
+        audience: ["Mastercard持卡人", "情侣", "朋友同行"],
+        precisionTags: ["官方景点页", "价格明确", "库存敏感"],
+        confidence: "A",
+        status: "verify",
+        statusLabel: "库存敏感",
+        activeWindow: "周一至周四；公假不适用；while stocks last",
+        deadlineNote: "标准成人单张 S$13.90，本地成人单张 S$11.90；输入 MCJEWEL 可拿 1-for-1。",
+        beforePrice: "双人标准成人 S$27.80；双人本地成人 S$23.80",
+        afterPrice: "双人同行 S$13.90 或 S$11.90 起",
+        savings: "少数还在跑的真 1-for-1，不是伪装成 9 折的会员价。",
+        fit: "适合两个人近期就能约工作日去 Jewel 的情况。",
+        whyNow: "真正风险不是到期，而是当天名额被抢完。",
+        tags: ["1-for-1", "金额明确", "工作日抢"],
+        link: "https://www.jewelchangiairport.com/en/attractions/Mastercard-canopy-bridge.html",
+        urgency: 95,
+        impact: 100
+      },
+      {
+        name: "Jewel Canopy Park DBS/POSB Promotion",
+        venue: "Jewel Changi Airport",
+        type: "景点",
+        subtype: "多项目联票",
+        dealType: ["25% off", "银行卡优惠"],
+        audience: ["DBS/POSB持卡人", "亲子", "普通用户"],
+        precisionTags: ["官方景点页", "硬截止日", "规则明确"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "有效至 2026-06-30",
+        deadlineNote: "单项票多数 75折，Jewel-rassic Quest 8折，Bundle Deal 1 / 2 为 8折。",
+        beforePrice: "标准票价 / Bundle 原价",
+        afterPrice: "单项票 75折；Jewel-rassic 8折；Bundle 1 / 2 为 8折",
+        savings: "25% off 已经高于常见 10% - 15% 银行联名力度。",
+        fit: "适合月底前就会去 Jewel，且不想只买一个小项目的人。",
+        whyNow: "它有明确硬截止日，过了 6/30 就不是同一档优惠。",
+        tags: ["月底截止", "25% off", "银行卡"],
+        link: "https://www.jewelchangiairport.com/en/Canopyparkpromotions.html",
+        urgency: 92,
+        impact: 82
+      },
+      {
+        name: "Jewel Double Nets Promo",
+        venue: "Jewel Changi Airport",
+        type: "景点",
+        subtype: "Walking Net + Bouncing Net",
+        dealType: ["限时特价"],
+        audience: ["亲子", "普通用户", "本地居民"],
+        precisionTags: ["官方景点页", "价格明确", "硬截止日"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "活动时间：2026-05-30 至 2026-06-28",
+        deadlineNote: "官方页面直接写促销价和结束日期，信息非常完整。",
+        beforePrice: "常规联票未在活动页单独对照",
+        afterPrice: "Standard 成人 S$34 / 儿童 S$27；Local 成人 S$31 / 儿童 S$23",
+        savings: "至少是一个可直接下单的明确特价，不用猜折后价。",
+        fit: "适合亲子和想去 Jewel 但不想研究复杂票种的人。",
+        whyNow: "这是明确写死到 6/28 的季节促销，过期后最可能回归常规价。",
+        tags: ["6/28 截止", "价格明确", "亲子"],
+        link: "https://www.jewelchangiairport.com/en/promotion/celebrate-jewel-blooms-with-lego-botanicals.html",
+        urgency: 94,
+        impact: 73
+      },
+      {
+        name: "One Last Snowfall Farewell Bundle",
+        venue: "Snow City + Science Centre Singapore + Omni-Theatre",
+        type: "景点",
+        subtype: "告别档组合票",
+        dealType: ["限时组合票", "赠送权益"],
+        audience: ["亲子", "本地居民", "普通用户"],
+        precisionTags: ["官方活动页", "价格明确", "限时窗口"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "告别档",
+        activeWindow: "促销时间：2026-06-01 至 2026-09-30",
+        deadlineNote: "页面直接给出 SG/PR 与 Standard 价格，并写明是 farewell promotion。",
+        beforePrice: "单买总价未在活动页单独拆出",
+        afterPrice: "SG/PR 儿童 S$16 起；成人 S$19 起；Peak 成人 S$25；Standard 成人 S$31",
+        savings: "包含 Snow City、Science Centre 和免费 Omni-Theatre 1 场。",
+        fit: "适合想一次带孩子玩足 3 个点，或对 Snow City 有情怀的人。",
+        whyNow: "这类票的 FOMO 不只是便宜，而是项目本身要永久关闭。",
+        tags: ["告别档", "S$16 起", "组合票"],
+        link: "https://www.science.edu.sg/whats-on/promotions/one-last-snowfall-promotion",
+        urgency: 88,
+        impact: 74
+      },
+      {
+        name: "David Hockney: Bigger & Closer",
+        venue: "官方合作权益页 / 展览",
+        type: "展览",
+        subtype: "沉浸式艺术展",
+        dealType: ["10% off"],
+        audience: ["SAFRA会员", "艺术展观众"],
+        precisionTags: ["官方合作页", "价格可换算", "硬截止日", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "优惠截止：2026-06-30",
+        deadlineNote: "SAFRA 官方页写明 10% off；资讯页给出 from S$32，可换算折后约 S$28.80 起。",
+        beforePrice: "S$32 起",
+        afterPrice: "约 S$28.80 起",
+        savings: "金额不算最狠，但信息链完整，适合追求确定性。",
+        fit: "适合这两周内想看展，且刚好能用 SAFRA 身份的人。",
+        whyNow: "有明确月底截止日，且这种展览优惠常常过期后只剩原价或普通渠道价。",
+        tags: ["6/30 截止", "可换算", "官方合作"],
+        link: "https://www.safra.sg/promotions/david-hockney",
+        urgency: 85,
+        impact: 58
+      },
+      {
+        name: "Asia Cat Expo",
+        venue: "SAFRA 官方合作票页",
+        type: "展览",
+        subtype: "主题博览会",
+        dealType: ["低价票", "限时票"],
+        audience: ["SAFRA会员", "宠物爱好者", "普通用户"],
+        precisionTags: ["官方合作页", "价格明确", "硬截止日", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "优惠截止：2026-06-28",
+        deadlineNote: "页面直接给 1-Day Pass S$6、2-Day Express Pass S$13，并写有效期。",
+        beforePrice: "页面未给原价对照",
+        afterPrice: "1-Day Pass S$6；2-Day Express Pass S$13",
+        savings: "虽然无法算折扣百分比，但属于非常低门槛、明确可买的限时价。",
+        fit: "适合预算敏感、想找轻量活动的人。",
+        whyNow: "这种活动本身周期短，且官方权益页明确到 6/28 截止。",
+        tags: ["6/28 截止", "低价票", "价格明确"],
+        link: "https://www.safra.sg/promotions/asia-cat-expo",
+        urgency: 89,
+        impact: 55
+      },
+      {
+        name: "Splashtopia 2026",
+        venue: "Sentosa",
+        type: "景点",
+        subtype: "充气水上乐园",
+        dealType: ["活动票", "Islander 再 9折"],
+        audience: ["亲子", "Sentosa Islander", "普通用户"],
+        precisionTags: ["官方活动页", "价格明确", "硬截止日", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "活动时间：2026-05-30 至 2026-06-28",
+        deadlineNote: "官方页直接写 weekday S$24、weekend S$28；Islander 再 10% off。",
+        beforePrice: "Weekday S$24；Weekend S$28",
+        afterPrice: "Islander 折后约 Weekday S$21.60；Weekend S$25.20",
+        savings: "价格简单直接，适合马上判断去不去。",
+        fit: "适合亲子和朋友组队玩水，且不想研究复杂票档。",
+        whyNow: "这是标准暑期短窗口活动，到 6/28 就结束，不是全年项目。",
+        tags: ["6/28 截止", "玩水", "亲子"],
+        link: "https://www.sentosa.com.sg/en/things-to-do/events/splashtopia/",
+        urgency: 91,
+        impact: 68
+      },
+      {
+        name: "Wings of Time 8:40pm Special",
+        venue: "Sentosa",
+        type: "景点",
+        subtype: "夜间秀",
+        dealType: ["特价票"],
+        audience: ["普通用户", "情侣", "游客"],
+        precisionTags: ["官方活动页", "价格明确", "结束日未写", "社媒发现已回查"],
+        confidence: "B+",
+        status: "verify",
+        statusLabel: "需二次确认",
+        activeWindow: "归属 June School Holiday Deals 档期",
+        deadlineNote: "官方页直接写 8:40pm 场 S$12（U.P. S$22），但未像其他活动那样写死结束日期。",
+        beforePrice: "S$22",
+        afterPrice: "S$12",
+        savings: "单票直接便宜 S$10，体感很强。",
+        fit: "适合最近几天就会去 Sentosa，且愿意临下单前再核一次的人。",
+        whyNow: "金额很香，但因为结束日没写死，最好的策略是看到就买，不要等。",
+        tags: ["S$12", "价格明确", "需二次确认"],
+        link: "https://www.sentosa.com.sg/schoolholidaydeals/",
+        urgency: 83,
+        impact: 80
+      },
+      {
+        name: "Formula 1 Singapore GP Junior Ticket",
+        venue: "Marina Bay Street Circuit",
+        type: "体育",
+        subtype: "F1 赛事",
+        dealType: ["最多 5折", "限量票种"],
+        audience: ["亲子", "16岁及以下"],
+        precisionTags: ["官方 FAQ", "规则明确", "库存敏感"],
+        confidence: "A-",
+        status: "verify",
+        statusLabel: "库存敏感",
+        activeWindow: "2026 赛事票在售中；限指定票档",
+        deadlineNote: "官方 FAQ 写明 16 岁及以下 Junior Ticket 最多 50% off，但按票档和库存走。",
+        beforePrice: "指定票档常规价",
+        afterPrice: "Junior Ticket 最多 5折",
+        savings: "在高单价赛事里，5 折属于非常实打实的大额优惠。",
+        fit: "适合计划带小孩去看 F1，且能尽早拍板行程的家庭。",
+        whyNow: "最容易先消失的是低价票档，不是活动文案。",
+        tags: ["最多 5折", "高单价省钱", "库存敏感"],
+        link: "https://singaporegp.sg/tickets",
+        urgency: 90,
+        impact: 96
+      },
+      {
+        name: "RWS 多景点联票",
+        venue: "Resorts World Sentosa",
+        type: "景点",
+        subtype: "环球影城 + 海洋馆 + 水上乐园联票",
+        dealType: ["组合票", "省 20%+"],
+        audience: ["游客", "亲子", "普通用户"],
+        precisionTags: ["官方活动页", "规则明确", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "长期窗口",
+        activeWindow: "所选开始日后 7 天内有效",
+        deadlineNote: "RWS 官方页写明 Save over 20%，票券从所选日期起 7 天内可用；Mastercard 专页版本写到 2026-06-30。",
+        beforePrice: "单买三园总价",
+        afterPrice: "成人 SGD131；儿童 SGD122",
+        savings: "比逐个买更省，且适合短期内连刷多个点。",
+        fit: "适合游客或亲子家庭，一次把 RWS 核心项目打包。",
+        whyNow: "这类打包票通常比单点票更稳，而且社媒热度高时常伴随档期拥挤，先锁票更安心。",
+        tags: ["RWS", "多景点", "省20%+"],
+        link: "https://www.rwsentosa.com/en/promotions/attraction-deals-at-resorts-world-sentosa/multi-attraction-pass",
+        urgency: 72,
+        impact: 70
+      },
+      {
+        name: "环球影城 1日票送 SGD15 券",
+        venue: "Universal Studios Singapore",
+        type: "景点",
+        subtype: "主题乐园门票",
+        dealType: ["赠券", "平台特惠"],
+        audience: ["游客", "普通用户", "亲子"],
+        precisionTags: ["平台售卖页", "优惠文案明确", "结束日模糊", "社媒发现已回查"],
+        confidence: "B+",
+        status: "verify",
+        statusLabel: "需二次确认",
+        activeWindow: "平台文案写“优惠至12月止”",
+        deadlineNote: "Klook 中文页明确写 1日门票 + SGD15 餐饮/商品券，但这条不是 RWS 官网直出，下单前最好再看使用条款。",
+        beforePrice: "平台常规 1日票",
+        afterPrice: "1日门票 + 赠 SGD15 voucher",
+        savings: "如果本来就会在园内消费，赠券体感很直观。",
+        fit: "适合以主题乐园为核心行程、且接受平台票的人。",
+        whyNow: "这类平台组合票改版频繁，常常今天有券、过几天就只剩裸票。",
+        tags: ["赠SGD15", "平台票", "环球影城"],
+        link: "https://www.klook.cn/zh-CN/activity/12250-universal-studios-vip-tour-ticket-singapore/",
+        urgency: 68,
+        impact: 63
+      },
+      {
+        name: "NTUC Wings of Time Standard",
+        venue: "Sentosa / Mount Faber",
+        type: "景点",
+        subtype: "夜间秀会员票",
+        dealType: ["NTUC 会员价", "65折左右"],
+        audience: ["NTUC会员", "情侣", "家庭"],
+        precisionTags: ["官方合作页", "价格明确", "硬截止日", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "优惠截止：2026-06-30",
+        deadlineNote: "NTUC 官方页与 Mount Faber 正价页可对照出 Standard Seat S$22 -> S$14.30。",
+        beforePrice: "S$22",
+        afterPrice: "S$14.30",
+        savings: "直接省 S$7.70，且是官方会员权益页明确写的。",
+        fit: "适合已有 NTUC 身份、想看夜间秀的人。",
+        whyNow: "这条是明确写死到 6/30 的会员强价，不是长期浮动折扣。",
+        tags: ["NTUC", "6/30 截止", "价格明确"],
+        link: "https://www.ntuc.org.sg/uportal/memberships/deals-for-members/mount-faber-cable-car-mayday26/",
+        urgency: 93,
+        impact: 77
+      },
+      {
+        name: "NTUC Wings of Time Premium",
+        venue: "Sentosa / Mount Faber",
+        type: "景点",
+        subtype: "夜间秀高级座位",
+        dealType: ["NTUC 会员价", "6折"],
+        audience: ["NTUC会员", "情侣", "家庭"],
+        precisionTags: ["官方合作页", "价格明确", "硬截止日", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "月底截止",
+        activeWindow: "优惠截止：2026-06-30",
+        deadlineNote: "NTUC 官方页直接给到 Premium Seat S$27 -> S$16.20。",
+        beforePrice: "S$27",
+        afterPrice: "S$16.20",
+        savings: "Premium 票位打到 6 折，体感比普通 9 折强很多。",
+        fit: "适合想要更好观演位置，又刚好有 NTUC 身份的人。",
+        whyNow: "明确到 6/30 截止，且 premium 座位通常先被挑完。",
+        tags: ["NTUC", "Premium", "6/30 截止"],
+        link: "https://www.ntuc.org.sg/uportal/memberships/deals-for-members/mount-faber-cable-car-mayday26/",
+        urgency: 94,
+        impact: 82
+      },
+      {
+        name: "Cable Car Sentosa Line Local Special",
+        venue: "Sentosa / Mount Faber",
+        type: "景点",
+        subtype: "缆车本地居民票",
+        dealType: ["本地居民特价"],
+        audience: ["新加坡居民", "亲子", "情侣"],
+        precisionTags: ["官方票务页", "价格明确", "结束日未写", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "需二次确认",
+        activeWindow: "当前官方票务页可售",
+        deadlineNote: "官方售票页直接显示本地价：成人 S$17 -> S$4，儿童 S$12 -> S$3，但没写硬截止日。",
+        beforePrice: "成人 S$17；儿童 S$12",
+        afterPrice: "成人 S$4；儿童 S$3",
+        savings: "折扣幅度非常狠，几乎接近体验价。",
+        fit: "适合本地居民临时安排 Sentosa 半日行程。",
+        whyNow: "便宜到容易被撤档，而且没写结束日，通常应该趁还能买时锁单。",
+        tags: ["本地居民", "S$4", "价格明确"],
+        link: "https://booking.mountfaberleisure.com/experiences/product/cable-car-sentosa-line/49683",
+        urgency: 92,
+        impact: 92
+      },
+      {
+        name: "Fun Discovery Pass 15% off",
+        venue: "Sentosa",
+        type: "景点",
+        subtype: "多项目通票",
+        dealType: ["85折", "送免费入岛"],
+        audience: ["NTUC会员", "Sentosa Islander", "游客"],
+        precisionTags: ["官方活动页", "价格明确", "结束日未写", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "需二次确认",
+        activeWindow: "票券 180 天有效；2 次免费入岛为 limited time only",
+        deadlineNote: "官方页可直接换算：S$60 -> S$51，S$90 -> S$76.50，S$120 -> S$102。",
+        beforePrice: "S$60 / S$90 / S$120",
+        afterPrice: "S$51 / S$76.50 / S$102",
+        savings: "如果一天刷多个点，比单买更容易回本。",
+        fit: "适合准备在 Sentosa 连玩多个收费项目的人。",
+        whyNow: "通票本身一直有，但 2 次免费入岛这种附赠权益不一定一直挂着。",
+        tags: ["85折", "通票", "可换算"],
+        link: "https://www.sentosa.com.sg/en/deals/fun-discovery-pass/",
+        urgency: 79,
+        impact: 69
+      },
+      {
+        name: "Mandai 5 Attractions Pass (1-Day)",
+        venue: "Mandai Wildlife Reserve",
+        type: "景点",
+        subtype: "五园一日通票",
+        dealType: ["最高 5折", "多园通票"],
+        audience: ["游客", "亲子", "普通用户"],
+        precisionTags: ["官方票务页", "价格明确", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "长期窗口",
+        activeWindow: "官方页当前可售",
+        deadlineNote: "Mandai 官方页直接给出 Non-Resident 价格：成人 S$246 -> S$118，儿童 S$175 -> S$90。",
+        beforePrice: "成人 S$246；儿童 S$175",
+        afterPrice: "成人 S$118；儿童 S$90",
+        savings: "如果真能在 1 天内刷多个园，这是当前官网上最明显的大额优惠之一。",
+        fit: "适合游客暴走型玩法，或想集中压缩时间成本的人。",
+        whyNow: "这类官方大通票不一定天天都有同样力度，先锁比等更稳。",
+        tags: ["Mandai", "近5折", "价格明确"],
+        link: "https://cn.mandai.com/en/tickets-and-passes/multi-park-admission.html?intcmp=epc%7Ci2%7CMulti-Park%20Passes%7Cpri%7CView%20Bundles%7Cmandai%3Atickets-and-passes",
+        urgency: 82,
+        impact: 94
+      },
+      {
+        name: "Mandai 5 Attractions Pass (5-Day)",
+        venue: "Mandai Wildlife Reserve",
+        type: "景点",
+        subtype: "五园五日通票",
+        dealType: ["打包省钱", "多日票"],
+        audience: ["游客", "亲子", "普通用户"],
+        precisionTags: ["官方票务页", "价格明确", "社媒发现已回查"],
+        confidence: "A",
+        status: "active",
+        statusLabel: "长期窗口",
+        activeWindow: "官方页当前可售",
+        deadlineNote: "Mandai 官方页直接给出 Non-Resident 价格：成人 S$246 -> S$128，儿童 S$175 -> S$98。",
+        beforePrice: "成人 S$246；儿童 S$175",
+        afterPrice: "成人 S$128；儿童 S$98",
+        savings: "比 1-Day 更适合轻松玩法，不用一天里硬刷五园。",
+        fit: "适合停留时间更长的游客。",
+        whyNow: "如果你本来就会分几天玩，多日票通常比单园单买稳定更省。",
+        tags: ["Mandai", "多日票", "价格明确"],
+        link: "https://cn.mandai.com/en/tickets-and-passes/multi-park-admission.html?intcmp=epc%7Ci2%7CMulti-Park%20Passes%7Cpri%7CView%20Bundles%7Cmandai%3Atickets-and-passes",
+        urgency: 74,
+        impact: 83
+      },
+      {
+        name: "Mandai WildPass 2-Attraction Pass",
+        venue: "Mandai Wildlife Reserve",
+        type: "景点",
+        subtype: "双园套票",
+        dealType: ["省 30%", "本地会员套票"],
+        audience: ["WildPass用户", "新加坡居民", "亲子"],
+        precisionTags: ["官方活动页", "规则明确", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "暑期窗口",
+        activeWindow: "有效期：2026-06-01 至 2026-08-31",
+        deadlineNote: "官方促销页写明 Up to 30% savings，但没有单页把每个组合的前后价完全拆开。",
+        beforePrice: "按所选双园组合不同",
+        afterPrice: "WildPass Exclusive 2-Attraction Pass",
+        savings: "对本地家庭来说，比临时单买两园票更像真正暑期促销。",
+        fit: "适合不想刷五园、但又想利用暑假去两园的人。",
+        whyNow: "这是明确只到 8/31 的窗口，属于暑期档，不是全年常驻。",
+        tags: ["WildPass", "6-8月窗口", "本地居民"],
+        link: "https://www.mandai.com/en/discover-mandai/promotions.mandai-wildlife-west.html",
+        urgency: 71,
+        impact: 66
+      },
+      {
+        name: "Flower Dome 儿童免票",
+        venue: "Gardens by the Bay",
+        type: "展览",
+        subtype: "花穹亲子优惠",
+        dealType: ["儿童免费", "节庆附带折扣"],
+        audience: ["新加坡居民", "12岁及以下儿童", "亲子"],
+        precisionTags: ["官方活动页", "时间明确", "社媒发现已回查"],
+        confidence: "A-",
+        status: "active",
+        statusLabel: "本周截止",
+        activeWindow: "活动时间：2026-05-30 至 2026-06-21",
+        deadlineNote: "官方儿童节活动页写明 12 岁及以下儿童可免费进入 Flower Dome，仅限新加坡居民；另持花园景点票可享 carnival / retail / craft 9折。",
+        beforePrice: "儿童标准票",
+        afterPrice: "儿童免费",
+        savings: "对亲子家庭来说是真减法，不是小额券。",
+        fit: "适合本地居民带娃去 GBTB 顺手把花穹一起看了。",
+        whyNow: "只到 6/21，而且学校假期和亲子活动会让现场人流更高，能用就尽快用。",
+        tags: ["儿童免费", "6/21 截止", "本地居民"],
+        link: "https://www.gardensbythebay.com.sg/en/things-to-do/calendar-of-events/children-s-festival-featuring-disney-s-winnie-the-pooh.html",
+        urgency: 95,
+        impact: 71
+      }
+    ];
+
+    const state = {
+      type: "全部",
+      deal: "全部",
+      audience: "全部",
+      precision: "全部",
+      status: "全部",
+      sort: "FOMO优先",
+      search: ""
+    };
+
+    const filters = {
+      type: ["全部", ...new Set(deals.map(item => item.type))],
+      deal: ["全部", ...new Set(deals.flatMap(item => item.dealType))],
+      audience: ["全部", ...new Set(deals.flatMap(item => item.audience))],
+      precision: ["全部", ...new Set(deals.flatMap(item => item.precisionTags))],
+      status: ["全部", ...new Set(deals.map(item => item.statusLabel))],
+      sort: ["FOMO优先", "优惠力度优先", "活动名称"]
+    };
+
+    function mountChips(containerId, values, key) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      values.forEach(value => {
+        const button = document.createElement("button");
+        button.className = "chip" + (state[key] === value ? " active" : "");
+        button.textContent = value;
+        button.addEventListener("click", () => {
+          state[key] = value;
+          render();
+        });
+        container.appendChild(button);
+      });
+    }
+
+    function scoreDeal(item) {
+      return item.impact || 50;
+    }
+
+    function statusWeight(item) {
+      return item.urgency || 50;
+    }
+
+    function matchFilter(item) {
+      const q = state.search.trim().toLowerCase();
+      const haystack = [
+        item.name, item.venue, item.type, item.subtype, item.beforePrice, item.afterPrice,
+        item.savings, item.fit, item.deadlineNote, item.activeWindow,
+        item.dealType.join(" "), item.audience.join(" "), item.tags.join(" "),
+        item.precisionTags.join(" "), item.confidence
+      ].join(" ").toLowerCase();
+
+      const typeOk = state.type === "全部" || item.type === state.type;
+      const dealOk = state.deal === "全部" || item.dealType.includes(state.deal);
+      const audienceOk = state.audience === "全部" || item.audience.includes(state.audience);
+      const precisionOk = state.precision === "全部" || item.precisionTags.includes(state.precision);
+      const statusOk = state.status === "全部" || item.statusLabel === state.status;
+      const queryOk = !q || haystack.includes(q);
+      return typeOk && dealOk && audienceOk && precisionOk && statusOk && queryOk;
+    }
+
+    function sortDeals(list) {
+      const copied = [...list];
+      if (state.sort === "优惠力度优先") {
+        copied.sort((a, b) => scoreDeal(b) - scoreDeal(a) || statusWeight(b) - statusWeight(a));
+      } else if (state.sort === "活动名称") {
+        copied.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        copied.sort((a, b) => statusWeight(b) - statusWeight(a) || scoreDeal(b) - scoreDeal(a));
+      }
+      return copied;
+    }
+
+    function renderSummary(list) {
+      const summary = document.getElementById("summary");
+      const topConfidenceCount = list.filter(item => /^A/.test(item.confidence)).length;
+      const thisWeekCount = list.filter(item => /本周截止/.test(item.statusLabel)).length;
+      const priceClearCount = list.filter(item => item.precisionTags.includes("价格明确") || item.precisionTags.includes("价格可换算")).length;
+      const inventoryCount = list.filter(item => /库存敏感/.test(item.statusLabel)).length;
+      summary.innerHTML = `
+        <div class="metric"><b>${list.length}</b><span>当前强推候选</span></div>
+        <div class="metric"><b>${topConfidenceCount}</b><span>A 档高准条目</span></div>
+        <div class="metric"><b>${priceClearCount}</b><span>价格明确 / 可换算</span></div>
+        <div class="metric"><b>${inventoryCount}</b><span>库存或名额敏感</span></div>
+      `;
+    }
+
+    function renderCards(list) {
+      const cardList = document.getElementById("cardList");
+      const empty = document.getElementById("emptyState");
+      cardList.innerHTML = "";
+      empty.style.display = list.length ? "none" : "block";
+
+      list.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-head">
+            <div>
+              <h3>${item.name}</h3>
+              <div class="subtitle">${item.venue} · ${item.type} / ${item.subtype}</div>
+            </div>
+            <span class="status ${item.status}">${item.statusLabel}</span>
+          </div>
+
+          <div class="tag-row">
+            ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+          </div>
+
+          <div class="tag-row">
+            <span class="tag">高准等级 ${item.confidence}</span>
+            ${item.precisionTags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+          </div>
+
+          <div class="price-box">
+            <div class="price-cell">
+              <small>折前价格</small>
+              <strong>${item.beforePrice}</strong>
+              <div class="dim">如果官网未公布固定原价，这里会写成原价基准或浮动价。</div>
+            </div>
+            <div class="price-cell">
+              <small>折后价格 / 计算方式</small>
+              <strong>${item.afterPrice}</strong>
+              <div class="dim">${item.savings}</div>
+            </div>
+          </div>
+
+          <div class="details">
+            <div class="detail">
+              <small>活动时间 / 有效期</small>
+              <div>${item.activeWindow}</div>
+            </div>
+            <div class="detail">
+              <small>适用门槛</small>
+              <div>${item.audience.join(" / ")}</div>
+            </div>
+            <div class="detail">
+              <small>高准标签</small>
+              <div>${item.precisionTags.join(" / ")}</div>
+            </div>
+            <div class="detail">
+              <small>下单提醒</small>
+              <div>${item.deadlineNote}</div>
+            </div>
+            <div class="detail">
+              <small>更适合谁</small>
+              <div>${item.fit}</div>
+            </div>
+            <div class="detail">
+              <small>为什么现在买</small>
+              <div>${item.whyNow}</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="${item.link}" target="_blank" rel="noreferrer">打开来源</a>
+          </div>
+        `;
+        cardList.appendChild(card);
+      });
+    }
+
+    function render() {
+      mountChips("typeFilter", filters.type, "type");
+      mountChips("dealFilter", filters.deal, "deal");
+      mountChips("audienceFilter", filters.audience, "audience");
+      mountChips("precisionFilter", filters.precision, "precision");
+      mountChips("statusFilter", filters.status, "status");
+      mountChips("sortFilter", filters.sort, "sort");
+
+      const filtered = sortDeals(deals.filter(matchFilter));
+      renderSummary(filtered);
+      renderCards(filtered);
+    }
+
+    document.getElementById("searchInput").addEventListener("input", (event) => {
+      state.search = event.target.value;
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
