@@ -1,6 +1,7 @@
 # html_demo
 
-GitHub Pages demo for the interactive Harry Potter themed kindergarten graduation show plan.
+GitHub Pages space for temporary HTML demos.
 
-- Entry: `index.html`
-- Source file comes from the local project dynamic review page
+- Root `index.html` only provides a generic landing page
+- Actual demos are stored in separate subdirectories
+- Demo names and paths can stay opaque to avoid exposing details from the root page
