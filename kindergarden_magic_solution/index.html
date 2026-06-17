@@ -650,6 +650,105 @@
       line-height: 1.8;
     }
 
+    .procurement-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .procurement-stat {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(224, 184, 90, 0.14);
+      background:
+        linear-gradient(180deg, rgba(224, 184, 90, 0.08), rgba(255, 255, 255, 0.03)),
+        rgba(255, 255, 255, 0.02);
+    }
+
+    .procurement-stat__label {
+      color: var(--text-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .procurement-stat__value {
+      margin-top: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gold-strong);
+    }
+
+    .procurement-stat__sub {
+      margin-top: 8px;
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .magic-procurement-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .magic-procurement-card {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .magic-procurement-card h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-family: "Noto Serif SC", serif;
+    }
+
+    .magic-procurement-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .magic-procurement-card__scene {
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .magic-procurement-card dl {
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .magic-procurement-card dt {
+      color: var(--gold-strong);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+
+    .magic-procurement-card dd {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .magic-procurement-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
     .props-layout {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
@@ -665,7 +764,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 720px;
+      min-width: 920px;
       background: rgba(255, 255, 255, 0.025);
     }
 
@@ -688,6 +787,48 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       z-index: 1;
+    }
+
+    .table-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .table-badge--must {
+      background: rgba(224, 82, 82, 0.18);
+      color: #ffb3b3;
+    }
+
+    .table-badge--buy {
+      background: rgba(224, 184, 90, 0.18);
+      color: #f3d79b;
+    }
+
+    .table-badge--own {
+      background: rgba(84, 189, 133, 0.18);
+      color: #a9efc2;
+    }
+
+    .table-badge--backup {
+      background: rgba(86, 156, 214, 0.18);
+      color: #a9d7ff;
+    }
+
+    .table-badge--optional {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-soft);
+    }
+
+    .table-note {
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.7;
     }
 
     .prep-stack {
@@ -801,6 +942,8 @@
       }
 
       .hero__meta,
+      .procurement-summary,
+      .magic-procurement-grid,
       .scene-grid,
       .scene-overview,
       .magic-grid,
@@ -838,6 +981,8 @@
       }
 
       .hero__meta,
+      .procurement-summary,
+      .magic-procurement-grid,
       .scene-grid,
       .scene-overview,
       .magic-grid,
@@ -907,10 +1052,12 @@
             <div>
               <h2 class="section-head__title">物品与准备</h2>
               <p class="section-head__desc">
-                道具、彩排建议和待确认项单独成区，方便执行准备时快速查，不和六幕剧情混在一起。
+                这里把采购优先级、按魔术拆分的采购重点、总道具表和彩排建议放在一起，方便直接进入准备和下单阶段。
               </p>
             </div>
           </div>
+          <div class="procurement-summary" id="procurement-summary"></div>
+          <div class="magic-procurement-grid" id="magic-procurement-grid"></div>
           <div class="props-layout">
             <div class="props-table-wrap">
               <table>
@@ -919,6 +1066,8 @@
                     <th>道具</th>
                     <th>用途</th>
                     <th>对应幕次</th>
+                    <th>获取方式</th>
+                    <th>采购等级</th>
                   </tr>
                 </thead>
                 <tbody id="props-table-body"></tbody>
@@ -965,7 +1114,7 @@
   <script>
     const planData = {
       title: "幼儿园毕业典礼哈利波特主题亲子魔术节目策划案",
-      description: "这是一个用于方案 review、活动筹备和彩排准备的单页动态文档。阅读路径默认从六幕切入，每一幕先看目的和故事概述，再按需展开剧本与魔术说明，最后再去看道具、彩排和待确认事项。",
+      description: "这是一个用于方案 review、活动筹备和彩排准备的单页动态文档。阅读路径默认从六幕切入，每一幕先看目的和故事概述，再按需展开剧本与魔术说明，最后集中看采购优先级、按魔术拆分的采购重点、总道具表和彩排注意事项。",
       meta: [
         {
           label: "演出形式",
@@ -979,23 +1128,45 @@
         },
         {
           label: "核心角色",
-          value: "3 位",
-          sub: "弟弟是新生小巫师，妈妈是教授，姐姐是学姐。"
+          value: "2 位",
+          sub: "弟弟是新生小巫师，妈妈是教授兼串场主持。"
         },
         {
           label: "默认阅读方式",
-          value: "六幕 → 剧本 / 魔术",
-          sub: "更适合 review 方案的人逐层理解，不会被整篇长文一次压住。"
+          value: "六幕 → 魔术 → 采购",
+          sub: "更适合 review 方案的人逐层理解，再直接切到执行和采购。"
         }
       ],
-      keywords: ["毕业典礼", "哈利波特主题", "亲子合作", "剧情型节目", "舞台魔术", "分层 Review", "彩排准备"],
+      keywords: ["毕业典礼", "哈利波特主题", "亲子合作", "剧情型节目", "舞台魔术", "采购优先级", "彩排准备"],
+      procurementSummary: [
+        {
+          label: "必须先采购",
+          value: "5 项",
+          sub: "空盒、变色书、分院信封、变花道具、变物袋是整场魔术主线，先买这批才能开始稳定彩排。"
+        },
+        {
+          label: "建议备份",
+          value: "4 组",
+          sub: "录取信、分院结果内页、备用花朵和结尾礼物建议都留备用，避免临场损坏或漏拿。"
+        },
+        {
+          label: "可自备 / 已有",
+          value: "6 项",
+          sub: "服装内搭、魔杖、桌布、收纳箱等尽量不额外花钱，把预算优先留给魔术道具。"
+        },
+        {
+          label: "采购顺序",
+          value: "先主线后氛围",
+          sub: "先保证能演，再补巫师造型和氛围件，最后补耗材、备份和礼物。"
+        }
+      ],
       scenes: [
         {
           id: "scene-1",
           actLabel: "第一幕",
           title: "新生来到霍格沃茨",
           shortSummary: "交代世界观和角色关系，让观众立刻进入“入学考验”的设定。",
-          background: "弟弟以新生小巫师身份上场，妈妈扮演教授发问，姐姐以学姐身份协助观察和陪伴。",
+          background: "弟弟以新生小巫师身份上场，妈妈扮演教授发问，先把霍格沃茨的新生考验设定立起来。",
           purpose: [
             "建立人物关系",
             "交代世界观",
@@ -1003,9 +1174,11 @@
           ],
           storySummary: "这一幕不靠魔术取胜，而是先把观众带进霍格沃茨的故事入口。它承担的是开场的世界观说明功能。",
           script: [
-            { speaker: "妈妈", text: "欢迎来到霍格沃茨。想进入魔法学校，可不是一件容易的事。你准备好接受考验了吗？" },
+            { speaker: "动作", text: "音乐起，弟弟手持魔杖上场，妈妈随后以教授身份进入。", type: "action" },
+            { speaker: "妈妈", text: "欢迎来到霍格沃茨。今天站在这里的，是一位即将接受考验的新生小巫师。" },
+            { speaker: "妈妈", text: "想进入魔法学校，可不是一件容易的事。新生，请告诉我，你准备好了吗？" },
             { speaker: "弟弟", text: "我准备好了！" },
-            { speaker: "姐姐", text: "教授，我来帮您一起看看，这位新生到底有没有真正的魔法本领。" }
+            { speaker: "妈妈", text: "很好。从现在开始，大家都会一起见证你能不能顺利进入霍格沃茨。" }
           ],
           magicRefs: []
         },
@@ -1024,9 +1197,10 @@
           script: [
             { speaker: "妈妈", text: "第一关，请证明你不是普通的小朋友，而是真正收到邀请的新生。" },
             { speaker: "弟弟", text: "我当然不是普通的小朋友，我已经准备好了！" },
-            { speaker: "姐姐", text: "那就让我们看看，你的录取信在哪里。" },
+            { speaker: "动作", text: "弟弟拿起空盒，先给观众展示盒内为空。", type: "action" },
+            { speaker: "妈妈", text: "大家请看清楚，现在这个盒子里还什么都没有。" },
             { speaker: "动作", text: "弟弟表演空盒变物。", type: "action" },
-            { speaker: "弟弟", text: "我的邀请信在这里！我的眼镜也在这里！" },
+            { speaker: "弟弟", text: "这是我的录取信，这是我的眼镜，还有我的学院围巾！" },
             { speaker: "妈妈", text: "很好，那你的魔杖呢？" },
             { speaker: "弟弟", text: "我的魔杖一直都在我身上。" },
             { speaker: "动作", text: "弟弟从身上取出魔杖。", type: "action" }
@@ -1047,10 +1221,11 @@
           storySummary: "这一幕更像一节被看见的“魔法入门课”，用适合幼儿园氛围的绘本式变化，让能力成长更加自然。",
           script: [
             { speaker: "妈妈", text: "光有录取信还不够，想成为真正的小巫师，还要会学习魔法。" },
-            { speaker: "姐姐", text: "让我看看你的教材里写了什么。" },
+            { speaker: "妈妈", text: "把你的教材打开，让我们看看，你有没有认真准备第一堂课。" },
             { speaker: "弟弟", text: "刚开始它还什么都没有，但只要我认真学习，它就会出现魔法内容。" },
             { speaker: "动作", text: "弟弟表演变色书。", type: "action" },
-            { speaker: "妈妈", text: "很好，你已经证明了自己能学会魔法。" }
+            { speaker: "弟弟", text: "你看，图案出现了。再认真一点，它就全部学会了！" },
+            { speaker: "妈妈", text: "很好，你已经证明了自己不只是能入学，还能真正学会魔法。" }
           ],
           magicRefs: ["magic-color-book"]
         },
@@ -1068,7 +1243,7 @@
           storySummary: "这一幕是全场气氛的抬升点。它把哈利波特主题真正立起来，同时也让现场有一轮安全、可控的集体互动。",
           script: [
             { speaker: "妈妈", text: "很好，你已经通过了前面的考验。现在，真正的分院仪式要开始了。" },
-            { speaker: "姐姐", text: "请大家跟我一起数，3、2、1！" },
+            { speaker: "妈妈", text: "请大家跟我一起数，3、2、1！" },
             { speaker: "全场", text: "3、2、1！" },
             { speaker: "妈妈", text: "请大家一起说，分院开始！" },
             { speaker: "全场", text: "分院开始！" },
@@ -1083,7 +1258,7 @@
           actLabel: "第五幕",
           title: "第一堂魔法课：让美好的东西开花",
           shortSummary: "体现弟弟现场真正学会了一道新魔法，形成成长弧线。",
-          background: "姐姐可以先尝试一下但没有成功，随后弟弟在教授指导下完成空棒变花或魔棒变花。",
+          background: "弟弟在教授指导下完成空棒变花或魔棒变花，形成“我真的学会了”的成长证明。",
           purpose: [
             "体现主角真正学会了一道新魔法",
             "形成剧情上的成长弧线",
@@ -1092,9 +1267,9 @@
           storySummary: "这不是简单的一个出花魔术，而是整场故事里最关键的成长证明：他开始像一个真正的小巫师了。",
           script: [
             { speaker: "妈妈", text: "恭喜你成为霍格沃茨的新生。接下来，我要教你第一堂真正的魔法课。" },
-            { speaker: "姐姐", text: "这可不简单，我第一次学的时候还失败过呢。" },
             { speaker: "妈妈", text: "这道魔法，叫做让美好的东西开花。" },
             { speaker: "弟弟", text: "我来试试！" },
+            { speaker: "妈妈", text: "记住，动作要稳，魔杖要举好，咒语要说清楚。" },
             { speaker: "动作", text: "弟弟表演空棒变花。", type: "action" },
             { speaker: "妈妈", text: "很好，你已经学会了真正的魔法。" }
           ],
@@ -1105,7 +1280,7 @@
           actLabel: "第六幕",
           title: "毕业与分享",
           shortSummary: "把哈利波特故事重新扣回毕业典礼，用礼物和祝福完成情绪收束。",
-          background: "弟弟用空袋变出送给现场小朋友的小纪念品，由妈妈和姐姐协助分发，并说出毕业主题的结尾话术。",
+          background: "弟弟用空袋变出送给现场小朋友的小纪念品，由妈妈协助收束，并说出毕业主题的结尾话术。",
           purpose: [
             "把故事重新扣回毕业典礼",
             "完成情绪收束",
@@ -1116,7 +1291,7 @@
             { speaker: "妈妈", text: "今天，你已经通过了霍格沃茨的新生考验。" },
             { speaker: "弟弟", text: "其实，我们也像小巫师一样，要从幼儿园毕业，去新的学校学习新的本领。" },
             { speaker: "动作", text: "弟弟表演空袋变纪念品。", type: "action" },
-            { speaker: "姐姐", text: "这些小礼物送给大家。" },
+            { speaker: "妈妈", text: "这些小礼物，也送给大家。" },
             { speaker: "弟弟", text: "以后不管我们去哪里上学，都希望我们记得老师的爱、朋友的陪伴，还有在幼儿园学会的勇敢和快乐。祝大家毕业快乐！" }
           ],
           magicRefs: ["magic-bag"]
@@ -1129,14 +1304,19 @@
           implementation: "使用空盒变物道具，通过隐藏仓、翻板、开合或抽拉完成切换。",
           roles: [
             "妈妈：出题、控节奏",
-            "姐姐：检查盒子，证明“看起来是空的”",
             "弟弟：挥杖、开盒、展示物品"
           ],
           tips: [
             "物品尽量轻、小、好拿",
             "不建议变整件衣服",
             "变化后要停顿展示"
-          ]
+          ],
+          procurement: {
+            level: "必须先采购",
+            items: ["空盒变物道具", "圆眼镜", "学院围巾 / 领带", "录取信"],
+            source: "空盒建议直接采购成熟儿童魔术道具；录取信建议自制并至少准备 2 份。",
+            backup: "录取信和围巾都建议留一份备用，避免彩排折损或临场漏拿。"
+          }
         },
         "magic-wand": {
           name: "从身上拿出魔杖",
@@ -1144,14 +1324,19 @@
           implementation: "提前把短魔杖藏在披风内侧、袖口内侧或背后固定位置，取出时配合遮挡。",
           roles: [
             "妈妈：提问“你的魔杖呢”",
-            "姐姐：靠近、转身、整理披风、帮助遮挡",
             "弟弟：顺势取出并高举展示"
           ],
           tips: [
             "魔杖长度要适合孩子",
             "预藏位置要提前练熟",
             "重点是自然，不是快"
-          ]
+          ],
+          procurement: {
+            level: "已有即可",
+            items: ["儿童魔杖", "固定辅料"],
+            source: "魔杖当前可沿用已有款；再补一套魔术贴、透明胶点或别针用于固定预藏位置。",
+            backup: "彩排前确认披风或衣服上固定点是否稳，避免上台时魔杖滑落。"
+          }
         },
         "magic-color-book": {
           name: "变色书 / 魔术涂色书",
@@ -1159,14 +1344,19 @@
           implementation: "使用儿童变色书道具，通过固定翻页顺序展示三种状态。",
           roles: [
             "妈妈：串联“学习魔法”的剧情",
-            "姐姐：检查或见证变化",
             "弟弟：翻书并展示结果"
           ],
           tips: [
             "只记固定翻页顺序",
             "每次翻页前先停一下",
             "书不要太大，避免拿不稳"
-          ]
+          ],
+          procurement: {
+            level: "必须先采购",
+            items: ["变色书 / 魔术涂色书"],
+            source: "建议直接采购儿童尺寸版本，重点筛选页数少、翻页顺序稳定、孩子能单手拿稳的款式。",
+            backup: "到手后先做 2-3 次完整翻书测试，确认孩子翻页不会卡住。"
+          }
         },
         "magic-envelope": {
           name: "预测信封 / 预言信封",
@@ -1174,14 +1364,19 @@
           implementation: "使用预测信封道具，或直接提前装入固定结果的信件。",
           roles: [
             "妈妈：宣布分院开始",
-            "姐姐：带动观众数数、做施法动作",
             "弟弟：打开信封并宣读结果"
           ],
           tips: [
             "重点是仪式感，不是难度",
             "结果要固定",
             "开信动作要慢，方便拍照"
-          ]
+          ],
+          procurement: {
+            level: "必须采购或自制稳定版",
+            items: ["预测信封 / 校长信封", "信纸内页"],
+            source: "如果买现成预测信封，重点看开口顺手和隐藏结构是否稳定；如果自制，就用固定结果的信纸并做两份备份。",
+            backup: "信纸内页建议打印 2 份，信封也最好备用一个，避免开口损坏。"
+          }
         },
         "magic-flower": {
           name: "空棒变花 / 魔棒变花",
@@ -1189,14 +1384,18 @@
           implementation: "使用儿童款变花道具，让折叠花朵通过抽拉、弹出或展开的方式出现。",
           roles: [
             "妈妈：扮演教授，负责“教学”",
-            "姐姐：可先尝试失败，制造反差",
             "弟弟：完成真正的变化"
           ],
           tips: [
-            "姐姐先失败一次会更有戏",
             "孩子动作越简单越好",
             "花出来后要停顿展示"
-          ]
+          ],
+          procurement: {
+            level: "必须先采购",
+            items: ["空棒变花 / 魔棒变花道具", "备用花朵 / 备用道具"],
+            source: "优先采购儿童易操作款，确认花朵展开阻力小；建议同时买 1 套备用花朵。",
+            backup: "这一幕最怕花打不开，正式演出前必须做至少一次全流程测试。"
+          }
         },
         "magic-bag": {
           name: "空袋变纪念品",
@@ -1204,32 +1403,52 @@
           implementation: "使用变物袋或乾坤袋，通过隐藏夹层切换出纪念品。",
           roles: [
             "妈妈：收束情绪，引入毕业主题",
-            "姐姐：协助取物或分发",
             "弟弟：施法并拿出第一批礼物"
           ],
           tips: [
             "纪念品尽量轻薄好分发",
             "第一批礼物要视觉明显",
             "不方便分发时可只做展示"
-          ]
+          ],
+          procurement: {
+            level: "必须先采购",
+            items: ["变物袋 / 乾坤袋", "小纪念品"],
+            source: "变物袋建议直接买稳定款；纪念品按现场人数准备，优先轻薄、便宜、统一包装的小物件。",
+            backup: "如果现场不方便真分发，就准备一版只展示不派送的替代流程。"
+          }
         }
       },
       props: [
-        ["儿童巫师袍 / 披风", "建立主角造型，增强哈利波特主题感", "全程"],
-        ["圆眼镜", "第一关空盒变出的入学标志物之一", "第二幕"],
-        ["学院围巾 / 领带", "第一关空盒变出的入学标志物之一", "第二幕"],
-        ["霍格沃茨风录取信", "第一关变出物，也可作为剧情道具", "第二幕"],
-        ["空盒变物道具", "用于变出录取信、眼镜、围巾等", "第二幕"],
-        ["儿童魔杖", "主角核心道具，后续多个魔术都要用到", "第二幕起"],
-        ["变色书 / 魔术涂色书", "展示学习能力的教材魔术", "第三幕"],
-        ["预测信封 / 校长信封", "分院仪式使用", "第四幕"],
-        ["分院帽", "增强分院场景氛围，可选", "第四幕"],
-        ["空棒变花 / 魔棒变花道具", "第一堂魔法课使用", "第五幕"],
-        ["变物袋 / 乾坤袋", "结尾变出纪念品", "第六幕"],
-        ["小纪念品", "贴纸、书签、徽章、小卡片等，用于结尾分享", "第六幕"],
-        ["小桌子 + 深色桌布", "摆放道具，便于舞台操作，可选", "全程"]
+        { name: "儿童巫师袍 / 披风", usage: "建立主角造型，增强哈利波特主题感", scene: "全程", source: "建议采购", priority: "造型件" },
+        { name: "白衬衫 + 深色裤子 / 鞋子", usage: "作为巫师袍内搭，保证整体造型完整", scene: "全程", source: "可自备", priority: "基础服装" },
+        { name: "圆眼镜", usage: "第一关空盒变出的入学标志物之一", scene: "第二幕", source: "建议采购", priority: "剧情造型件" },
+        { name: "学院围巾 / 领带", usage: "第一关空盒变出的入学标志物之一", scene: "第二幕", source: "建议采购", priority: "剧情造型件" },
+        { name: "霍格沃茨风录取信", usage: "第一关变出物，也可作为剧情道具", scene: "第二幕", source: "建议自制 2 份", priority: "需备份" },
+        { name: "空盒变物道具", usage: "用于变出录取信、眼镜、围巾等", scene: "第二幕", source: "必须采购", priority: "核心魔术" },
+        { name: "儿童魔杖", usage: "主角核心道具，后续多个魔术都要用到", scene: "第二幕起", source: "已有", priority: "已有主道具" },
+        { name: "变色书 / 魔术涂色书", usage: "展示学习能力的教材魔术", scene: "第三幕", source: "必须采购", priority: "核心魔术" },
+        { name: "预测信封 / 校长信封", usage: "分院仪式使用", scene: "第四幕", source: "必须采购或自制稳定版", priority: "核心魔术" },
+        { name: "信纸内页（分院结果）", usage: "写明固定分院结果，避免现场遗忘或写错", scene: "第四幕", source: "建议打印 2 份备份", priority: "需备份" },
+        { name: "分院帽", usage: "增强分院场景氛围，可选", scene: "第四幕", source: "可选采购", priority: "氛围件" },
+        { name: "空棒变花 / 魔棒变花道具", usage: "第一堂魔法课使用", scene: "第五幕", source: "必须采购", priority: "核心魔术" },
+        { name: "备用花朵 / 备用变花道具", usage: "防止花朵损坏、弹出失败或排练损耗", scene: "第五幕", source: "建议备 1 套", priority: "需备份" },
+        { name: "变物袋 / 乾坤袋", usage: "结尾变出纪念品", scene: "第六幕", source: "必须采购", priority: "核心魔术" },
+        { name: "小纪念品", usage: "贴纸、书签、徽章、小卡片等，用于结尾分享", scene: "第六幕", source: "按现场人数采购", priority: "耗材" },
+        { name: "小桌子 + 深色桌布", usage: "摆放道具，便于舞台操作", scene: "全程", source: "可借用 / 可自备", priority: "现场支持" },
+        { name: "分幕收纳箱 / 收纳篮", usage: "按幕次归置道具，减少上台时找不到道具的风险", scene: "全程", source: "建议自备", priority: "现场支持" },
+        { name: "魔术贴 / 双面胶 / 别针 / 透明胶点", usage: "固定魔杖、信封、围巾或服装细节，属于容易临时缺的辅助物料", scene: "全程", source: "建议提前采购整套", priority: "辅助耗材" },
+        { name: "背景音乐文件 + 播放设备 / U 盘", usage: "配合开场、转场和结尾收束", scene: "全程", source: "提前准备并彩排测试", priority: "现场支持" }
       ],
       preparation: [
+        {
+          title: "采购优先级建议",
+          items: [
+            "第一步先锁定 5 个核心魔术道具：空盒、变色书、分院信封、变花、变物袋",
+            "第二步补齐第二幕和第四幕的剧情物：录取信、圆眼镜、围巾、分院结果信纸",
+            "第三步再补造型和氛围件：巫师袍、分院帽、桌布、音乐",
+            "第四步最后采购耗材和备份：纪念品、胶点、备用花朵、额外信纸"
+          ]
+        },
         {
           title: "彩排顺序建议",
           items: [
@@ -1243,8 +1462,8 @@
           title: "分工上的练习重点",
           items: [
             "妈妈重点练控场、转场和接台词",
-            "姐姐重点练互动、遮挡、检查动作和提示",
-            "弟弟重点练动作点，不一定要先背长台词"
+            "弟弟重点练动作点，不一定要先背长台词",
+            "妈妈和弟弟要额外练“递道具、接道具、站位遮挡”这些原本可以由第三人补位的动作"
           ]
         },
         {
@@ -1254,7 +1473,8 @@
             "孩子只记关键词和动作点，不要背太复杂的长句",
             "每次魔术变化后都要留展示停顿",
             "分院互动时间不要拖太久，避免现场散",
-            "如果现场分发礼物不方便，可以改成象征性展示"
+            "如果现场分发礼物不方便，可以改成象征性展示",
+            "第四幕和第六幕建议都准备一份备用信纸 / 备用礼物，防止临场损坏"
           ]
         },
         {
@@ -1264,7 +1484,6 @@
             "现场舞台大小、上台路线、是否有小桌可用",
             "是否方便在结尾真的分发纪念品",
             "格兰芬多是否最终锁定，还是想保留别的学院方案",
-            "姐姐是否参与“先失败一次”的表演设计",
             "每个魔术道具是现成采购，还是部分手工改造"
           ]
         }
@@ -1284,6 +1503,8 @@
     const sceneJumpGrid = document.getElementById("scene-jump-grid");
     const sceneStack = document.getElementById("scene-stack");
     const miniSceneList = document.getElementById("mini-scene-list");
+    const procurementSummary = document.getElementById("procurement-summary");
+    const magicProcurementGrid = document.getElementById("magic-procurement-grid");
     const propsTableBody = document.getElementById("props-table-body");
     const prepStack = document.getElementById("prep-stack");
     const futurePillList = document.getElementById("future-pill-list");
@@ -1360,6 +1581,17 @@
                 <ul>${magic.tips.map((tip) => `<li>${escapeHtml(tip)}</li>`).join("")}</ul>
               </dd>
             </div>
+            ${magic.procurement ? `
+              <div>
+                <dt>采购重点</dt>
+                <dd>
+                  <strong>${escapeHtml(magic.procurement.level)}</strong><br>
+                  需要准备：${escapeHtml(magic.procurement.items.join("、"))}<br>
+                  获取方式：${escapeHtml(magic.procurement.source)}<br>
+                  备份提醒：${escapeHtml(magic.procurement.backup)}
+                </dd>
+              </div>
+            ` : ""}
           </dl>
         </article>
       `;
@@ -1448,11 +1680,55 @@
     }
 
     function renderProps() {
-      propsTableBody.innerHTML = planData.props.map(([name, usage, scene]) => `
+      procurementSummary.innerHTML = planData.procurementSummary.map((item) => `
+        <article class="procurement-stat">
+          <div class="procurement-stat__label">${escapeHtml(item.label)}</div>
+          <div class="procurement-stat__value">${escapeHtml(item.value)}</div>
+          <div class="procurement-stat__sub">${escapeHtml(item.sub)}</div>
+        </article>
+      `).join("");
+
+      magicProcurementGrid.innerHTML = planData.scenes
+        .filter((scene) => scene.magicRefs.length > 0)
+        .map((scene) => scene.magicRefs.map((magicKey) => {
+          const magic = planData.magicDetails[magicKey];
+          if (!magic || !magic.procurement) return "";
+          return `
+            <article class="magic-procurement-card">
+              <div class="magic-procurement-card__top">
+                <div>
+                  <h3>${escapeHtml(magic.name)}</h3>
+                  <div class="magic-procurement-card__scene">${escapeHtml(scene.actLabel)} · ${escapeHtml(scene.title)}</div>
+                </div>
+                <span class="table-badge ${getBadgeClass(magic.procurement.level)}">${escapeHtml(magic.procurement.level)}</span>
+              </div>
+              <dl>
+                <div>
+                  <dt>要买什么</dt>
+                  <dd>
+                    <ul>${magic.procurement.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+                  </dd>
+                </div>
+                <div>
+                  <dt>怎么准备</dt>
+                  <dd>${escapeHtml(magic.procurement.source)}</dd>
+                </div>
+                <div>
+                  <dt>风险与备份</dt>
+                  <dd>${escapeHtml(magic.procurement.backup)}</dd>
+                </div>
+              </dl>
+            </article>
+          `;
+        }).join("")).join("");
+
+      propsTableBody.innerHTML = planData.props.map((item) => `
         <tr>
-          <td>${escapeHtml(name)}</td>
-          <td>${escapeHtml(usage)}</td>
-          <td>${escapeHtml(scene)}</td>
+          <td>${escapeHtml(item.name)}</td>
+          <td>${escapeHtml(item.usage)}</td>
+          <td>${escapeHtml(item.scene)}</td>
+          <td><div class="table-note">${escapeHtml(item.source)}</div></td>
+          <td><span class="table-badge ${getBadgeClass(item.source)}">${escapeHtml(item.priority)}</span></td>
         </tr>
       `).join("");
 
@@ -1468,6 +1744,15 @@
       futurePillList.innerHTML = planData.futureExtensions.map((item) => `
         <span class="pill">${escapeHtml(item)}</span>
       `).join("");
+    }
+
+    function getBadgeClass(label) {
+      if (label.includes("必须")) return "table-badge--must";
+      if (label.includes("建议备") || label.includes("备份") || label.includes("打印 2 份")) return "table-badge--backup";
+      if (label.includes("已有") || label.includes("可自备") || label.includes("可借用")) return "table-badge--own";
+      if (label.includes("可选")) return "table-badge--optional";
+      if (label.includes("采购")) return "table-badge--buy";
+      return "table-badge--optional";
     }
 
     function setActiveJump(sceneId) {
