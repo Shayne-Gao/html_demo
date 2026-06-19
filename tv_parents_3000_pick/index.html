@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>爸妈家用 3000 档电视选择</title>
+    <style>
+      :root {
+        --bg: #071018;
+        --panel: rgba(8, 19, 30, 0.82);
+        --panel-strong: rgba(13, 25, 39, 0.95);
+        --line: rgba(183, 203, 221, 0.14);
+        --line-strong: rgba(183, 203, 221, 0.28);
+        --text: #eef5fb;
+        --muted: #8fa3b8;
+        --soft: #bdd0e0;
+        --lime: #c4ff5f;
+        --cyan: #79e7ff;
+        --amber: #ffbf69;
+        --red: #ff7d72;
+        --violet: #d1adff;
+        --gold: #ffd76f;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+        --mono: "DIN Alternate", "Avenir Next Condensed", "Arial Narrow", sans-serif;
+        --body: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: var(--body);
+        background:
+          radial-gradient(circle at 12% 0%, rgba(196, 255, 95, 0.12), transparent 28%),
+          radial-gradient(circle at 88% 14%, rgba(121, 231, 255, 0.11), transparent 24%),
+          linear-gradient(180deg, #09111a 0%, #071018 38%, #0b1520 100%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        max-width: 1640px;
+        margin: 0 auto;
+        padding: 28px 22px 60px;
+      }
+
+      .hero,
+      .card,
+      .table-shell,
+      .callout {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 30px;
+      }
+
+      .hero::before,
+      .hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(8px);
+        pointer-events: none;
+      }
+
+      .hero::before {
+        width: 280px;
+        height: 280px;
+        right: -60px;
+        top: -80px;
+        background: radial-gradient(circle, rgba(121, 231, 255, 0.18), transparent 72%);
+      }
+
+      .hero::after {
+        width: 240px;
+        height: 240px;
+        left: -40px;
+        bottom: -70px;
+        background: radial-gradient(circle, rgba(196, 255, 95, 0.16), transparent 72%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(196, 255, 95, 0.24);
+        background: rgba(196, 255, 95, 0.08);
+        color: var(--lime);
+        font-size: 12px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: var(--mono);
+        letter-spacing: 0.03em;
+      }
+
+      h1 {
+        margin-top: 16px;
+        font-size: clamp(34px, 5vw, 68px);
+        line-height: 0.94;
+      }
+
+      .lead {
+        max-width: 920px;
+        margin: 14px 0 0;
+        color: var(--soft);
+        font-size: 16px;
+        line-height: 1.85;
+      }
+
+      .chip-row,
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip-row {
+        margin-top: 18px;
+      }
+
+      .chip,
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 12px;
+      }
+
+      .good {
+        color: var(--lime);
+        border-color: rgba(196, 255, 95, 0.28);
+        background: rgba(196, 255, 95, 0.09);
+      }
+
+      .warn {
+        color: var(--amber);
+        border-color: rgba(255, 191, 105, 0.28);
+        background: rgba(255, 191, 105, 0.08);
+      }
+
+      .watch {
+        color: var(--red);
+        border-color: rgba(255, 125, 114, 0.26);
+        background: rgba(255, 125, 114, 0.08);
+      }
+
+      .info {
+        color: var(--cyan);
+        border-color: rgba(121, 231, 255, 0.26);
+        background: rgba(121, 231, 255, 0.08);
+      }
+
+      .gold {
+        color: var(--gold);
+        border-color: rgba(255, 215, 111, 0.24);
+        background: rgba(255, 215, 111, 0.08);
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card h2 {
+        font-size: 22px;
+      }
+
+      .metric {
+        margin-top: 14px;
+        font-family: var(--mono);
+        font-size: 36px;
+        color: var(--lime);
+      }
+
+      .card p,
+      .callout p {
+        margin: 10px 0 0;
+        color: var(--soft);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .callout {
+        margin-top: 18px;
+        padding: 20px 22px;
+      }
+
+      .callout h2 {
+        font-size: 24px;
+      }
+
+      .reco-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .reco-card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .reco-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--lime), transparent);
+      }
+
+      .reco-rank {
+        margin-top: 12px;
+        font-family: var(--mono);
+        font-size: 44px;
+        color: var(--gold);
+      }
+
+      .reco-subtitle {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .reco-price {
+        margin-top: 14px;
+        font-family: var(--mono);
+        font-size: 28px;
+        color: var(--lime);
+      }
+
+      ul {
+        margin: 12px 0 0;
+        padding-left: 18px;
+      }
+
+      li {
+        color: var(--soft);
+        font-size: 14px;
+        line-height: 1.75;
+        margin-bottom: 4px;
+      }
+
+      .table-shell {
+        margin-top: 18px;
+        overflow: hidden;
+      }
+
+      .table-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: end;
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .table-head p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 1720px;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--panel-strong);
+        color: var(--muted);
+        border-bottom: 1px solid var(--line-strong);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 14px 12px;
+        white-space: nowrap;
+      }
+
+      tbody td {
+        padding: 14px 12px;
+        vertical-align: top;
+        border-bottom: 1px solid var(--line);
+        background: rgba(8, 17, 27, 0.55);
+      }
+
+      tbody tr:hover td {
+        background: rgba(14, 26, 40, 0.86);
+      }
+
+      .sticky-1,
+      .sticky-2 {
+        position: sticky;
+        z-index: 4;
+        background: rgba(11, 22, 34, 0.97);
+      }
+
+      .sticky-1 {
+        left: 0;
+        min-width: 240px;
+      }
+
+      .sticky-2 {
+        left: 240px;
+        min-width: 140px;
+      }
+
+      thead .sticky-1,
+      thead .sticky-2 {
+        z-index: 7;
+      }
+
+      .model {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .alias {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .price {
+        font-family: var(--mono);
+        font-size: 26px;
+        color: var(--lime);
+      }
+
+      .sub {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .mini {
+        display: grid;
+        gap: 7px;
+      }
+
+      .mini div {
+        color: var(--soft);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .mini strong {
+        color: var(--text);
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .decision-card h3 {
+        font-size: 20px;
+      }
+
+      .quote {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        color: var(--soft);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 1120px) {
+        .summary-grid,
+        .reco-grid,
+        .decision-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          padding: 18px 14px 40px;
+        }
+
+        .hero,
+        .card,
+        .callout {
+          border-radius: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <section class="hero">
+        <div class="eyebrow">Parents Use Case</div>
+        <h1>爸妈家用 3000 档电视怎么选</h1>
+        <p class="lead">
+          使用场景已经固定：主要看有线电视、新闻综艺、普通电视剧，偶尔投屏，不打游戏。<br />
+          所以这页不按“参数越高越强”来排，而是按 <strong>买给爸妈是否更省心、更耐用、更舒服</strong> 来排。
+        </p>
+        <div class="chip-row">
+          <span class="chip good">重点看：画面均衡、系统流畅、声音、亮厅可看性</span>
+          <span class="chip warn">不必执着：288Hz、4 个 HDMI 2.1、游戏参数</span>
+          <span class="chip info">默认对比中心：雷鸟 75R69A</span>
+        </div>
+      </section>
+
+      <section class="grid summary-grid">
+        <article class="card">
+          <h2>我最推荐</h2>
+          <div class="metric">75R69A</div>
+          <p>不是最炸裂，但对爸妈家用最均衡。Mini LED、3+64GB、声音和整体完成度都够稳，几乎就是“买完少操心”的甜点位。</p>
+        </article>
+        <article class="card">
+          <h2>同价更猛</h2>
+          <div class="metric">75Q9K</div>
+          <p>如果你能确认真的是 <strong>3000 左右到手</strong>，而且不是很麻烦的限地区玩法，那它画质规格会明显压过 75R69A。</p>
+        </article>
+        <article class="card">
+          <h2>便宜替代</h2>
+          <div class="metric">75P8F</div>
+          <p>如果你更想省几百块，又还想要 Mini LED，75P8F 很香；但从“整体稳妥度”看，我还是更偏向雷鸟和 TCL。</p>
+        </article>
+      </section>
+
+      <section class="callout">
+        <h2>这次真正该看的参数</h2>
+        <div class="tag-row" style="margin-top: 14px;">
+          <span class="tag good">分区 / 亮度：影响夜景、黑位、白天是否通透</span>
+          <span class="tag good">内存 / 存储：影响系统是否越用越卡</span>
+          <span class="tag good">声音：影响新闻、对白、综艺的舒服程度</span>
+          <span class="tag info">抗反光：白天客厅强光时更关键</span>
+          <span class="tag watch">高刷 / 游戏接口：你爸妈几乎可以忽略</span>
+        </div>
+      </section>
+
+      <section class="grid reco-grid">
+        <article class="card reco-card">
+          <div class="tag gold">最终推荐</div>
+          <div class="reco-rank">#1</div>
+          <h2 style="margin-top: 10px;">雷鸟 75R69A</h2>
+          <div class="reco-subtitle">最适合爸妈家用的均衡解</div>
+          <div class="reco-price">约 2948 元</div>
+          <ul>
+            <li>Mini LED + 3+64GB，画质和系统都跨过“够用线”很多。</li>
+            <li>声音口径更明确，家用电视场景比“游戏接口堆料”更有意义。</li>
+            <li>如果你想少纠结、少踩坑，它是最像标准答案的一台。</li>
+          </ul>
+        </article>
+        <article class="card reco-card">
+          <div class="tag good">有条件可反超</div>
+          <div class="reco-rank">#2</div>
+          <h2 style="margin-top: 10px;">TCL 75Q9K</h2>
+          <div class="reco-subtitle">同价买到就是更高画质</div>
+          <div class="reco-price">约 2974 元</div>
+          <ul>
+            <li>分区、亮度、控光明显更强，夜景和电影感会比 75R69A 更好。</li>
+            <li>前提是你买到的确实是靠谱渠道的真实到手价，不是很折腾的限地区玩法。</li>
+          </ul>
+        </article>
+        <article class="card reco-card">
+          <div class="tag warn">省预算选项</div>
+          <div class="reco-rank">#3</div>
+          <h2 style="margin-top: 10px;">酷开 75P8F</h2>
+          <div class="reco-subtitle">更便宜，但不是最稳</div>
+          <div class="reco-price">约 2589 元</div>
+          <ul>
+            <li>纸面参数非常夸张，便宜又大碗。</li>
+            <li>如果你特别看重“花最少的钱买最猛规格”，它很值。</li>
+            <li>但要是给爸妈买，我还是更看重雷鸟 / TCL 的整体稳定感。</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="table-shell">
+        <div class="table-head">
+          <div>
+            <h2>75R69A 对比同价位替代项</h2>
+            <p>只保留对爸妈家用最关键的信息，不用你再从一堆参数里自己翻重点。</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="sticky-1">型号</th>
+                <th class="sticky-2">价格</th>
+                <th>画质核心</th>
+                <th>系统耐用性</th>
+                <th>白天客厅</th>
+                <th>声音 / 日常电视感受</th>
+                <th>对爸妈最直接的好处</th>
+                <th>你要留意的点</th>
+                <th>最终判断</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="sticky-1">
+                  <div class="model">雷鸟 75R69A</div>
+                  <div class="alias">QD-Mini LED / 约 312 分区 / 约 1300 nits / 3+64GB</div>
+                </td>
+                <td class="sticky-2">
+                  <div class="price">2947.66 元</div>
+                  <div class="sub">当前这轮里最稳的 3K 档基准机</div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>Mini LED</strong>，暗场、黑位、夜景比普通液晶更像样。</div>
+                    <div>分区不算夸张，但已经明显高于入门款。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>3+64GB</strong>，对爸妈来说已经属于放心档。</div>
+                    <div>比 2+32GB 更不容易越用越卡。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>不是低反特化机，但亮度已经够正常客厅使用。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>2.1 声道安桥</strong> 是加分项。</div>
+                    <div>新闻、综艺、对白会比很多堆参数机更舒服。</div>
+                  </div>
+                </td>
+                <td>
+                  <ul>
+                    <li>不用研究一堆玩法，也能买到一台明显高于“普通大屏”的机型。</li>
+                    <li>系统、声音、画面都没有明显短板。</li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>如果白天采光极强，低反不是它的特长。</li>
+                    <li>如果你能同价买到 75Q9K，参数上会被反超。</li>
+                  </ul>
+                </td>
+                <td>
+                  <span class="tag good">默认推荐</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="sticky-1">
+                  <div class="model">TCL 75Q9K</div>
+                  <div class="alias">QD-Mini LED / 约 1248 分区 / 约 2400 nits</div>
+                </td>
+                <td class="sticky-2">
+                  <div class="price">2974.15 元</div>
+                  <div class="sub">同价买到很有杀伤力</div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>分区和亮度显著强于 75R69A</strong>。</div>
+                    <div>晚上看片、夜景、字幕边缘、黑位层次都会更好。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>中高端线，长期流畅度一般不用太担心。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>亮度高，白天更抗环境光。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>音响和整体完成度口碑也很硬。</div>
+                  </div>
+                </td>
+                <td>
+                  <ul>
+                    <li>如果你爸妈晚上也常看电影、电视剧，这台观感理论上更好。</li>
+                    <li>这是“同价能买到就别犹豫太久”的类型。</li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>很多时候价格和地区资格会波动。</li>
+                    <li>如果到手价不稳，优势就没那么绝对。</li>
+                  </ul>
+                </td>
+                <td>
+                  <span class="tag gold">同价有机会反超</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="sticky-1">
+                  <div class="model">酷开 75P8F</div>
+                  <div class="alias">Mini LED / 约 2304 分区 / 约 4000 nits / 4+64GB</div>
+                </td>
+                <td class="sticky-2">
+                  <div class="price">2589.49 元</div>
+                  <div class="sub">更便宜的参数怪</div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>纸面参数远超 75R69A</strong>。</div>
+                    <div>亮度、分区、存储都很唬人。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>4+64GB</strong> 很漂亮，长期用理论更从容。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>高亮路线，白天理论不差。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>声音不是它最稳定的口碑强项。</div>
+                  </div>
+                </td>
+                <td>
+                  <ul>
+                    <li>如果你想少花几百块，又想要很强的画质纸面参数，它最有吸引力。</li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>它更像“参数党超值款”，不是“爸妈家用最稳款”。</li>
+                    <li>讨论热度高，但分歧也比雷鸟更明显。</li>
+                  </ul>
+                </td>
+                <td>
+                  <span class="tag warn">更值，但没那么稳</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="sticky-1">
+                  <div class="model">海信 E3QH Pro / E3S Pro+</div>
+                  <div class="alias">抗反光 / 高刷 / 家用亮厅路线</div>
+                </td>
+                <td class="sticky-2">
+                  <div class="price">2569 - 2844 元</div>
+                  <div class="sub">亮厅家用思路</div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>不是纯“冲控光和暗场”的路子。</div>
+                    <div>更偏白天好看、看电视轻松。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>整体家用取向没问题，但长期“高级感”不如 75R69A。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div><strong>亮厅友好</strong>，如果电视正对窗户会更有吸引力。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>更偏“普通电视和综艺看着舒服”，不是电影党路线。</div>
+                  </div>
+                </td>
+                <td>
+                  <ul>
+                    <li>如果你爸妈家白天特别亮，这类机会更对症。</li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>暗场、HDR 层次不是强项。</li>
+                    <li>不同子型号差异比较大。</li>
+                  </ul>
+                </td>
+                <td>
+                  <span class="tag info">只在亮厅特别加分</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="sticky-1">
+                  <div class="model">创维 75A28F / 75A4F Pro</div>
+                  <div class="alias">低反 / Mini LED 路线，但样本不如前几台稳</div>
+                </td>
+                <td class="sticky-2">
+                  <div class="price">约 2678 - 2894 元</div>
+                  <div class="sub">可以看，但不优先</div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>纸面上有亮点，但型号间差异较大。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>创维家用大屏整体不差，但这次不如雷鸟/TCL 明确。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>部分低反路线对白天客厅有帮助。</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini">
+                    <div>声音和系统不是这次最能打的亮点。</div>
+                  </div>
+                </td>
+                <td>
+                  <ul>
+                    <li>如果你本来就偏向创维品牌，可以继续细看。</li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>口碑样本和清晰度不如前几台。</li>
+                    <li>我不会把它排在 75R69A 前面。</li>
+                  </ul>
+                </td>
+                <td>
+                  <span class="tag watch">不建议优先</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid decision-grid">
+        <article class="card decision-card">
+          <h3>想直接买，不想再纠结</h3>
+          <div class="quote">
+            选 <strong>雷鸟 75R69A</strong>。<br />
+            它不是参数最炸的那台，但最像“给爸妈家用最稳的一台”。
+          </div>
+        </article>
+        <article class="card decision-card">
+          <h3>如果你确认 75Q9K 真能 3000 左右拿下</h3>
+          <div class="quote">
+            那就可以优先 <strong>TCL 75Q9K</strong>。<br />
+            这个前提成立时，它对 75R69A 是有真实画质优势的。
+          </div>
+        </article>
+        <article class="card decision-card">
+          <h3>如果你更想省钱</h3>
+          <div class="quote">
+            选 <strong>酷开 75P8F</strong>。<br />
+            但请把它理解成“更值的参数替代”，而不是“更稳的爸妈机替代”。
+          </div>
+        </article>
+      </section>
+
+      <div class="footer-note">
+        结论口径基于这轮什么值得买前 5 页抓取、已有参数记录和外站口碑整理。价格会随国补地区、会员券、直播间玩法波动。
+        这页的核心目的不是找“参数最大”，而是帮你快速判断：<strong>3000 档里，哪台更适合爸妈长期家用。</strong>
+      </div>
+    </div>
+  </body>
+</html>
