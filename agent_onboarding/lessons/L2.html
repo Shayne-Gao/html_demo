@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>L2 · Vibe Coding 初体验 | PM 培训学习平台</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html[data-theme="dark"]{
+    --bg:#0b0d12; --bg-soft:#11141b; --bg-card:#161a23; --bg-card-hover:#1c2230;
+    --border:#252b39; --border-strong:#323a4d;
+    --text:#e6e8ee; --text-soft:#a4abbb; --text-mute:#6b7186;
+    --accent:#7c5cff; --accent-2:#22d3ee; --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399; --danger:#f87171; --warn:#fbbf24;
+    --A:#22d3ee; --code-bg:#0d1018; --code-border:#1f2533;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px; --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8; --bg-soft:#eceff3; --bg-card:#ffffff; --bg-card-hover:#fafbfc;
+    --border:#e4e7eb; --border-strong:#cbd0d8;
+    --text:#1f2329; --text-soft:#4e5969; --text-mute:#8a93a6;
+    --accent:#1664ff; --accent-2:#0e62e3; --accent-soft:#e6f0ff;
+    --success:#00a870; --danger:#f53f3f; --warn:#ff7d00;
+    --A:#1664ff; --code-bg:#f7f8fa; --code-border:#e4e7eb;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px; --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:var(--font-mono);font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+  strong{color:var(--text);font-weight:600}
+  ul,ol{padding-left:1.6em}
+  li{margin:.3em 0}
+
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mute)}
+  .breadcrumb a{color:var(--text-soft)}
+  .breadcrumb .current{color:var(--text);font-weight:500}
+  .breadcrumb .sep{color:var(--text-mute)}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+  .theme-switch,.track-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  .theme-switch button,.track-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1;white-space:nowrap}
+  .theme-switch button.active,.track-switch button.active{color:#fff}
+  .theme-switch .ind,.track-switch .ind{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s}
+  .nav-btn{font-size:12px;color:var(--text-soft);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  .layout{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:flex-start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static !important}}
+  .article{padding:32px 0 96px;min-width:0}
+  .sidebar{position:sticky;top:64px;padding:24px 0;max-height:calc(100vh - 64px);overflow:auto}
+
+  .lesson-header{margin-bottom:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  .lesson-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-mute);margin-bottom:12px;align-items:center}
+  .lesson-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-weight:600}
+  .lesson-meta .sep{width:1px;height:12px;background:var(--border)}
+  h1.lesson-title{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.3;margin-bottom:10px}
+  .lesson-tagline{color:var(--text-soft);font-size:15px;font-style:italic;border-left:3px solid var(--accent);padding-left:12px;margin-top:8px}
+  h2.section-h{font-size:20px;font-weight:600;letter-spacing:-.3px;margin:48px 0 14px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h2.section-h .num{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--accent)}
+  h3.step-h{font-size:17px;font-weight:600;margin:28px 0 10px;color:var(--text);display:flex;align-items:center;gap:10px}
+  h3.step-h .badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+  .step-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+  .label-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--text)}
+  .label-row .icon{font-size:14px}
+  .label-row.tone-warn{color:var(--warn)}
+
+  .prompt-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);overflow:hidden;margin:8px 0 4px;position:relative}
+  .prompt-tabs{display:flex;align-items:center;gap:0;background:var(--bg-soft);border-bottom:1px solid var(--code-border);padding:0 6px}
+  .prompt-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text-mute);border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .prompt-tab:hover{color:var(--text-soft)}
+  .prompt-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .prompt-spacer{flex:1}
+  .prompt-copy{font-size:11px;color:var(--text-mute);padding:4px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s;display:inline-flex;align-items:center;gap:4px;margin-right:8px}
+  .prompt-copy:hover{color:var(--accent);border-color:var(--accent)}
+  .prompt-copy.copied{color:var(--success);border-color:var(--success);background:var(--bg-card)}
+  .prompt-body{font-family:var(--font-mono);font-size:13px;line-height:1.65;padding:14px 16px;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+  .note-tip{background:var(--accent-soft);border:1px solid var(--accent);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-soft);margin:10px 0}
+  .note-tip strong{color:var(--accent)}
+  .note-warn{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;margin:10px 0}
+  .note-shock{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:14px;margin:14px 0}
+  .note-shock h4{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:700}
+
+  .track-info{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;font-size:13px;color:var(--text-soft)}
+  .track-info table{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}
+  .track-info td{padding:4px 10px 4px 0;border-top:1px dashed var(--border)}
+  .track-info tr:first-child td{border-top:none;font-weight:600;color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .track-info code{font-size:.85em}
+
+  .check-list{list-style:none;padding-left:0;margin:8px 0}
+  .check-list li{padding-left:28px;position:relative;margin:6px 0;font-size:14px;cursor:pointer}
+  .check-list li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;background:var(--bg-card);transition:.15s}
+  .check-list li.done::before{background:var(--success);border-color:var(--success);content:"✓";color:#fff;font-size:11px;text-align:center;line-height:11px;font-weight:700}
+  .check-list li:hover::before{border-color:var(--accent)}
+  .check-list li.done{color:var(--text-soft)}
+
+  .deliv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card)}
+  .deliv-card h4{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .deliv-card pre{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--text-soft);background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:10px 12px;white-space:pre;overflow:auto}
+
+  .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card)}
+  .sb-card h4{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .sb-progress{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mute);font-weight:400;text-transform:none;letter-spacing:0}
+  .sb-progress-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .sb-progress-bar div{height:100%;background:var(--success);transition:width .4s}
+  .toc-list{list-style:none;padding:0;margin:0}
+  .toc-list a{display:block;padding:6px 10px;font-size:13px;color:var(--text-soft);border-radius:var(--radius-sm);transition:.15s;text-decoration:none}
+  .toc-list a:hover{background:var(--bg-soft);color:var(--text)}
+  .toc-list a.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+  .complete-btn{width:100%;padding:12px;background:var(--success);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+  .complete-btn:hover{filter:brightness(1.05)}
+  .complete-btn.done{background:var(--bg-card);color:var(--success);border:1.5px solid var(--success)}
+
+  .mini-nav{display:flex;gap:8px;margin-top:32px}
+  .mini-nav a{flex:1;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-soft);transition:.15s;text-decoration:none}
+  .mini-nav a:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-nav .label{font-size:11px;color:var(--text-mute);margin-bottom:4px;display:block}
+  .mini-nav .title{color:var(--text);font-weight:500}
+  .mini-nav .next{text-align:right}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .quiz{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:var(--shadow-card)}
+  .quiz h4{font-size:14px;margin-bottom:12px;font-weight:600}
+  .quiz-q{margin:12px 0;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .quiz-q .q{font-size:13px;margin-bottom:8px;font-weight:500}
+  .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .quiz-opt{padding:5px 14px;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.15s;cursor:pointer}
+  .quiz-opt:hover{border-color:var(--accent)}
+  .quiz-opt.right{background:var(--success);color:#fff;border-color:var(--success)}
+  .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .quiz-explain{margin-top:8px;font-size:12px;color:var(--text-soft);display:none}
+  .quiz-explain.show{display:block}
+  .quiz-explain .right-tag{color:var(--success);font-weight:600}
+
+  .lesson-footer{margin-top:48px;padding:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);text-align:center;font-size:13px;color:var(--text-soft)}
+
+  /* === Dashboard Demo === */
+  .dash-demo{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0;box-shadow:var(--shadow-card)}
+  .dash-demo h3{font-size:15px;font-weight:600;margin-bottom:4px}
+  .dash-demo .demo-sub{font-size:13px;color:var(--text-soft);margin-bottom:14px}
+  .dash-stepper{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .dash-step{padding:6px 12px;border:1px solid var(--border);border-radius:999px;font-size:12px;font-weight:500;color:var(--text-soft);background:var(--bg-soft);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:5px}
+  .dash-step:hover{border-color:var(--accent);color:var(--accent)}
+  .dash-step.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .dash-step .pill-num{display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,.12);font-size:10px;font-weight:700}
+  .dash-step.active .pill-num{background:rgba(255,255,255,.25)}
+
+  .dash-frame{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg-soft)}
+  .dash-browser-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--bg-card);border-bottom:1px solid var(--border)}
+  .dash-dot{width:10px;height:10px;border-radius:50%;background:var(--border-strong)}
+  .dash-dot.r{background:#f87171}.dash-dot.y{background:#fbbf24}.dash-dot.g{background:#34d399}
+  .dash-url{flex:1;background:var(--bg-soft);padding:3px 10px;border-radius:4px;font-family:var(--font-mono);font-size:11px;color:var(--text-mute);margin-left:8px}
+  .dash-body{padding:14px;min-height:340px;background:var(--bg-card);color:var(--text);font-size:13px}
+
+  .dash-banner{display:none;gap:14px;margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius-sm);flex-wrap:wrap}
+  .dash-banner.show{display:flex}
+  .dash-banner .stat{font-size:12px;color:var(--text-soft)}
+  .dash-banner .stat strong{color:var(--accent);font-size:18px;display:block;font-weight:700;margin-bottom:2px}
+
+  .dash-filters{display:none;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+  .dash-filters.show{display:flex}
+  .dash-filter-chips{display:flex;gap:5px;flex-wrap:wrap}
+  .dash-fchip{padding:3px 10px;border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--text-soft);background:var(--bg-card);cursor:pointer;transition:.15s}
+  .dash-fchip:hover{border-color:var(--accent);color:var(--accent)}
+  .dash-fchip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .dash-imp-select{display:none}
+  .dash-imp-select.show{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-soft)}
+  .dash-imp-select select{padding:3px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text);font-size:11px;font-family:inherit}
+
+  .dash-table{width:100%;border-collapse:collapse;font-size:12px}
+  .dash-table th{text-align:left;padding:8px 10px;color:var(--text-mute);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);background:var(--bg-soft);cursor:default;user-select:none}
+  .dash-table th.sortable{cursor:pointer}
+  .dash-table th.sortable:hover{color:var(--accent)}
+  .dash-table th .sort-ind{display:inline-block;margin-left:4px;color:var(--text-mute);font-size:10px}
+  .dash-table th.sort-asc .sort-ind::before{content:"▲";color:var(--accent)}
+  .dash-table th.sort-desc .sort-ind::before{content:"▼";color:var(--accent)}
+  .dash-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+  .dash-table tr:hover td{background:var(--bg-soft)}
+  .imp-chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600;background:var(--border);color:var(--text-soft)}
+  .dash-table.styled .imp-chip[data-imp="5"]{background:#f53f3f;color:#fff}
+  .dash-table.styled .imp-chip[data-imp="4"]{background:#ff7d00;color:#fff}
+  .dash-table.styled .imp-chip[data-imp="3"]{background:#fbbf24;color:#1f2329}
+  .dash-table.styled .imp-chip[data-imp="2"],
+  .dash-table.styled .imp-chip[data-imp="1"]{background:var(--border);color:var(--text-soft)}
+  .dash-table .title-link{color:var(--text);font-weight:500}
+  .dash-table.styled .title-link:hover{text-decoration:underline;color:var(--accent)}
+  .dash-tag{display:inline-block;padding:1px 7px;margin-right:3px;border:1px solid var(--border);border-radius:4px;font-size:10px;color:var(--text-soft);background:var(--bg-soft)}
+
+  .stage-caption{margin-top:10px;font-size:12px;color:var(--text-mute);font-style:italic;display:flex;align-items:center;gap:8px}
+  .stage-caption .badge{background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:var(--radius-sm);font-style:normal;font-weight:600;font-size:11px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">PM 培训学习平台</a>
+      <span class="sep">/</span>
+      <a href="../index.html#map">课程地图</a>
+      <span class="sep">/</span>
+      <span class="current">L2 · Vibe Coding 初体验</span>
+    </div>
+    <div class="topbar-right">
+      <div class="track-switch" id="trackSwitch" title="切换练手场景">
+        <div class="ind"></div>
+        <button data-track="backlog">📋 需求池</button>
+        <button data-track="meeting">📝 会议纪要</button>
+        <button data-track="news">📰 行业周报</button>
+      </div>
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button data-theme-btn="stealth">📊 摸鱼</button>
+        <button data-theme-btn="dark">🌙 暗色</button>
+      </div>
+      <a class="nav-btn" href="../index.html">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <article class="article">
+
+    <header class="lesson-header">
+      <div class="lesson-meta">
+        <span class="lesson-badge">L2 · 模块 A 认知与上手</span>
+        <span>⏱ 60 min</span>
+        <span class="sep"></span>
+        <span>难度 ⭐⭐</span>
+        <span class="sep"></span>
+        <span>当前练手场景：<strong id="currentTrackName" style="color:var(--accent)">需求池整理</strong></span>
+      </div>
+      <h1 class="lesson-title">Vibe Coding 初体验：不会写代码也能做工具</h1>
+      <p class="lesson-tagline">把 L1 的结构化数据，变成一个真正能用、能给老板看的 HTML dashboard——你不写一行代码。</p>
+    </header>
+
+    <!-- ===== 1. 你将学会 ===== -->
+    <section id="s1">
+      <h2 class="section-h"><span class="num">1</span>你将学会</h2>
+      <p>勾选完成情况会自动同步到首页学习进度。</p>
+      <ul class="check-list" id="learnGoals">
+        <li data-goal="g1">我能用<strong>纯自然语言</strong>驱动 Agent 给我做一个单文件 HTML 工具</li>
+        <li data-goal="g2">我能用"反复微调 + 报错回喂"持续把它改到自己满意</li>
+        <li data-goal="g3">我能区分"一次性 demo"和"可持续维护的产物"——并知道 PM 应该在哪一档<strong>停手</strong></li>
+      </ul>
+    </section>
+
+    <!-- ===== 2. 背景小知识 ===== -->
+    <section id="s2">
+      <h2 class="section-h"><span class="num">2</span>背景小知识</h2>
+      <p><strong>Vibe Coding</strong> 不是一种编程语言，而是一种<strong>工作方式</strong>：</p>
+      <div class="note-shock">
+        <h4>💡 一句话</h4>
+        你描述意图（vibe），Agent 负责实现（coding）；你不审代码，<strong>只审结果</strong>。
+      </div>
+      <p>它对 PM 的意义是巨大的：</p>
+      <ul>
+        <li><strong>过去</strong>：你想验证一个交互想法，要排期、找研发、几天后才看到 demo</li>
+        <li><strong>现在</strong>：你 30 分钟内就能拿到一个<strong>可点击、能筛选、能排序</strong>的 demo 挂给老板</li>
+      </ul>
+      <p>不是要 PM 替代研发，而是让你把"想法 → 可被讨论的产物"的距离压到最短。</p>
+      <div class="note-warn"><strong>⚠️ 红线：</strong>Vibe Coding 出来的产物<strong>默认是一次性的</strong>——能跑、能演示、能验证想法，但不要直接拿去当生产代码。该交研发还是交研发，但交的不再是 PRD，而是<strong>已经验证过的 demo</strong>。</div>
+    </section>
+
+    <!-- ===== Interactive: Dashboard Progressive Demo ===== -->
+    <div class="dash-demo">
+      <h3>🧪 互动演示：Dashboard 渐进预览</h3>
+      <p class="demo-sub">每次只加一个功能，看到效果再继续——这就是 vibe coding 跟 Agent 协作的节奏。点上方按钮切换 5 步演进。</p>
+      <div class="dash-stepper" id="dashStepper">
+        <button class="dash-step active" data-stage="0"><span class="pill-num">1</span>v0 列表</button>
+        <button class="dash-step" data-stage="1"><span class="pill-num">2</span>+ 标签筛选</button>
+        <button class="dash-step" data-stage="2"><span class="pill-num">3</span>+ 重要性筛选</button>
+        <button class="dash-step" data-stage="3"><span class="pill-num">4</span>+ 排序</button>
+        <button class="dash-step" data-stage="4"><span class="pill-num">5</span>+ banner + 视觉</button>
+      </div>
+      <div class="dash-frame">
+        <div class="dash-browser-bar">
+          <span class="dash-dot r"></span><span class="dash-dot y"></span><span class="dash-dot g"></span>
+          <span class="dash-url" id="dashUrl">http://localhost:8000/dashboard.html</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-banner" id="dashBanner"></div>
+          <div class="dash-filters" id="dashFilters">
+            <div class="dash-filter-chips" id="dashTagChips"></div>
+            <span class="dash-imp-select" id="dashImpSelect">
+              <label for="impFilter">最低分</label>
+              <select id="impFilter"><option value="1">≥1</option><option value="3">≥3</option><option value="5">≥5</option></select>
+            </span>
+          </div>
+          <div style="overflow:auto">
+            <table class="dash-table" id="dashTable"><thead id="dashHead"></thead><tbody id="dashBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+      <div class="stage-caption" id="stageCaption"><span class="badge">第 1 步</span> v0：先把数据展示出来，不做任何花活</div>
+    </div>
+
+    <!-- ===== 3. 准备工作 ===== -->
+    <section id="s3">
+      <h2 class="section-h"><span class="num">3</span>准备工作</h2>
+      <ul class="check-list" id="prepList">
+        <li data-prep="p1">已完成 <a href="L1.html">L1</a>，本地有 <code id="prepJsonPath">backlog.json</code> 这种"L1 结构化产物"</li>
+        <li data-prep="p2">Agent 能写文件（已在 L0/L1 验证）</li>
+        <li data-prep="p3">一个浏览器（Chrome / Edge / Safari 任意）</li>
+        <li data-prep="p4">心理建设：<strong>你不需要懂代码</strong>。出问题就把现象贴回去，Agent 自己改</li>
+      </ul>
+
+      <div class="track-info">
+        <strong>🎯 三选一练手主线</strong>
+        <p style="margin-top:6px">本讲示例默认演示当前选中的场景。HTML 单课页会根据顶栏切换自动联动 prompt 和 dashboard 预览。</p>
+        <table>
+          <tr><td>场景</td><td>本讲产物路径</td></tr>
+          <tr><td>📋 需求池整理</td><td><code>pm-agent-lab/backlog-lab/data/2026-W25/dashboard.html</code></td></tr>
+          <tr><td>📝 会议纪要跟进</td><td><code>pm-agent-lab/meeting-lab/data/2026-W25/dashboard.html</code></td></tr>
+          <tr><td>📰 行业 / 竞品周报</td><td><code>pm-agent-lab/news-lab/data/2026-W25/dashboard.html</code></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== 4. 实战任务 ===== -->
+    <section id="s4">
+      <h2 class="section-h"><span class="num">4</span>实战任务</h2>
+      <p>我们要做的成品：一个<strong>单文件 HTML</strong>，双击即可打开，能：</p>
+      <ul>
+        <li>列出本周数据</li>
+        <li>按标签 / 重要性筛选</li>
+        <li>按时间或重要性排序</li>
+        <li>顶部一个简单的统计 banner</li>
+      </ul>
+      <p>放在 <code id="targetPath">pm-agent-lab/backlog-lab/data/2026-W25/dashboard.html</code></p>
+
+      <!-- Step 1 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">1</span>一句话先要个 v0</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">不要想太细，先让 Agent 用最简方式做一版，你看到东西再迭代。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step1">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">基于 pm-agent-lab/backlog-lab/data/2026-W25/backlog.json，做一个单文件 HTML dashboard：
+- 路径：pm-agent-lab/backlog-lab/data/2026-W25/dashboard.html
+- 单文件（HTML + 内联 CSS + 内联 JS），不依赖任何外部库（不要引入 React / Vue / Tailwind CDN）
+- 直接用 fetch 读同目录下的 backlog.json
+- 主体是一张表，列：需求描述 / 来源 / 提出人 / 提出日期 / 所属模块 / 价值判断 / 下一步
+- 暂时不要做筛选和排序，先把数据展示出来
+- 写完告诉我打开方式</pre>
+          <pre class="prompt-body" data-track-text="meeting">基于 pm-agent-lab/meeting-lab/data/2026-W25/follow-up.json，做一个单文件 HTML dashboard：
+- 路径：pm-agent-lab/meeting-lab/data/2026-W25/dashboard.html
+- 单文件（HTML + 内联 CSS + 内联 JS），不依赖任何外部库（不要引入 React / Vue / Tailwind CDN）
+- 直接用 fetch 读同目录下的 follow-up.json
+- 主体是一张表，列：事项 / 归属人 / 紧急度 / 截止日期 / 来源会议 / 当前状态
+- 暂时不要做筛选和排序，先把数据展示出来
+- 写完告诉我打开方式</pre>
+          <pre class="prompt-body" data-track-text="news">基于 pm-agent-lab/news-lab/data/2026-W25/news.json，做一个单文件 HTML dashboard：
+- 路径：pm-agent-lab/news-lab/data/2026-W25/dashboard.html
+- 单文件（HTML + 内联 CSS + 内联 JS），不依赖任何外部库（不要引入 React / Vue / Tailwind CDN）
+- 直接用 fetch 读同目录下的 news.json
+- 主体是一张表，列：标题（可点击跳原文链接）/ 来源 / 日期 / 行业标签 / 重要性 / 摘要
+- 暂时不要做筛选和排序，先把数据展示出来
+- 写完告诉我打开方式</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>Agent 创建 <code>dashboard.html</code></li>
+          <li>给你一个打开方式（双击、或起一个本地小服务器）</li>
+          <li><strong>可能踩坑</strong>：直接双击打开会被浏览器 CORS 挡住读 JSON——这是预期的，下一步处理</li>
+        </ul>
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：Agent 把 JSON 内嵌到 HTML 里了</strong> → 纠偏：<br><code>请保持 JSON 单独一个文件，HTML 用 fetch 去读，不要把数据写死在 HTML 里。这样下周新数据来时，HTML 不用动。</code></li>
+          <li><strong>偏差 B：Agent 引入了 Tailwind / Vue 的 CDN</strong> → 纠偏：<br><code>不要任何外部依赖。所有样式和逻辑都内联到这个 HTML 里。我要离线双击就能用。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">2</span>处理打开方式（CORS 坑）</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 帮你解决"双击打不开 JSON"的问题。这是 PM 第一次"和真实工程问题打照面"，但不需要懂原理。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step2">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">我直接双击 dashboard.html 打开，浏览器报错读不到 backlog.json（CORS）。给我两种解法：
+A) 教我用一行命令在该目录起一个本地静态服务器（最简单的那种，比如 python 自带）
+B) 改成把 backlog.json 内容直接写进 HTML 同目录的一个 .js 文件里，HTML 用 <script src> 引入
+
+帮我选 A，并把启动命令直接给我，我复制粘贴就能跑。</pre>
+          <pre class="prompt-body" data-track-text="meeting">我直接双击 dashboard.html 打开，浏览器报错读不到 follow-up.json（CORS）。给我两种解法：
+A) 教我用一行命令在该目录起一个本地静态服务器（最简单的那种，比如 python 自带）
+B) 改成把 follow-up.json 内容直接写进 HTML 同目录的一个 .js 文件里，HTML 用 <script src> 引入
+
+帮我选 A，并把启动命令直接给我，我复制粘贴就能跑。</pre>
+          <pre class="prompt-body" data-track-text="news">我直接双击 dashboard.html 打开，浏览器报错读不到 news.json（CORS）。给我两种解法：
+A) 教我用一行命令在该目录起一个本地静态服务器（最简单的那种，比如 python 自带）
+B) 改成把 news.json 内容直接写进 HTML 同目录的一个 .js 文件里，HTML 用 <script src> 引入
+
+帮我选 A，并把启动命令直接给我，我复制粘贴就能跑。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>Agent 给你一行命令（典型是 <code>python3 -m http.server 8000</code>）</li>
+          <li>告诉你访问 <code>http://localhost:8000/dashboard.html</code></li>
+          <li>你<strong>真的能在浏览器里看到那张表</strong></li>
+        </ul>
+        <div class="note-shock">
+          <h4>📝 这一刻的体验</h4>
+          你刚刚<strong>在没写一行代码的情况下，做出了一个能跑的工具</strong>。停下来感受一下：这就是 vibe coding 给 PM 的杠杆。
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">3</span>一次加一个功能：筛选 + 排序 + 统计</h3>
+        <div class="note-tip"><strong>💡 节奏：</strong>不要一口气提十个需求。<strong>每次只加一项，看到效果再继续</strong>——这也是和 Agent 协作的最佳节奏。上面互动模块里你可以提前预览 5 步效果。</div>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么（按顺序，逐条发，每条等做完）</div>
+        <div class="prompt-box" data-prompt-group="step3">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">1) 在表格上方加一个所属模块筛选条：把所有出现过的模块做成可点击的 chip，点一下只显示该模块的需求；再点一下取消。
+
+2) 加一个价值判断下拉筛选：≥1 / ≥3 / ≥5（默认 ≥1）。
+
+3) 表头每一列加排序：点一下升序，再点一下降序，第三下取消。默认按价值判断降序、再按提出日期降序。
+
+4) 最顶部加一个统计 banner：共 N 条 / 今日新增 M 条 / 最高价值分 X / 最常见模块 TOP 3。
+
+5) 视觉微调：价值判断 5 用红底白字 chip、4 用橙、3 用黄、1-2 用灰；需求描述悬停下划线；表格在窄屏下能横向滚动。</pre>
+          <pre class="prompt-body" data-track-text="meeting">1) 在表格上方加一个来源会议筛选条：把所有出现过的会议做成可点击的 chip，点一下只显示该会议的事项；再点一下取消。
+
+2) 加一个紧急度下拉筛选：全部 / 中以上 / 仅高（默认全部）。
+
+3) 表头每一列加排序：点一下升序，再点一下降序，第三下取消。默认按紧急度降序、再按截止日期升序。
+
+4) 最顶部加一个统计 banner：共 N 条 / 今日到期 M 条 / 已完成占比 X% / 最常见归属人 TOP 3。
+
+5) 视觉微调：紧急度高用红底白字 chip、中用橙、低用灰；今日/逾期截止日期用红色高亮；表格在窄屏下能横向滚动。</pre>
+          <pre class="prompt-body" data-track-text="news">1) 在表格上方加一个标签筛选条：把所有出现过的行业标签做成可点击的 chip，点一下只显示该标签的新闻；再点一下取消。
+
+2) 加一个重要性下拉筛选：≥1 / ≥3 / ≥5（默认 ≥1）。
+
+3) 表头每一列加排序：点一下升序，再点一下降序，第三下取消。默认按重要性降序、再按时间降序。
+
+4) 最顶部加一个统计 banner：共 N 条 / 今日新增 M 条 / 最高分 X / 最常见标签 TOP 3。
+
+5) 视觉微调：重要性 5 用红底白字 chip、4 用橙、3 用黄、1-2 用灰；标题悬停下划线；表格在窄屏下能横向滚动。</pre>
+        </div>
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：加新功能时把上一个功能搞坏了</strong> → 纠偏：<br><code>你刚才把"标签筛选"功能改坏了。请只加排序功能，不要动筛选逻辑；改完告诉我哪几行代码动过。</code></li>
+          <li><strong>偏差 B：你描述不清想要的样子</strong> → 给参照物：<br><code>样式参考：飞书多维表格筛选条那种 chip 风格；如果你不确定我想要什么，先做一个最朴素版给我看，我再调。</code></li>
+          <li><strong>偏差 C：报错了</strong> → 直接把报错原文贴回去：<br><code>浏览器 console 报错：&lt;完整错误文本&gt;。你修一下，并告诉我是什么原因。</code></li>
+        </ul>
+        <div class="note-tip"><strong>这是 PM 必须养成的肌肉记忆</strong>：报错原文 > 你重述的报错。</div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">4</span>让 Agent 自己写一段"使用说明"</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">demo 做完了，让 Agent 给它配一段说明书。给老板看时你直接转发即可。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step4">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">为这个 dashboard 写一份 README.md，存到同目录，包含：
+1) 这个工具是干嘛的（2 句话，给完全没上下文的同事看）
+2) 怎么打开（启动命令 + URL）
+3) 当前支持的功能列表
+4) 已知限制（比如不刷新数据、不分页等）
+5) 数据更新方式：把新一周的 backlog.json 替换进来即可
+不要写"未来可优化"那种空话。</pre>
+          <pre class="prompt-body" data-track-text="meeting">为这个 dashboard 写一份 README.md，存到同目录，包含：
+1) 这个工具是干嘛的（2 句话，给完全没上下文的同事看）
+2) 怎么打开（启动命令 + URL）
+3) 当前支持的功能列表
+4) 已知限制（比如不刷新数据、不分页等）
+5) 数据更新方式：把新一周的 follow-up.json 替换进来即可
+不要写"未来可优化"那种空话。</pre>
+          <pre class="prompt-body" data-track-text="news">为这个 dashboard 写一份 README.md，存到同目录，包含：
+1) 这个工具是干嘛的（2 句话，给完全没上下文的同事看）
+2) 怎么打开（启动命令 + URL)
+3) 当前支持的功能列表
+4) 已知限制（比如不刷新数据、不分页等）
+5) 数据更新方式：把新一周的 news.json 替换进来即可
+不要写"未来可优化"那种空话。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>一份能直接发给老板/同事的 <code>README.md</code></li>
+          <li>你只要补一句"这周我用 Agent 做了个 dashboard，启动命令在 README 里"就够了</li>
+        </ul>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">5</span>给自己一个"克制按钮"——这一档止步</h3>
+        <p>此刻你脑子里很可能涌出无数想法：要不要加深色模式？要不要自动每天刷新？要不要做月度对比？</p>
+        <div class="note-shock">
+          <h4>📝 这条 prompt 不发给 Agent，发给自己</h4>
+          写在 <code>dashboard.html</code> 同目录的 <code>BACKLOG.md</code> 里：把所有想法<strong>列出来但不要现在做</strong>。
+        </div>
+        <p>这是 PM 必修课：vibe coding 做出来的东西<strong>容易上瘾</strong>，但每多做一项，未来维护成本就多一份。</p>
+        <p>本讲到此截稿。<strong>L5</strong> 我们会把"做成 dashboard 这件事"封装成 Skill，那时候才是真正适合扩展的时刻。</p>
+      </div>
+    </section>
+
+    <!-- ===== 5. 自检 ===== -->
+    <section id="s5">
+      <h2 class="section-h"><span class="num">5</span>自检清单</h2>
+      <ul class="check-list" id="selfCheck">
+        <li data-check="c1">我能在浏览器里打开 dashboard 并演示给同事 60 秒</li>
+        <li data-check="c2">我能用 1 句话告诉同事它是怎么读数据的（"它读同目录的 <span id="checkJsonName">backlog.json</span>"）</li>
+        <li data-check="c3">我有一个 <code>BACKLOG.md</code>，把没做的想法都收住了</li>
+        <li data-check="c4">出现报错时，我的本能反应是"<strong>把报错贴回 Agent</strong>"，而不是"我搞不定"</li>
+        <li data-check="c5">我能讲清楚：为什么这个 demo <strong>不应该</strong>直接拿去当生产代码</li>
+      </ul>
+
+      <div class="quiz">
+        <h4>🧠 快速自测</h4>
+        <div class="quiz-q">
+          <div class="q">Q1. 跟 Agent 协作 vibe coding 的最佳节奏是？</div>
+          <div class="quiz-opts" data-correct="1">
+            <button class="quiz-opt">A. 一次性把所有需求写清楚，让它一把做完</button>
+            <button class="quiz-opt">B. 每次只加一个功能，看到效果再继续</button>
+            <button class="quiz-opt">C. 不要管它做啥，反正不审代码</button>
+            <button class="quiz-opt">D. 先让它写完，再回头审 PRD</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 B</span>：渐进式加功能能让你及时纠偏，也让 Agent 不破坏前一步成果。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q2. 出现浏览器报错时，PM 最该做的是？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. 自己学一下报错是啥意思</button>
+            <button class="quiz-opt">B. 把报错描述给 Agent</button>
+            <button class="quiz-opt">C. 直接把完整报错原文贴给 Agent，让它修并解释</button>
+            <button class="quiz-opt">D. 重启浏览器</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：报错原文 > 你重述的报错。这是 PM 必须养成的肌肉记忆。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q3. 这个 dashboard demo 应该走哪一档？</div>
+          <div class="quiz-opts" data-correct="0">
+            <button class="quiz-opt">A. 一次性 demo——验证完想法就停</button>
+            <button class="quiz-opt">B. 个人小工具——长期维护</button>
+            <button class="quiz-opt">C. 团队产品——给同事都开账号用</button>
+            <button class="quiz-opt">D. 商业化产品——拿去当公司功能</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 A</span>：90% 的 PM 场景一档就够；要升档先 Skill 化（L5）再说。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. 思考题 ===== -->
+    <section id="s6">
+      <h2 class="section-h"><span class="num">6</span>思考题 & 下一讲引子</h2>
+      <p><strong>思考题</strong></p>
+      <ul>
+        <li>如果下周再来一次（新一周的数据），你希望 Agent 自动做哪几步？哪几步必须保留你来确认？</li>
+        <li>把这个 dashboard 截图发给老板时，你会怎么写那句话？这句话本身就是你下一次 prompt 的"封面"——<strong>L3</strong> 我们会专门讲它。</li>
+      </ul>
+      <p style="margin-top:12px"><strong>下一讲引子</strong></p>
+      <p>你已经会"喊一声 Agent 做事"，但你会发现：<strong>有时候它做对了，有时候它跑偏了</strong>——差别往往就在 prompt 写法上。L3 我们用一个 PM 视角的 4 要素模板，把"碰运气"变成"高命中率"。</p>
+    </section>
+
+    <!-- ===== 7. 交付物 ===== -->
+    <section id="s7">
+      <h2 class="section-h"><span class="num">7</span>本讲交付物</h2>
+      <p>按你选定的场景，下面三选一即可：</p>
+      <div class="deliv-card">
+        <h4>📁 目录结构</h4>
+        <pre id="deliverTree">pm-agent-lab/backlog-lab/data/2026-W25/
+├── backlog.json
+├── backlog.md
+├── HOWTO.md
+├── dashboard.html              # ← 本讲新增：可交互 dashboard
+├── README.md                   # ← 本讲新增：使用说明
+└── BACKLOG.md                  # ← 本讲新增：被克制的想法清单</pre>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--text-soft)">三个场景共用同一套 dashboard 形态，只是数据源和列不同。L5 把"做成 dashboard 这件事"封装成 Skill 后，三个场景就能一键复用。</p>
+    </section>
+
+    <!-- ===== 8. 副线 ===== -->
+    <section id="s8">
+      <h2 class="section-h"><span class="num">8</span>副线练习（可选）</h2>
+      <p>本讲主线已经可在三个场景切换。如果时间允许，可以把同样的姿势套到你的 PM 真实场景上：</p>
+      <ul>
+        <li><strong>竞品动态看板</strong>：基于 <code>competitor-lab/data/.../items.json</code>，做一个看板，按对手维度纵向铺开，每家最近一条事件高亮</li>
+        <li><strong>用户反馈热力图</strong>：基于 <code>feedback-lab/data/.../feedbacks.json</code>，做一个左侧分类、右侧 verbatim 流的双栏页面</li>
+        <li><strong>OKR 进度小看板</strong>：手动维护一份 <code>okrs.json</code>，做一个进度条 + 风险标注的页面</li>
+      </ul>
+      <div class="note-tip"><strong>💡</strong> 副线产物挂在对应 lab 目录，命名都叫 <code>dashboard.html</code>，结构保持和主线一致——这样 L5 一次封装就能服务所有副线场景。</div>
+    </section>
+
+    <!-- ===== 9. 小结 ===== -->
+    <section id="s9">
+      <h2 class="section-h"><span class="num">9</span>给 PM 的小结：vibe coding 的"三档止步线"</h2>
+      <table style="width:100%;font-size:13px;border-collapse:collapse">
+        <thead><tr style="text-align:left;color:var(--text-mute);border-bottom:1px solid var(--border)">
+          <th style="padding:8px 10px 8px 0">档位</th><th style="padding:8px 10px">长什么样</th><th style="padding:8px 0">止步条件</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:6px 10px 6px 0"><strong>一次性 demo</strong></td><td style="padding:6px 10px">双击能打开、能演示一个想法</td><td style="padding:6px 0"><strong>本讲 = 一档</strong>。验证完想法就停</td></tr>
+          <tr><td style="padding:6px 10px 6px 0"><strong>个人小工具</strong></td><td style="padding:6px 10px">可以反复打开使用、有数据更新流程</td><td style="padding:6px 0">L5 把它封装成 Skill 后再升档</td></tr>
+          <tr><td style="padding:6px 10px 6px 0"><strong>团队产品</strong></td><td style="padding:6px 10px">多人用、有权限、要维护</td><td style="padding:6px 0"><strong>永远交给研发</strong>，不要自己接</td></tr>
+        </tbody>
+      </table>
+      <div class="note-shock" style="margin-top:14px">
+        <h4>🎯 一句话带走</h4>
+        <strong>90% 的 PM 场景一档就够。</strong> 不要把自己拖进维护泥潭。
+      </div>
+    </section>
+
+    <!-- 上一讲 / 下一讲 -->
+    <nav class="mini-nav">
+      <a href="L1.html"><span class="label">← 上一讲</span><span class="title">L1 · 让 Agent 第一次"动手"</span></a>
+      <a href="L2.5.html" class="next"><span class="label">下一讲 →</span><span class="title">L2.5 · 浏览器自动化</span></a>
+    </nav>
+
+    <div class="lesson-footer">学完这一讲，你已经能让 Agent 替你做出可点击的工具。L3 我们教你写出"高命中率"的 prompt。</div>
+
+  </article>
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sb-card">
+      <h4>本讲进度
+        <span class="sb-progress">
+          <span class="sb-progress-bar"><div id="sbBar" style="width:0%"></div></span>
+          <span id="sbText">0%</span>
+        </span>
+      </h4>
+      <ul class="toc-list">
+        <li><a href="#s1">1. 你将学会</a></li>
+        <li><a href="#s2">2. 背景小知识</a></li>
+        <li><a href="#s3">3. 准备工作</a></li>
+        <li><a href="#s4">4. 实战任务</a></li>
+        <li><a href="#s5">5. 自检清单</a></li>
+        <li><a href="#s6">6. 思考题</a></li>
+        <li><a href="#s7">7. 交付物</a></li>
+        <li><a href="#s8">8. 副线练习</a></li>
+        <li><a href="#s9">9. 三档止步线</a></li>
+      </ul>
+    </div>
+
+    <div class="sb-card">
+      <h4>当前练手场景</h4>
+      <p style="font-size:13px;color:var(--text-soft)" id="sbTrackInfo">📋 需求池整理</p>
+      <p style="font-size:11px;color:var(--text-mute);margin-top:4px">顶栏可一键切换三场景，所有 prompt + dashboard 预览联动。</p>
+    </div>
+
+    <div class="sb-card">
+      <h4>键盘快捷键</h4>
+      <p style="font-size:12px;color:var(--text-soft)">
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">1</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">2</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">3</kbd> 切换三场景<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">T</kbd> 切换主题<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">←</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">→</kbd> 切换 demo 步骤
+      </p>
+    </div>
+
+    <button class="complete-btn" id="completeBtn">
+      <span id="completeText">✓ 标记本讲已学完</span>
+    </button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+const LESSON_ID = "L2";
+const TOTAL_LESSONS = 14;
+const THEME_KEY = "agentOnboarding.theme";
+const TRACK_KEY = "agentOnboarding.track";
+const PROGRESS_KEY = "agentOnboarding.progress.v1";
+const STATE_KEY = `agentOnboarding.${LESSON_ID}.state`;
+const html = document.documentElement;
+
+const TRACK_INFO = {
+  backlog: {
+    name:"需求池整理", emoji:"📋",
+    jsonFile:"backlog.json",
+    targetPath:"pm-agent-lab/backlog-lab/data/2026-W25/dashboard.html",
+    deliverTree:`pm-agent-lab/backlog-lab/data/2026-W25/
+├── backlog.json
+├── backlog.md
+├── HOWTO.md
+├── dashboard.html              # ← 本讲新增：可交互 dashboard
+├── README.md                   # ← 本讲新增：使用说明
+└── BACKLOG.md                  # ← 本讲新增：被克制的想法清单`,
+    columns:[
+      {key:"description", label:"需求描述", type:"text"},
+      {key:"requester",   label:"提出人",   type:"text"},
+      {key:"requested_at",label:"提出日期", type:"date"},
+      {key:"module",      label:"所属模块", type:"tag"},
+      {key:"importance",  label:"价值",     type:"imp"}
+    ],
+    tagKey:"module",
+    tagsTitle:"所属模块",
+    rows:[
+      {description:"打通三方账号登录失败兜底",     requester:"小明@增长",  requested_at:"2026-06-16", module:"账号体系",      importance:5, tags:["登录","受阻"]},
+      {description:"支付二次确认弹窗简化",         requester:"王琳@交易",  requested_at:"2026-06-17", module:"核心交易",      importance:5, tags:["支付"]},
+      {description:"社区帖子标签自动推荐",         requester:"张磊@内容",  requested_at:"2026-06-15", module:"内容/社区",     importance:4, tags:["推荐"]},
+      {description:"618 活动入口卡片改版",         requester:"陈帆@增长",  requested_at:"2026-06-15", module:"增长/活动",     importance:4, tags:["活动"]},
+      {description:"后台报表导出加分钟级筛选",     requester:"刘洋@数据",  requested_at:"2026-06-14", module:"数据/后台",     importance:3, tags:["报表"]},
+      {description:"用户实名 OCR 失败重试机制",    requester:"周敏@平台",  requested_at:"2026-06-14", module:"平台/合规",     importance:3, tags:["实名","合规"]},
+      {description:"群组邀请页 H5 微优化",         requester:"林涛@内容",  requested_at:"2026-06-13", module:"内容/社区",     importance:2, tags:["H5"]},
+      {description:"积分兑换列表加价格筛选",       requester:"小明@增长",  requested_at:"2026-06-13", module:"增长/活动",     importance:2, tags:["积分"]}
+    ]
+  },
+  meeting: {
+    name:"会议纪要跟进", emoji:"📝",
+    jsonFile:"follow-up.json",
+    targetPath:"pm-agent-lab/meeting-lab/data/2026-W25/dashboard.html",
+    deliverTree:`pm-agent-lab/meeting-lab/data/2026-W25/
+├── follow-up.json
+├── follow-up.md
+├── HOWTO.md
+├── dashboard.html              # ← 本讲新增：可交互 dashboard
+├── README.md                   # ← 本讲新增：使用说明
+└── BACKLOG.md                  # ← 本讲新增：被克制的想法清单`,
+    columns:[
+      {key:"description", label:"事项",     type:"text"},
+      {key:"owner",       label:"归属人",   type:"text"},
+      {key:"due_date",    label:"截止",     type:"date"},
+      {key:"source_meeting",label:"来源会议", type:"tag"},
+      {key:"importance",  label:"紧急度",   type:"imp"}
+    ],
+    tagKey:"source_meeting",
+    tagsTitle:"来源会议",
+    rows:[
+      {description:"完成 Q3 上线时间表 v2",        owner:"小明@增长",  due_date:"2026-06-23", source_meeting:"Q3 启动会",   importance:5, tags:["排期"]},
+      {description:"对齐风控接口字段口径",         owner:"王琳@交易",  due_date:"2026-06-22", source_meeting:"风控周会",    importance:5, tags:["接口"]},
+      {description:"618 物料初稿确认",             owner:"陈帆@增长",  due_date:"2026-06-21", source_meeting:"618 复盘",    importance:4, tags:["素材"]},
+      {description:"输出群运营策略 PRD 评审版",   owner:"张磊@内容",  due_date:"2026-06-25", source_meeting:"群运营双周",  importance:4, tags:["PRD"]},
+      {description:"反馈渠道分类受控词表",         owner:"刘洋@数据",  due_date:"2026-06-26", source_meeting:"反馈治理会",  importance:3, tags:["词表"]},
+      {description:"实名失败问题集中梳理",         owner:"周敏@平台",  due_date:"2026-06-27", source_meeting:"风控周会",    importance:3, tags:["合规"]},
+      {description:"对接客服培训物料",             owner:"林涛@内容",  due_date:"2026-06-28", source_meeting:"群运营双周",  importance:2, tags:["培训"]},
+      {description:"补 OKR Q2 自评",               owner:"待指派",     due_date:"2026-06-30", source_meeting:"Q3 启动会",   importance:2, tags:["OKR"]}
+    ]
+  },
+  news: {
+    name:"行业 / 竞品周报", emoji:"📰",
+    jsonFile:"news.json",
+    targetPath:"pm-agent-lab/news-lab/data/2026-W25/dashboard.html",
+    deliverTree:`pm-agent-lab/news-lab/data/2026-W25/
+├── news.json
+├── news.md
+├── HOWTO.md
+├── dashboard.html              # ← 本讲新增：可交互 dashboard
+├── README.md                   # ← 本讲新增：使用说明
+└── BACKLOG.md                  # ← 本讲新增：被克制的想法清单`,
+    columns:[
+      {key:"title",       label:"标题",     type:"text"},
+      {key:"source_name", label:"来源",     type:"text"},
+      {key:"published_at",label:"发布日期", type:"date"},
+      {key:"tags",        label:"行业标签", type:"taglist"},
+      {key:"importance",  label:"重要性",   type:"imp"}
+    ],
+    tagKey:"tags",
+    tagsTitle:"行业标签",
+    rows:[
+      {title:"Anthropic 发布 Claude 4 Opus，长上下文与工具调用大升级",   source_name:"The Verge",   published_at:"2026-06-19", tags:["模型能力","Agent 框架"], importance:5},
+      {title:"OpenAI Codex CLI 1.0 发布，工程师工作流迎来重塑",          source_name:"TechCrunch",  published_at:"2026-06-18", tags:["工具/CLI","Agent 应用"], importance:5},
+      {title:"国内某大厂推出企业级 Agent 编排平台并对外开放试用",         source_name:"36Kr",        published_at:"2026-06-17", tags:["Agent 框架","投融资"],   importance:4},
+      {title:"欧盟 AI 法案细则落地，Agent 高风险场景需额外披露",          source_name:"Reuters",     published_at:"2026-06-17", tags:["政策合规"],              importance:4},
+      {title:"Cursor 完成新一轮融资，估值翻倍",                          source_name:"Bloomberg",   published_at:"2026-06-16", tags:["投融资","工具/CLI"],     importance:3},
+      {title:"飞书发布 lark-cli 1.5，Agent 集成场景扩容",                source_name:"InfoQ",       published_at:"2026-06-15", tags:["工具/CLI","Agent 应用"], importance:3},
+      {title:"Notion 上线 Agent Inbox，自动整理跨工作区任务",            source_name:"Product Hunt",published_at:"2026-06-14", tags:["Agent 应用"],            importance:2},
+      {title:"研究：Agent 长链路任务错误累积仍是头号瓶颈",                source_name:"Arxiv",       published_at:"2026-06-14", tags:["模型能力"],              importance:2}
+    ]
+  }
+};
+
+/* =============== Theme =============== */
+const themeSwitch = document.getElementById("themeSwitch");
+function applyTheme(theme){
+  if(theme!=="dark" && theme!=="stealth") theme="stealth";
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.themeBtn===theme));
+  moveIndicator(themeSwitch);
+  localStorage.setItem(THEME_KEY, theme);
+}
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =============== Track =============== */
+const trackSwitch = document.getElementById("trackSwitch");
+let currentTrack = "backlog";
+function applyTrack(track){
+  if(!TRACK_INFO[track]) track = "backlog";
+  currentTrack = track;
+  localStorage.setItem(TRACK_KEY, track);
+  trackSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
+  moveIndicator(trackSwitch);
+  document.querySelectorAll(".prompt-box").forEach(box=>{
+    const tabs = box.querySelectorAll(".prompt-tab");
+    const bodies = box.querySelectorAll(".prompt-body");
+    const isUniversal = box.querySelector('[data-track-tab="all"]');
+    if(isUniversal){ bodies.forEach(b=>b.style.display="block"); return; }
+    tabs.forEach(t=>t.classList.toggle("active", t.dataset.trackTab===track));
+    bodies.forEach(b=>{ b.style.display = b.dataset.trackText===track ? "block" : "none"; });
+  });
+  const info = TRACK_INFO[track];
+  document.getElementById("currentTrackName").textContent = info.name;
+  document.getElementById("sbTrackInfo").textContent = `${info.emoji} ${info.name}`;
+  document.getElementById("prepJsonPath").textContent = info.jsonFile;
+  document.getElementById("checkJsonName").textContent = info.jsonFile;
+  document.getElementById("targetPath").textContent = info.targetPath;
+  document.getElementById("deliverTree").textContent = info.deliverTree;
+  document.getElementById("dashUrl").textContent = `http://localhost:8000/dashboard.html`;
+  // reset filters when track changes
+  activeTag = null;
+  impFilter = 1;
+  sortKey = null;
+  sortDir = 0;
+  renderDashboard();
+}
+trackSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTrack(btn.dataset.track));
+});
+
+/* =============== Indicator =============== */
+function moveIndicator(switchEl){
+  const ind = switchEl.querySelector(".ind");
+  const active = switchEl.querySelector("button.active");
+  if(!ind || !active) return;
+  ind.style.width = active.offsetWidth + "px";
+  ind.style.transform = `translateX(${active.offsetLeft - 2}px)`;
+}
+window.addEventListener("resize",()=>{moveIndicator(themeSwitch);moveIndicator(trackSwitch)});
+
+/* =============== Tabs in prompt boxes =============== */
+document.querySelectorAll(".prompt-tab[data-track-tab]").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    const target = tab.dataset.trackTab;
+    if(target==="all") return;
+    applyTrack(target);
+  });
+});
+
+/* =============== Copy =============== */
+document.querySelectorAll(".prompt-copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box = btn.closest(".prompt-box");
+    const visible = [...box.querySelectorAll(".prompt-body")].find(b=>b.style.display!=="none") || box.querySelector(".prompt-body");
+    const text = visible.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = "✓ 已复制";
+      btn.classList.add("copied");
+      showToast("已复制 prompt 到剪贴板");
+      setTimeout(()=>{btn.textContent="📋 复制";btn.classList.remove("copied")}, 1500);
+    });
+  });
+});
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* =============== Dashboard demo =============== */
+let stage = 0; // 0..4
+let activeTag = null;
+let impFilter = 1;
+let sortKey = null;
+let sortDir = 0; // 0 none, 1 asc, -1 desc
+
+const STAGE_CAPTIONS = [
+  "v0：先把数据展示出来，不做任何花活",
+  "+ 标签筛选 chip：点一下只看该标签",
+  "+ 重要性下拉筛选：≥1 / ≥3 / ≥5",
+  "+ 表头排序：点一下升、再点降、第三下取消",
+  "+ 顶部统计 banner & 视觉分级：重要性 5 红、4 橙、3 黄"
+];
+
+function getTagsForTrack(info){
+  const set = new Set();
+  info.rows.forEach(r=>{
+    const v = r[info.tagKey];
+    if(Array.isArray(v)) v.forEach(t=>set.add(t));
+    else if(v) set.add(v);
+  });
+  return [...set];
+}
+
+function getFilteredRows(info){
+  let rows = info.rows.slice();
+  if(stage>=1 && activeTag){
+    rows = rows.filter(r=>{
+      const v = r[info.tagKey];
+      if(Array.isArray(v)) return v.includes(activeTag);
+      return v===activeTag;
+    });
+  }
+  if(stage>=2 && impFilter>1){
+    rows = rows.filter(r=>r.importance>=impFilter);
+  }
+  if(stage>=3 && sortKey && sortDir!==0){
+    rows.sort((a,b)=>{
+      const av = a[sortKey], bv = b[sortKey];
+      if(av<bv) return -1*sortDir;
+      if(av>bv) return 1*sortDir;
+      return 0;
+    });
+  } else if(stage>=3){
+    // default sort: importance desc, then date desc
+    rows.sort((a,b)=>{
+      if(b.importance!==a.importance) return b.importance-a.importance;
+      const da = a.requested_at||a.due_date||a.published_at||"";
+      const db = b.requested_at||b.due_date||b.published_at||"";
+      return db.localeCompare(da);
+    });
+  }
+  return rows;
+}
+
+function renderDashboard(){
+  const info = TRACK_INFO[currentTrack];
+  // banner (stage 4)
+  const bannerEl = document.getElementById("dashBanner");
+  if(stage>=4){
+    const rows = info.rows;
+    const total = rows.length;
+    const maxImp = Math.max(...rows.map(r=>r.importance));
+    // count tag freq
+    const freq = {};
+    rows.forEach(r=>{
+      const v = r[info.tagKey];
+      const arr = Array.isArray(v)?v:[v];
+      arr.forEach(t=>{ if(t) freq[t]=(freq[t]||0)+1; });
+    });
+    const top3 = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(" · ");
+    bannerEl.innerHTML = `
+      <span class="stat"><strong>${total}</strong>本周总条数</span>
+      <span class="stat"><strong>${rows.filter(r=>r.importance>=4).length}</strong>重点条目 (≥4)</span>
+      <span class="stat"><strong>${maxImp}</strong>最高分</span>
+      <span class="stat"><strong>${top3||"—"}</strong>${info.tagsTitle} TOP 3</span>
+    `;
+    bannerEl.classList.add("show");
+  } else {
+    bannerEl.classList.remove("show");
+  }
+  // filters (stage 1+)
+  const filtersEl = document.getElementById("dashFilters");
+  const tagChipsEl = document.getElementById("dashTagChips");
+  const impSelEl = document.getElementById("dashImpSelect");
+  if(stage>=1){
+    filtersEl.classList.add("show");
+    tagChipsEl.innerHTML = "";
+    const allBtn = document.createElement("span");
+    allBtn.className = "dash-fchip" + (!activeTag?" active":"");
+    allBtn.textContent = "全部";
+    allBtn.addEventListener("click",()=>{ activeTag=null; renderDashboard(); });
+    tagChipsEl.appendChild(allBtn);
+    getTagsForTrack(info).forEach(t=>{
+      const chip = document.createElement("span");
+      chip.className = "dash-fchip" + (activeTag===t?" active":"");
+      chip.textContent = t;
+      chip.addEventListener("click",()=>{ activeTag = activeTag===t?null:t; renderDashboard(); });
+      tagChipsEl.appendChild(chip);
+    });
+  } else {
+    filtersEl.classList.remove("show");
+  }
+  if(stage>=2){
+    impSelEl.classList.add("show");
+    const sel = document.getElementById("impFilter");
+    sel.value = String(impFilter);
+    sel.onchange = ()=>{ impFilter = parseInt(sel.value,10); renderDashboard(); };
+  } else {
+    impSelEl.classList.remove("show");
+  }
+  // table head & body
+  const table = document.getElementById("dashTable");
+  table.classList.toggle("styled", stage>=4);
+  const head = document.getElementById("dashHead");
+  const body = document.getElementById("dashBody");
+  head.innerHTML = "<tr>" + info.columns.map(c=>{
+    const sortable = stage>=3;
+    const cls = sortable ? "sortable" + (sortKey===c.key?(sortDir===1?" sort-asc":sortDir===-1?" sort-desc":""):"") : "";
+    return `<th class="${cls}" data-key="${c.key}">${c.label}${sortable?'<span class="sort-ind"></span>':""}</th>`;
+  }).join("") + "</tr>";
+  if(stage>=3){
+    head.querySelectorAll("th.sortable").forEach(th=>{
+      th.addEventListener("click",()=>{
+        const k = th.dataset.key;
+        if(sortKey!==k){ sortKey=k; sortDir=1; }
+        else if(sortDir===1) sortDir=-1;
+        else if(sortDir===-1){ sortDir=0; sortKey=null; }
+        else sortDir=1;
+        renderDashboard();
+      });
+    });
+  }
+  const rows = getFilteredRows(info);
+  body.innerHTML = rows.map(r=>{
+    return "<tr>" + info.columns.map(c=>{
+      const v = r[c.key];
+      if(c.type==="imp") return `<td><span class="imp-chip" data-imp="${v}">${v}</span></td>`;
+      if(c.type==="tag") return `<td><span class="dash-tag">${v||"—"}</span></td>`;
+      if(c.type==="taglist"){
+        const arr = Array.isArray(v)?v:[v];
+        return `<td>${arr.map(t=>`<span class="dash-tag">${t}</span>`).join("")}</td>`;
+      }
+      if(c.key==="title" || c.key==="description"){
+        return `<td><span class="title-link">${v}</span></td>`;
+      }
+      return `<td>${v||"—"}</td>`;
+    }).join("") + "</tr>";
+  }).join("") || `<tr><td colspan="${info.columns.length}" style="text-align:center;color:var(--text-mute);padding:24px">没匹配到记录</td></tr>`;
+
+  // caption
+  document.getElementById("stageCaption").innerHTML = `<span class="badge">第 ${stage+1} 步</span> ${STAGE_CAPTIONS[stage]}`;
+  // stepper
+  document.querySelectorAll("#dashStepper .dash-step").forEach(b=>{
+    b.classList.toggle("active", parseInt(b.dataset.stage,10)===stage);
+  });
+}
+
+document.querySelectorAll("#dashStepper .dash-step").forEach(b=>{
+  b.addEventListener("click",()=>{ stage = parseInt(b.dataset.stage,10); renderDashboard(); });
+});
+
+/* Initialize track + dashboard */
+applyTrack(localStorage.getItem(TRACK_KEY) || "backlog");
+
+/* =============== Check lists =============== */
+const STATE = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(STATE)); updateProgress(); }
+function bindCheckList(ulId, key){
+  const ul = document.getElementById(ulId);
+  if(!ul) return;
+  STATE[key] = STATE[key] || {};
+  ul.querySelectorAll("li").forEach(li=>{
+    const id = li.dataset.goal || li.dataset.prep || li.dataset.check;
+    if(STATE[key][id]) li.classList.add("done");
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      STATE[key][id] = li.classList.contains("done");
+      saveState();
+    });
+  });
+}
+bindCheckList("learnGoals","goals");
+bindCheckList("prepList","preps");
+bindCheckList("selfCheck","checks");
+
+/* =============== Progress =============== */
+function updateProgress(){
+  const sources = [
+    {key:"goals",  count:3},
+    {key:"preps",  count:4},
+    {key:"checks", count:5},
+    {key:"quiz",   count:3}
+  ];
+  let done = 0, total = 0;
+  sources.forEach(s=>{
+    total += s.count;
+    if(STATE[s.key]) done += Object.values(STATE[s.key]).filter(Boolean).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("sbBar").style.width = pct + "%";
+  document.getElementById("sbText").textContent = pct + "%";
+}
+updateProgress();
+
+/* =============== Quiz =============== */
+document.querySelectorAll(".quiz-q").forEach((q,idx)=>{
+  const opts = q.querySelector(".quiz-opts");
+  const correct = parseInt(opts.dataset.correct, 10);
+  const explain = q.querySelector(".quiz-explain");
+  STATE.quiz = STATE.quiz || {};
+  if(STATE.quiz[`q${idx}`]){
+    opts.children[correct].classList.add("right");
+    explain.classList.add("show");
+  }
+  opts.querySelectorAll(".quiz-opt").forEach((opt,i)=>{
+    opt.addEventListener("click",()=>{
+      if(opts.querySelector(".right")) return;
+      if(i===correct){
+        opt.classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }else{
+        opt.classList.add("wrong");
+        opts.children[correct].classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }
+      explain.classList.add("show");
+    });
+  });
+});
+
+/* =============== Mark complete =============== */
+const completeBtn = document.getElementById("completeBtn");
+const completeText = document.getElementById("completeText");
+function refreshCompleteUI(){
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  const isDone = doneSet.has(LESSON_ID);
+  completeBtn.classList.toggle("done", isDone);
+  completeText.textContent = isDone ? "✓ 已学完（点击取消）" : "✓ 标记本讲已学完";
+}
+completeBtn.addEventListener("click",()=>{
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  if(doneSet.has(LESSON_ID)) doneSet.delete(LESSON_ID);
+  else { doneSet.add(LESSON_ID); showToast(`L2 已标记为完成 · ${doneSet.size}/${TOTAL_LESSONS}`); }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...doneSet]));
+  refreshCompleteUI();
+});
+refreshCompleteUI();
+
+/* =============== TOC active highlight =============== */
+const tocLinks = document.querySelectorAll(".toc-list a");
+const sections = [...document.querySelectorAll(".article section[id]")];
+function onScroll(){
+  let cur = sections[0];
+  const top = window.scrollY + 120;
+  for(const s of sections){ if(s.offsetTop <= top) cur = s; }
+  tocLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#" + cur.id));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* =============== Keyboard shortcuts =============== */
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select")) return;
+  if(e.key==="1") applyTrack("backlog");
+  else if(e.key==="2") applyTrack("meeting");
+  else if(e.key==="3") applyTrack("news");
+  else if(e.key==="t" || e.key==="T") applyTheme(html.getAttribute("data-theme")==="dark"?"stealth":"dark");
+  else if(e.key==="ArrowLeft" && stage>0){ stage--; renderDashboard(); }
+  else if(e.key==="ArrowRight" && stage<4){ stage++; renderDashboard(); }
+});
+
+/* =============== Cross-tab sync =============== */
+window.addEventListener("storage", e=>{
+  if(e.key===THEME_KEY) applyTheme(e.newValue);
+  else if(e.key===TRACK_KEY) applyTrack(e.newValue);
+  else if(e.key===PROGRESS_KEY) refreshCompleteUI();
+});
+</script>
+</body>
+</html>
