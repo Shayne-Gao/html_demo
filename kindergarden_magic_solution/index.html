@@ -60,37 +60,28 @@
     .info h4{margin:0 0 10px;color:var(--gold);font-size:14px}
     .info p,.info ul{margin:0;color:var(--muted);font-size:14px;line-height:1.85}
     .info ul{padding-left:18px}
-    .beat-list{display:flex;flex-direction:column;gap:14px}
-    .beat{display:grid;grid-template-columns:156px minmax(0,1fr);border-radius:20px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.04);overflow:hidden}
+    .beat-list{display:flex;flex-direction:column;gap:12px}
+    .beat{display:grid;grid-template-columns:142px minmax(0,1fr);border-radius:18px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.04);overflow:hidden}
     .beat.magic{border-color:rgba(141,226,174,.22)}
-    .speaker-panel{padding:18px 16px;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+    .speaker-panel{padding:14px 14px;border-right:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start}
     .speaker-panel.mom{background:linear-gradient(180deg,rgba(255,194,147,.22),rgba(255,194,147,.08))}
     .speaker-panel.kid{background:linear-gradient(180deg,rgba(151,183,255,.22),rgba(151,183,255,.08))}
     .speaker-panel.crowd{background:linear-gradient(180deg,rgba(195,202,217,.18),rgba(195,202,217,.07))}
-    .speaker-role{font-size:22px;font-weight:800;line-height:1.2}
-    .speaker-type{display:inline-flex;align-self:flex-start;padding:8px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12)}
+    .speaker-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;line-height:1.45}
+    .speaker-role{font-size:18px;font-weight:800;line-height:1.2}
+    .speaker-type{display:inline-flex;align-self:flex-start;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.12)}
     .speaker-type.dialogue{background:rgba(255,213,125,.12);color:var(--gold)}
     .speaker-type.magic{background:rgba(141,226,174,.12);color:var(--green)}
     .speaker-index{font-size:12px;color:rgba(247,240,223,.72)}
-    .beat-content{padding:16px}
-    .beat-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
-    .badges{display:flex;gap:8px;flex-wrap:wrap}
-    .b{display:inline-flex;padding:7px 11px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05)}
-    .b.dialogue{color:var(--gold);background:rgba(255,213,125,.1);border-color:rgba(255,213,125,.18)}
-    .b.magic{color:var(--green);background:rgba(141,226,174,.1);border-color:rgba(141,226,174,.18)}
-    .b.mom{color:var(--orange);background:rgba(255,194,147,.1);border-color:rgba(255,194,147,.18)}
-    .b.kid{color:var(--blue);background:rgba(151,183,255,.1);border-color:rgba(151,183,255,.18)}
-    .b.crowd{color:var(--gray);background:rgba(195,202,217,.1);border-color:rgba(195,202,217,.18)}
-    .b.core{color:var(--danger);background:rgba(255,181,181,.12);border-color:rgba(255,181,181,.18)}
-    .beat-index{color:var(--muted);font-size:12px}
+    .beat-content{padding:14px}
     .beat-grid{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:14px}
-    .quote{padding:12px 14px;border-left:3px solid rgba(255,213,125,.58);border-radius:0 12px 12px 0;background:rgba(255,255,255,.03);margin-bottom:10px}
+    .quote{padding:10px 12px;border-left:3px solid rgba(255,213,125,.58);border-radius:0 12px 12px 0;background:rgba(255,255,255,.03);margin-bottom:8px}
     .quote strong{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
     .quote div{line-height:1.8;font-size:14px}
-    .dialogue-box{padding:14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05)}
-    .dialogue-box strong{display:block;color:var(--text);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
-    .lines{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px;line-height:1.82}
-    .prep{padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.06);background:rgba(8,12,24,.45)}
+    .dialogue-box{padding:12px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05)}
+    .dialogue-box strong{display:block;color:var(--text);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+    .lines{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px;line-height:1.76}
+    .prep{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.06);background:rgba(8,12,24,.45)}
     .prep strong{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
     .prep div{color:var(--muted);font-size:13px;line-height:1.8}
     .accordion{overflow:hidden}
@@ -119,9 +110,10 @@
     @media (max-width:720px){
       .page{padding:16px}
       .hero,.panel{padding:20px;border-radius:22px}
-      .tab-list{grid-template-columns:1fr}
+      .tab-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+      .tab-btn{padding:10px 8px;font-size:12px;border-radius:12px}
       .material-summary,.jump-list,.material-grid{grid-template-columns:1fr}
-      .scene-card>summary,.beat-top,.material-top,.beat{flex-direction:column;align-items:stretch}
+      .scene-card>summary,.material-top,.beat{flex-direction:column;align-items:stretch}
       .beat{display:flex}
       .speaker-panel{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
       .scene-tags{justify-content:flex-start}
@@ -350,20 +342,13 @@
         const items = beats.length ? beats.map((beat,i)=>`
           <article class="beat ${toneClass(beat.kind)}">
             <div class="speaker-panel ${speakerClass(beat.speaker)}">
-              <div>
-                <div class="speaker-role">${esc(beat.speaker)}</div>
-                <div class="speaker-index">第 ${i+1} 条</div>
+              <div class="speaker-meta">
+                <span class="speaker-index">${i+1}:</span>
+                <span class="speaker-role">${esc(beat.speaker)}</span>
+                <span class="speaker-type ${toneClass(beat.kind)}">${beat.kind==="magic"?"魔法呈现":"情景对话"}</span>
               </div>
-              <span class="speaker-type ${toneClass(beat.kind)}">${beat.kind==="magic"?"魔法呈现":"情景对话"}</span>
             </div>
             <div class="beat-content">
-              <div class="beat-top">
-                <div class="badges">
-                  <span class="b ${speakerClass(beat.speaker)}">${esc(beat.speaker)}</span>
-                  <span class="b ${toneClass(beat.kind)}">${beat.kind==="magic"?"魔术段":"剧情段"}</span>
-                  ${beat.kind==="magic"?'<span class="b core">魔术相关</span>':""}
-                </div>
-              </div>
               <div class="beat-grid">
                 <div>
                   <div class="quote"><strong>动作 / 表情</strong><div>${esc(beat.action)} <span style="color:var(--muted)">｜</span> ${esc(beat.expression)}</div></div>
