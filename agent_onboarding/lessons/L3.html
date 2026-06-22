@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>L3 · Prompt 工程的最小够用版 | PM 培训学习平台</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html[data-theme="dark"]{
+    --bg:#0b0d12; --bg-soft:#11141b; --bg-card:#161a23; --bg-card-hover:#1c2230;
+    --border:#252b39; --border-strong:#323a4d;
+    --text:#e6e8ee; --text-soft:#a4abbb; --text-mute:#6b7186;
+    --accent:#7c5cff; --accent-2:#22d3ee; --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399; --danger:#f87171; --warn:#fbbf24;
+    --A:#22d3ee; --code-bg:#0d1018; --code-border:#1f2533;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px; --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8; --bg-soft:#eceff3; --bg-card:#ffffff; --bg-card-hover:#fafbfc;
+    --border:#e4e7eb; --border-strong:#cbd0d8;
+    --text:#1f2329; --text-soft:#4e5969; --text-mute:#8a93a6;
+    --accent:#1664ff; --accent-2:#0e62e3; --accent-soft:#e6f0ff;
+    --success:#00a870; --danger:#f53f3f; --warn:#ff7d00;
+    --A:#1664ff; --code-bg:#f7f8fa; --code-border:#e4e7eb;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px; --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:var(--font-mono);font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+  strong{color:var(--text);font-weight:600}
+  ul,ol{padding-left:1.6em}
+  li{margin:.3em 0}
+
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mute)}
+  .breadcrumb a{color:var(--text-soft)}
+  .breadcrumb .current{color:var(--text);font-weight:500}
+  .breadcrumb .sep{color:var(--text-mute)}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+  .theme-switch,.track-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  .theme-switch button,.track-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1;white-space:nowrap}
+  .theme-switch button.active,.track-switch button.active{color:#fff}
+  .theme-switch .ind,.track-switch .ind{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s}
+  .nav-btn{font-size:12px;color:var(--text-soft);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  .layout{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:flex-start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static !important}}
+  .article{padding:32px 0 96px;min-width:0}
+  .sidebar{position:sticky;top:64px;padding:24px 0;max-height:calc(100vh - 64px);overflow:auto}
+
+  .lesson-header{margin-bottom:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  .lesson-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-mute);margin-bottom:12px;align-items:center}
+  .lesson-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-weight:600}
+  .lesson-meta .sep{width:1px;height:12px;background:var(--border)}
+  h1.lesson-title{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.3;margin-bottom:10px}
+  .lesson-tagline{color:var(--text-soft);font-size:15px;font-style:italic;border-left:3px solid var(--accent);padding-left:12px;margin-top:8px}
+  h2.section-h{font-size:20px;font-weight:600;letter-spacing:-.3px;margin:48px 0 14px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h2.section-h .num{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--accent)}
+  h3.step-h{font-size:17px;font-weight:600;margin:28px 0 10px;color:var(--text);display:flex;align-items:center;gap:10px}
+  h3.step-h .badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+  .step-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+  .label-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--text)}
+  .label-row .icon{font-size:14px}
+  .label-row.tone-warn{color:var(--warn)}
+
+  .prompt-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);overflow:hidden;margin:8px 0 4px;position:relative}
+  .prompt-tabs{display:flex;align-items:center;gap:0;background:var(--bg-soft);border-bottom:1px solid var(--code-border);padding:0 6px}
+  .prompt-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text-mute);border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .prompt-tab:hover{color:var(--text-soft)}
+  .prompt-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .prompt-spacer{flex:1}
+  .prompt-copy{font-size:11px;color:var(--text-mute);padding:4px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s;display:inline-flex;align-items:center;gap:4px;margin-right:8px}
+  .prompt-copy:hover{color:var(--accent);border-color:var(--accent)}
+  .prompt-copy.copied{color:var(--success);border-color:var(--success);background:var(--bg-card)}
+  .prompt-body{font-family:var(--font-mono);font-size:13px;line-height:1.65;padding:14px 16px;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+  .note-tip{background:var(--accent-soft);border:1px solid var(--accent);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-soft);margin:10px 0}
+  .note-tip strong{color:var(--accent)}
+  .note-warn{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;margin:10px 0}
+  .note-shock{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:14px;margin:14px 0}
+  .note-shock h4{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:700}
+
+  .track-info{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;font-size:13px;color:var(--text-soft)}
+  .track-info table{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}
+  .track-info td{padding:4px 10px 4px 0;border-top:1px dashed var(--border)}
+  .track-info tr:first-child td{border-top:none;font-weight:600;color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .track-info code{font-size:.85em}
+
+  .check-list{list-style:none;padding-left:0;margin:8px 0}
+  .check-list li{padding-left:28px;position:relative;margin:6px 0;font-size:14px;cursor:pointer}
+  .check-list li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;background:var(--bg-card);transition:.15s}
+  .check-list li.done::before{background:var(--success);border-color:var(--success);content:"✓";color:#fff;font-size:11px;text-align:center;line-height:11px;font-weight:700}
+  .check-list li:hover::before{border-color:var(--accent)}
+  .check-list li.done{color:var(--text-soft)}
+
+  .deliv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card)}
+  .deliv-card h4{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .deliv-card pre{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--text-soft);background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:10px 12px;white-space:pre;overflow:auto}
+
+  .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card)}
+  .sb-card h4{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .sb-progress{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mute);font-weight:400;text-transform:none;letter-spacing:0}
+  .sb-progress-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .sb-progress-bar div{height:100%;background:var(--success);transition:width .4s}
+  .toc-list{list-style:none;padding:0;margin:0}
+  .toc-list a{display:block;padding:6px 10px;font-size:13px;color:var(--text-soft);border-radius:var(--radius-sm);transition:.15s;text-decoration:none}
+  .toc-list a:hover{background:var(--bg-soft);color:var(--text)}
+  .toc-list a.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+  .complete-btn{width:100%;padding:12px;background:var(--success);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+  .complete-btn:hover{filter:brightness(1.05)}
+  .complete-btn.done{background:var(--bg-card);color:var(--success);border:1.5px solid var(--success)}
+
+  .mini-nav{display:flex;gap:8px;margin-top:32px}
+  .mini-nav a{flex:1;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-soft);transition:.15s;text-decoration:none}
+  .mini-nav a:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-nav .label{font-size:11px;color:var(--text-mute);margin-bottom:4px;display:block}
+  .mini-nav .title{color:var(--text);font-weight:500}
+  .mini-nav .next{text-align:right}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .quiz{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:var(--shadow-card)}
+  .quiz h4{font-size:14px;margin-bottom:12px;font-weight:600}
+  .quiz-q{margin:12px 0;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .quiz-q .q{font-size:13px;margin-bottom:8px;font-weight:500}
+  .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .quiz-opt{padding:5px 14px;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.15s;cursor:pointer}
+  .quiz-opt:hover{border-color:var(--accent)}
+  .quiz-opt.right{background:var(--success);color:#fff;border-color:var(--success)}
+  .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .quiz-explain{margin-top:8px;font-size:12px;color:var(--text-soft);display:none}
+  .quiz-explain.show{display:block}
+  .quiz-explain .right-tag{color:var(--success);font-weight:600}
+
+  .lesson-footer{margin-top:48px;padding:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);text-align:center;font-size:13px;color:var(--text-soft)}
+
+  /* === Prompt Builder === */
+  .pb-demo{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0;box-shadow:var(--shadow-card)}
+  .pb-demo h3{font-size:15px;font-weight:600;margin-bottom:4px}
+  .pb-demo .demo-sub{font-size:13px;color:var(--text-soft);margin-bottom:14px}
+  .pb-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:880px){.pb-grid{grid-template-columns:1fr}}
+  .pb-form{display:flex;flex-direction:column;gap:12px}
+  .pb-field{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;transition:.15s}
+  .pb-field:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .pb-field label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px}
+  .pb-field .tag{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700}
+  .pb-field .hint{font-size:11px;color:var(--text-mute);font-weight:400;margin-left:auto}
+  .pb-field input,.pb-field textarea{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:7px 10px;font-family:var(--font-sans);font-size:13px;color:var(--text);outline:none;line-height:1.55;transition:.15s}
+  .pb-field input:focus,.pb-field textarea:focus{border-color:var(--accent)}
+  .pb-field textarea{resize:vertical;min-height:60px;font-family:var(--font-sans)}
+  .pb-actions{display:flex;gap:8px;margin-top:4px}
+  .pb-btn{font-size:12px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-soft);transition:.15s;display:inline-flex;align-items:center;gap:5px}
+  .pb-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .pb-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .pb-btn.primary:hover{filter:brightness(1.05);color:#fff}
+
+  .pb-preview{display:flex;flex-direction:column;gap:8px}
+  .pb-preview-head{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--text-mute)}
+  .pb-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
+  .pb-badge.ok{background:rgba(0,168,112,.15);color:var(--success);border:1px solid var(--success)}
+  .pb-badge.miss{background:rgba(245,63,63,.12);color:var(--danger);border:1px solid var(--danger)}
+  .pb-preview-body{flex:1;background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:14px 16px;font-family:var(--font-mono);font-size:12.5px;line-height:1.65;color:var(--text);white-space:pre-wrap;word-break:break-word;min-height:280px;max-height:480px;overflow:auto}
+  .pb-preview-body .miss-mark{display:inline-block;color:var(--danger);background:rgba(245,63,63,.1);border:1px dashed var(--danger);border-radius:3px;padding:1px 6px;font-size:11px;font-weight:600}
+  .pb-preview-body .seg-title{color:var(--accent);font-weight:600}
+  .pb-preview-actions{display:flex;justify-content:flex-end;gap:8px}
+
+  /* tiny table for weight section */
+  .pm-tbl{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+  .pm-tbl th,.pm-tbl td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+  .pm-tbl th{background:var(--bg-soft);color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+  details.fold{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;margin:8px 0;font-size:13px;color:var(--text-soft)}
+  details.fold summary{cursor:pointer;font-weight:500;color:var(--text);outline:none}
+  details.fold[open]{padding-bottom:12px}
+  details.fold p,details.fold ul{margin-top:8px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">PM 培训学习平台</a>
+      <span class="sep">/</span>
+      <a href="../index.html#map">课程地图</a>
+      <span class="sep">/</span>
+      <span class="current">L3 · Prompt 工程的最小够用版</span>
+    </div>
+    <div class="topbar-right">
+      <div class="track-switch" id="trackSwitch" title="切换练手场景">
+        <div class="ind"></div>
+        <button data-track="backlog">📋 需求池</button>
+        <button data-track="meeting">📝 会议纪要</button>
+        <button data-track="news">📰 行业周报</button>
+      </div>
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button data-theme-btn="stealth">📊 摸鱼</button>
+        <button data-theme-btn="dark">🌙 暗色</button>
+      </div>
+      <a class="nav-btn" href="../index.html">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <article class="article">
+
+    <header class="lesson-header">
+      <div class="lesson-meta">
+        <span class="lesson-badge">L3 · 模块 B 提效进阶</span>
+        <span>⏱ 45 min</span>
+        <span class="sep"></span>
+        <span>难度 ⭐⭐</span>
+        <span class="sep"></span>
+        <span>当前练手场景：<strong id="currentTrackName" style="color:var(--accent)">需求池整理</strong></span>
+      </div>
+      <h1 class="lesson-title">Prompt 工程的最小够用版：4 要素模板</h1>
+      <p class="lesson-tagline">把"碰运气"变成"高命中率"——给 PM 一个 4 要素模板，5 分钟学会、终身受益。</p>
+    </header>
+
+    <!-- ===== 1. 你将学会 ===== -->
+    <section id="s1">
+      <h2 class="section-h"><span class="num">1</span>你将学会</h2>
+      <p>勾选完成情况会自动同步到首页学习进度。</p>
+      <ul class="check-list" id="learnGoals">
+        <li data-goal="g1">我能用<strong>角色 / 上下文 / 约束 / 产物</strong> 4 要素模板，把任何模糊请求重写成高命中率 prompt</li>
+        <li data-goal="g2">我能识别一个 prompt 为什么会让 Agent 跑偏，并准确加上<strong>缺失的那一块</strong></li>
+        <li data-goal="g3">我能把 L0–L2.5 用过的所有 prompt <strong>倒过来</strong>用 4 要素拆解、复盘自己的进步</li>
+      </ul>
+    </section>
+
+    <!-- ===== 2. 背景小知识 ===== -->
+    <section id="s2">
+      <h2 class="section-h"><span class="num">2</span>背景小知识</h2>
+      <p>到 L2.5 你已经会"使唤"Agent 了，但多半还是凭直觉。<strong>直觉的天花板就是：你不知道为什么这次结果好、那次结果差。</strong></p>
+      <p>PM 不需要研究学术意义上的 prompt engineering。<strong>你只需要一个最小够用的 4 要素模板</strong>：</p>
+      <div class="prompt-box">
+        <pre class="prompt-body" style="display:block">[角色]   你扮演谁
+[上下文] 我在做什么、当前情境
+[约束]   不能做什么 / 必须遵守什么
+[产物]   我要什么形态的输出、放在哪</pre>
+      </div>
+      <div class="note-shock">
+        <h4>💡 一句口诀</h4>
+        <strong>角色定语气，上下文定方向，约束防跑偏，产物收住手。</strong>
+      </div>
+      <p>大多数"Agent 不听话"，本质是这 4 块少了 1–2 块。L0–L2.5 你之所以能跑通，是因为讲义里已经偷偷在 prompt 里替你补齐了这些；本讲是把方法论交还给你。</p>
+    </section>
+
+    <!-- ===== Interactive: 4 要素 Prompt Builder ===== -->
+    <div class="pb-demo">
+      <h3>🛠 互动模块：4 要素 Prompt Builder</h3>
+      <p class="demo-sub">左侧填 4 块，右侧实时拼接成完整 prompt。任何一块为空，右侧都会高亮提醒——亲手感受"少一块的危害"。顶栏切换场景，会自动重置成对应场景的预填示例。</p>
+      <div class="pb-grid">
+        <div class="pb-form">
+          <div class="pb-field">
+            <label><span class="tag">1</span>角色 <span class="hint">你扮演谁</span></label>
+            <input id="pbRole" type="text" placeholder="例：PM 助手，熟悉 xxx 场景" />
+          </div>
+          <div class="pb-field">
+            <label><span class="tag">2</span>上下文 <span class="hint">我在做什么、当前情境</span></label>
+            <textarea id="pbContext" rows="3" placeholder="本周我做了哪些事 / 关键背景 / 对方是谁"></textarea>
+          </div>
+          <div class="pb-field">
+            <label><span class="tag">3</span>约束 <span class="hint">不能做什么 / 必须遵守什么</span></label>
+            <textarea id="pbConstraints" rows="3" placeholder="一行一条，可加多条"></textarea>
+          </div>
+          <div class="pb-field">
+            <label><span class="tag">4</span>产物 <span class="hint">什么形态 / 放在哪</span></label>
+            <input id="pbDeliverable" type="text" placeholder="例：写到 pm-agent-lab/.../xxx.md，并打印给我看" />
+          </div>
+          <div class="pb-actions">
+            <button class="pb-btn primary" id="pbResetBtn">↺ 重置为场景示例</button>
+            <button class="pb-btn" id="pbClearBtn">🗑 全部清空</button>
+          </div>
+        </div>
+        <div class="pb-preview">
+          <div class="pb-preview-head">
+            <span>实时拼接预览</span>
+            <span id="pbStatusBadge" class="pb-badge miss">检测中…</span>
+            <span class="prompt-spacer" style="flex:1"></span>
+            <button class="pb-btn" id="pbCopyBtn">📋 复制完整 prompt</button>
+          </div>
+          <div class="pb-preview-body" id="pbPreviewBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 3. 准备工作 ===== -->
+    <section id="s3">
+      <h2 class="section-h"><span class="num">3</span>准备工作</h2>
+      <ul class="check-list" id="prepList">
+        <li data-prep="p1">已完成 <a href="L2.5.html">L2.5</a>（手上有过完整的"翻车"和"翻车后纠偏"经验）</li>
+        <li data-prep="p2">工作目录：<code>pm-agent-lab/prompt-lab/</code></li>
+        <li data-prep="p3">准备一个空文档 <code>before-after.md</code>：本讲会反复用到</li>
+      </ul>
+
+      <div class="track-info">
+        <strong>🎯 三选一练手主线</strong>
+        <p style="margin-top:6px">本讲示例默认演示当前选中的场景。HTML 单课页会根据顶栏切换自动联动 prompt 和 Builder 预填示例。</p>
+        <table>
+          <tr><td>场景</td><td>本讲产物路径</td></tr>
+          <tr><td>📋 需求池整理</td><td><code>pm-agent-lab/backlog-lab/L3-demo/backlog-digest.md</code></td></tr>
+          <tr><td>📝 会议纪要跟进</td><td><code>pm-agent-lab/meeting-lab/L3-demo/meeting-followup.md</code></td></tr>
+          <tr><td>📰 行业 / 竞品周报</td><td><code>pm-agent-lab/news-lab/L3-demo/weekly-report.md</code></td></tr>
+          <tr><td>三场景共用</td><td><code>pm-agent-lab/prompt-lab/PROMPT_TEMPLATE.md</code> + <code>before-after.md</code></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== 4. 实战任务 ===== -->
+    <section id="s4">
+      <h2 class="section-h"><span class="num">4</span>实战任务</h2>
+      <p>本讲的实战不是"做一个新东西"，而是<strong>把你已经做过的事情用 4 要素重写一遍</strong>——亲手感受好 prompt 和坏 prompt 的差距。</p>
+
+      <!-- Step 1 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">1</span>用一个翻车 prompt 让 Agent 翻车给你看</h3>
+        <div class="note-warn"><strong>故意翻车</strong>是为了你记得"为什么不能这么写"。</div>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">找一个你日常会写的"模糊请求"，故意发给 Agent。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step1">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我整理一下这周的需求池。</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我整理一下这周的会议待办。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我整理一下这周的产品工作。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">Agent 会<strong>反问你</strong>或者<strong>自由发挥</strong>，结果大概率是以下之一：</p>
+        <ul>
+          <li>产出一份不知所云的"工作整理"</li>
+          <li>反问你 5 个问题（而你没耐心一条条答）</li>
+          <li>给一个范文模板让你"自己填"</li>
+        </ul>
+        <div class="note-tip"><strong>📝 这一步要做的事</strong>：把这次回答整段复制到 <code>pm-agent-lab/prompt-lab/before-after.md</code>，标记为 <strong>Before</strong>。</div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">2</span>用 4 要素重写同一个请求</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">把同样的需求，用 4 要素模板重写一次。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step2">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">[角色]
+你是我的 PM 助手，熟悉互联网产品的需求池治理场景。
+
+[上下文]
+我是一个产品经理，本周新增了三条候选需求：
+1) "推荐流冷启动优化"（来源：算法同学反馈）
+2) "iOS 用户登录后偶发白屏"（来源：客服转接的用户反馈）
+3) "下季度 OKR 草案里提到要补一个'分享回流'入口"
+对方是我的直属 leader，他时间紧，喜欢看结论，不喜欢长篇大论。
+
+[约束]
+- 输出 ≤ 200 字
+- 结构：[结论一句] + [3 条需求，每条 1 行：一句话描述 + 初判优先级] + [下周 1 个最重要的下一步动作]
+- 不要使用 emoji 或夸张副词（"非常"、"极大地"等）
+- 我没说的不要编
+
+[产物]
+直接把内容写到 pm-agent-lab/prompt-lab/backlog-digest.md，并打印到对话里给我看。</pre>
+          <pre class="prompt-body" data-track-text="meeting">[角色]
+你是我的 PM 助手，熟悉跨团队协作的会议跟进场景。
+
+[上下文]
+我是一个产品经理，本周开了三个会，得到的关键事项是：
+1) 需求评审会：通过了"推荐流冷启动优化"，研发承诺下周一给排期
+2) bug 复盘会：iOS 登录白屏定位为客户端缓存问题，待发版
+3) OKR 对齐会：leader 要求下周三前给出"留存提升"的拆解方案
+对方是我的直属 leader，他时间紧，喜欢看结论，不喜欢长篇大论。
+
+[约束]
+- 输出 ≤ 200 字
+- 结构：[结论一句] + [3 件事，每件 1 行：决策/待办 + 归属人 + 截止] + [下周 1 个最关键的跟进点]
+- 不要使用 emoji 或夸张副词（"非常"、"极大地"等）
+- 我没说的不要编
+
+[产物]
+直接把内容写到 pm-agent-lab/prompt-lab/meeting-followup.md，并打印到对话里给我看。</pre>
+          <pre class="prompt-body" data-track-text="news">[角色]
+你是我的 PM 助手，熟悉互联网产品周报场景。
+
+[上下文]
+我是一个产品经理，本周做了三件事：
+1) 推动某需求评审通过（需求名："推荐流冷启动优化"）
+2) 跟进一个线上 bug 修复（影响：iOS 用户登录后偶发白屏）
+3) 完成下季度 OKR 草案讨论
+对方是我的直属 leader，他时间紧，喜欢看结论，不喜欢长篇大论。
+
+[约束]
+- 输出 ≤ 200 字
+- 结构：[结论一句] + [本周 3 件事，每件 1 行] + [下周 1 个最重要的事]
+- 不要使用 emoji 或夸张副词（"非常"、"极大地"等）
+- 我没说的不要编
+
+[产物]
+直接把内容写到 pm-agent-lab/prompt-lab/weekly-report.md，并打印到对话里给我看。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>Agent 几乎<strong>一次成型</strong>——内容贴合 leader 偏好、长度可控、无幻觉</li>
+          <li>文件真的产出在你指定路径</li>
+          <li>对比 Step 1 那次，差距大到惊人</li>
+        </ul>
+        <div class="note-tip"><strong>📝 这一步要做的事</strong>：把这次回答也粘到 <code>before-after.md</code>，标记为 <strong>After</strong>。</div>
+
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：Agent 还是写超长</strong> → 你少写了"违反约束就重写"，纠偏：<br><code>你刚才超过 200 字了。请把约束当硬指标：超字数立即压缩重写，不要让我提醒第二次。</code></li>
+          <li><strong>偏差 B：Agent 还是用了"非常"这类副词</strong> → 让它<strong>自检</strong>：<br><code>扫一遍你刚才的输出，列出违反"不要使用夸张副词"约束的所有词，然后改写。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">3</span>反向拆解：把 L0–L2.5 的 prompt 对号入座</h3>
+        <div class="note-shock">
+          <h4>🧩 这一步是 PM 学习 prompt 的"开窍时刻"</h4>
+          回到 L1 Step 1 里"和 Agent 一起定 schema"那段 prompt，把它<strong>拆成 4 块</strong>，写在 <code>before-after.md</code> 里。
+        </div>
+        <div class="label-row"><span class="icon">📐</span>参考拆法</div>
+        <table class="pm-tbl">
+          <thead><tr><th>要素</th><th>对应原文（示意）</th></tr></thead>
+          <tbody>
+            <tr><td>角色</td><td>（L1 没显式写，靠会话上下文撑）</td></tr>
+            <tr><td>上下文</td><td>"我要做一个'行业新闻周报'主线任务，每周抓一次新闻，存到本地，下游会用这些数据做 HTML 可视化。"</td></tr>
+            <tr><td>约束</td><td>"字段尽量原子化…必含…先不要去抓真实新闻…"</td></tr>
+            <tr><td>产物</td><td>"schema/news.schema.md…一条 mock 数据 sample.json"</td></tr>
+          </tbody>
+        </table>
+        <div class="label-row"><span class="icon">📝</span>你在拆解中会发现的事</div>
+        <ol>
+          <li>几乎所有"好用的 prompt"都在不知不觉里凑齐了 4 要素</li>
+          <li>你之前写的 prompt <strong>最常缺的是"约束"和"产物路径"</strong></li>
+          <li><strong>角色</strong>这一块 PM 经常忽略，但其实"你扮演谁"对语气和深度影响巨大</li>
+        </ol>
+        <p style="margin-top:8px;font-size:14px;color:var(--text-soft)">把 L0、L2、L2.5 各挑一段 prompt 重做这个拆解，每段写一两行心得。</p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">4</span>给自己造一个"4 要素填空机"</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 把这个模板沉淀下来，以后每次喊它做事都用同样的姿势。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step4">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我把"PM 4 要素 prompt 模板"写成一个可复用的 markdown 文件：
+
+路径：pm-agent-lab/prompt-lab/PROMPT_TEMPLATE.md
+
+要求：
+1) 文件顶部写一段 ≤ 100 字的解释：4 要素分别是什么，为什么少一块就会跑偏
+2) 给一个空模板（4 个标题 + 占位符）让我直接复制粘贴
+3) 给 3 个我真实工作里的填好示例：
+   - 需求池摘要（同 Step 2）
+   - 单条需求的初步价值评估
+   - 让 Agent 把杂乱来源（IM/邮件/访谈）汇总成结构化 backlog
+4) 末尾给一段"反模式清单"：3–5 条 PM 容易踩的 prompt 坏习惯
+
+不要写"未来可优化"那种空话；模板要能直接用。</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我把"PM 4 要素 prompt 模板"写成一个可复用的 markdown 文件：
+
+路径：pm-agent-lab/prompt-lab/PROMPT_TEMPLATE.md
+
+要求：
+1) 文件顶部写一段 ≤ 100 字的解释：4 要素分别是什么，为什么少一块就会跑偏
+2) 给一个空模板（4 个标题 + 占位符）让我直接复制粘贴
+3) 给 3 个我真实工作里的填好示例：
+   - 会议待办摘要（同 Step 2）
+   - 把一段会议纪要拆成"决策 / 待办 / 风险"三栏
+   - 让 Agent 给跨部门同步邮件起草 follow-up
+4) 末尾给一段"反模式清单"：3–5 条 PM 容易踩的 prompt 坏习惯
+
+不要写"未来可优化"那种空话；模板要能直接用。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我把"PM 4 要素 prompt 模板"写成一个可复用的 markdown 文件：
+
+路径：pm-agent-lab/prompt-lab/PROMPT_TEMPLATE.md
+
+要求：
+1) 文件顶部写一段 ≤ 100 字的解释：4 要素分别是什么，为什么少一块就会跑偏
+2) 给一个空模板（4 个标题 + 占位符）让我直接复制粘贴
+3) 给 3 个我真实工作里的填好示例：
+   - 周报生成（同 Step 2）
+   - 竞品调研落本地
+   - 让 Agent 自助跑数据并出图
+4) 末尾给一段"反模式清单"：3–5 条 PM 容易踩的 prompt 坏习惯
+
+不要写"未来可优化"那种空话；模板要能直接用。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>一份你以后随手就能调用的 <code>PROMPT_TEMPLATE.md</code></li>
+          <li>3 个示例都贴近你真实工作</li>
+        </ul>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">5</span>升级技：让 Agent 帮你"挑刺自己的 prompt"</h3>
+        <div class="note-tip"><strong>💡 何时用</strong>：4 要素是底盘。下面这两个手法是"高级护栏"，遇到关键任务时再用。</div>
+
+        <div class="label-row"><span class="icon">5.1</span>让 Agent 先 plan 再做</div>
+        <div class="prompt-box" data-prompt-group="step5a">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">[在产物前面加一句]
+开始动手前，先给我一份需求池整理的执行计划（你打算从哪些来源抓线索 + 用什么字段去重 + 大致顺序），让我确认后你再执行。</pre>
+          <pre class="prompt-body" data-track-text="meeting">[在产物前面加一句]
+开始动手前，先给我一份会议待办提取的执行计划（你打算读哪些纪要文件 + 怎么区分"决策/待办/风险" + 大致顺序），让我确认后你再执行。</pre>
+          <pre class="prompt-body" data-track-text="news">[在产物前面加一句]
+开始动手前，先给我一份执行计划（步骤 + 你打算调用什么工具 + 大致顺序），让我确认后你再执行。</pre>
+        </div>
+        <p style="font-size:13px;color:var(--text-soft);margin-top:6px">用途：长任务、不可逆任务、第一次跑的新流程。</p>
+
+        <div class="label-row" style="margin-top:18px"><span class="icon">5.2</span>让 Agent 自己"挑刺"你的 prompt</div>
+        <div class="prompt-box" data-prompt-group="step5b">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">我刚刚给你的"需求池整理 prompt"你先不要执行，按下面 5 个角度挑刺：
+1) 4 要素哪块缺失或不清晰？（角色/上下文/约束/产物路径）
+2) 哪些表述会被你理解成至少两种意思？（比如"重要需求"具体指什么）
+3) 有没有"约束太多反而互相打架"的地方？
+4) 我有没有让你做一些其实你做不到 / 不该做的事？（比如要求你判断"用户是否真的会用"）
+5) 如果只能保留 1 句话，最关键的是哪一句？
+给完反馈再等我确认要不要执行。</pre>
+          <pre class="prompt-body" data-track-text="meeting">我刚刚给你的"会议纪要跟进 prompt"你先不要执行，按下面 5 个角度挑刺：
+1) 4 要素哪块缺失或不清晰？（角色/上下文/约束/产物路径）
+2) 哪些表述会被你理解成至少两种意思？（比如"待办"还是"决策"边界模糊）
+3) 有没有"约束太多反而互相打架"的地方？
+4) 我有没有让你做一些其实你做不到 / 不该做的事？（比如让你替没出席的人判断态度）
+5) 如果只能保留 1 句话，最关键的是哪一句？
+给完反馈再等我确认要不要执行。</pre>
+          <pre class="prompt-body" data-track-text="news">我刚刚给你的 prompt 你先不要执行，按下面 5 个角度挑刺：
+1) 4 要素哪块缺失或不清晰？
+2) 哪些表述会被你理解成至少两种意思？
+3) 有没有"约束太多反而互相打架"的地方？
+4) 我有没有让你做一些其实你做不到 / 不该做的事？
+5) 如果只能保留 1 句话，最关键的是哪一句？
+给完反馈再等我确认要不要执行。</pre>
+        </div>
+        <p style="font-size:13px;color:var(--text-soft);margin-top:6px">用途：你打算把一个 prompt 沉淀成 Skill 之前（直接连到 L5）。</p>
+
+        <div class="note-tip" style="margin-top:14px">把这两段也补到 <code>PROMPT_TEMPLATE.md</code> 末尾的"高阶用法"章节。</div>
+      </div>
+    </section>
+
+    <!-- ===== 5. 自检 ===== -->
+    <section id="s5">
+      <h2 class="section-h"><span class="num">5</span>自检清单</h2>
+      <ul class="check-list" id="selfCheck">
+        <li data-check="c1">我手上有 <code>pm-agent-lab/prompt-lab/PROMPT_TEMPLATE.md</code>，3 个真实示例齐全</li>
+        <li data-check="c2">我的 <code>before-after.md</code> 里至少有 1 组完整的 <strong>Before/After</strong> 对比</li>
+        <li data-check="c3">给我任何一个我现在写过的 prompt，我都能指出"它缺了 4 要素中的哪一块"</li>
+        <li data-check="c4">我能给同事现场演示"加一行约束就让结果可控"的小魔术</li>
+        <li data-check="c5">我开始下意识地在每个 prompt 末尾写"产物：xxx 文件 / xxx 字数"</li>
+      </ul>
+
+      <div class="quiz">
+        <h4>🧠 快速自测</h4>
+        <div class="quiz-q">
+          <div class="q">Q1. 4 要素里 PM <strong>最容易偷懒不写</strong>的是？</div>
+          <div class="quiz-opts" data-correct="3">
+            <button class="quiz-opt">A. 角色</button>
+            <button class="quiz-opt">B. 上下文</button>
+            <button class="quiz-opt">C. 约束</button>
+            <button class="quiz-opt">D. 产物</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 D</span>：不写产物路径 → Agent 把答案丢在对话里，下游用不了——这就是为什么对话越聊越乱。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q2. Agent 总写超长、还动不动用"非常 / 极大地"，最该补哪个要素？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. 角色</button>
+            <button class="quiz-opt">B. 上下文</button>
+            <button class="quiz-opt">C. 约束</button>
+            <button class="quiz-opt">D. 产物</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：字数失控、风格漂移、瞎编内容——这三类问题几乎都是"约束"那一块没写或写得太软。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q3. PM 偷懒的极简版 prompt，至少要带哪两要素？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. 角色 + 上下文</button>
+            <button class="quiz-opt">B. 角色 + 产物</button>
+            <button class="quiz-opt">C. 约束 + 产物</button>
+            <button class="quiz-opt">D. 上下文 + 约束</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：极简版 = "做 X，约束 Y，结果落到 &lt;路径&gt;"——带上"约束 + 产物"，命中率就能拉到 80 分以上。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. 思考题 ===== -->
+    <section id="s6">
+      <h2 class="section-h"><span class="num">6</span>思考题 & 下一讲引子</h2>
+      <p><strong>思考题</strong></p>
+      <ul>
+        <li>4 要素里 PM 最容易忽略哪一块？为什么？（提示：很多 PM 不写"产物"，导致 Agent 把答案丢在对话里就完事——这就是为什么对话越聊越乱。）</li>
+        <li>把 4 要素延伸成你团队所有同事都用的"团队 prompt 公约"，需要补哪一条？</li>
+      </ul>
+      <p style="margin-top:12px"><strong>下一讲引子</strong></p>
+      <p>你已经会写好 prompt 了，但好 prompt 的"上下文"那块每次都要重写吗？显然不行。<strong>L4</strong> 我们会建一个 <strong>LLM Wiki</strong>——把"我是谁、我们产品是什么、我的偏好"一次性写好，让 Agent 永远从那里取材。</p>
+    </section>
+
+    <!-- ===== 7. 交付物 ===== -->
+    <section id="s7">
+      <h2 class="section-h"><span class="num">7</span>本讲交付物</h2>
+      <p>按你选定的场景，下面三选一即可（三场景共享同一份 <code>PROMPT_TEMPLATE.md</code> 与 <code>before-after.md</code>，只是 Step 2 的"主线产物"文件名按场景区分）：</p>
+      <div class="deliv-card">
+        <h4>📁 目录结构</h4>
+        <pre id="deliverTree">pm-agent-lab/
+├── prompt-lab/                           # 三场景共享：模板 + 翻车样本
+│   ├── PROMPT_TEMPLATE.md
+│   └── before-after.md
+└── backlog-lab/L3-demo/
+    └── backlog-digest.md                 # Step 2 顺手产出的需求池摘要</pre>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--text-soft)">Step 2 在三种场景下都是"4 要素重写一份给 leader 的简报"，只是主题、字段和落盘文件名不同；模板与拆解笔记是通用的，所以集中在 <code>prompt-lab/</code> 下。</p>
+    </section>
+
+    <!-- ===== 8. 副线 ===== -->
+    <section id="s8">
+      <h2 class="section-h"><span class="num">8</span>副线练习（可选）</h2>
+      <p>本讲主线已经可在三个场景切换。副线建议挑战更进阶的玩法：挑一个你<strong>最近被 Agent 气过</strong>的真实场景，用 4 要素重写一遍：</p>
+      <ul>
+        <li>让 Agent 帮你写 <strong>PRD 摘要</strong> → 总写得太啰嗦？补"<strong>约束</strong>"。</li>
+        <li>让 Agent 帮你整理 <strong>用户访谈</strong> → 抓不住重点？补"<strong>角色</strong>"+"<strong>产物结构</strong>"。</li>
+        <li>让 Agent 帮你做 <strong>协作方对比表</strong> → 总维度不对？补"<strong>上下文</strong>"+"<strong>产物列名</strong>"。</li>
+      </ul>
+      <div class="note-tip"><strong>💡</strong> 把每次重写过程记到 <code>before-after.md</code>。<strong>这份文件会成为你 prompt 能力的成长档案。</strong></div>
+    </section>
+
+    <!-- ===== 9. 小结 ===== -->
+    <section id="s9">
+      <h2 class="section-h"><span class="num">9</span>给 PM 的小结：4 要素的"权重"</h2>
+      <p>不是 4 块同等重要。按 PM 实际场景排序：</p>
+      <table class="pm-tbl">
+        <thead><tr><th>优先级</th><th>要素</th><th>写不好的代价</th></tr></thead>
+        <tbody>
+          <tr><td>🥇</td><td><strong>产物</strong></td><td>不写 → Agent 把答案丢在对话里，下游用不了</td></tr>
+          <tr><td>🥈</td><td><strong>约束</strong></td><td>不写 → 字数失控、风格漂移、瞎编内容</td></tr>
+          <tr><td>🥉</td><td><strong>上下文</strong></td><td>不写 → 答非所问、需要反复补背景</td></tr>
+          <tr><td>4️⃣</td><td><strong>角色</strong></td><td>不写 → 语气与深度不对，但通常不致命</td></tr>
+        </tbody>
+      </table>
+      <div class="note-shock" style="margin-top:14px">
+        <h4>🎯 一句话带走</h4>
+        所以 PM 平时偷懒的<strong>极简版</strong>可以是：<br>
+        "做 X，约束 Y，结果落到 <code>&lt;具体路径&gt;</code>。" ——只要带上"<strong>约束 + 产物</strong>"，命中率就能直接拉到 80 分以上。
+      </div>
+    </section>
+
+    <!-- 上一讲 / 下一讲 -->
+    <nav class="mini-nav">
+      <a href="L2.5.html"><span class="label">← 上一讲</span><span class="title">L2.5 · 浏览器自动化</span></a>
+      <a href="L4.html" class="next"><span class="label">下一讲 →</span><span class="title">L4 · 建你的 LLM Wiki</span></a>
+    </nav>
+
+    <div class="lesson-footer">学完这一讲，你已经能写出"高命中率"的 prompt。L4 我们教你把上下文一次性存下来，让 Agent 永远从那里取材。</div>
+
+  </article>
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sb-card">
+      <h4>本讲进度
+        <span class="sb-progress">
+          <span class="sb-progress-bar"><div id="sbBar" style="width:0%"></div></span>
+          <span id="sbText">0%</span>
+        </span>
+      </h4>
+      <ul class="toc-list">
+        <li><a href="#s1">1. 你将学会</a></li>
+        <li><a href="#s2">2. 背景小知识</a></li>
+        <li><a href="#s3">3. 准备工作</a></li>
+        <li><a href="#s4">4. 实战任务</a></li>
+        <li><a href="#s5">5. 自检清单</a></li>
+        <li><a href="#s6">6. 思考题</a></li>
+        <li><a href="#s7">7. 交付物</a></li>
+        <li><a href="#s8">8. 副线练习</a></li>
+        <li><a href="#s9">9. 4 要素权重</a></li>
+      </ul>
+    </div>
+
+    <div class="sb-card">
+      <h4>当前练手场景</h4>
+      <p style="font-size:13px;color:var(--text-soft)" id="sbTrackInfo">📋 需求池整理</p>
+      <p style="font-size:11px;color:var(--text-mute);margin-top:4px">顶栏可一键切换三场景，所有 prompt + Builder 预填联动。</p>
+    </div>
+
+    <div class="sb-card">
+      <h4>键盘快捷键</h4>
+      <p style="font-size:12px;color:var(--text-soft)">
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">1</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">2</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">3</kbd> 切换三场景<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">T</kbd> 切换主题
+      </p>
+    </div>
+
+    <button class="complete-btn" id="completeBtn">
+      <span id="completeText">✓ 标记本讲已学完</span>
+    </button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+const LESSON_ID = "L3";
+const TOTAL_LESSONS = 14;
+const THEME_KEY = "agentOnboarding.theme";
+const TRACK_KEY = "agentOnboarding.track";
+const PROGRESS_KEY = "agentOnboarding.progress.v1";
+const STATE_KEY = `agentOnboarding.${LESSON_ID}.state`;
+const html = document.documentElement;
+
+const TRACK_INFO = {
+  backlog: {
+    name:"需求池整理", emoji:"📋",
+    deliverTree:`pm-agent-lab/
+├── prompt-lab/                           # 三场景共享：模板 + 翻车样本
+│   ├── PROMPT_TEMPLATE.md
+│   └── before-after.md
+└── backlog-lab/L3-demo/
+    └── backlog-digest.md                 # Step 2 顺手产出的需求池摘要`,
+    pbExample:{
+      role:"PM 助手，熟悉互联网产品的需求池治理场景",
+      context:`我是一个产品经理，本周新增了三条候选需求：
+1) "推荐流冷启动优化"（来源：算法同学反馈）
+2) "iOS 用户登录后偶发白屏"（来源：客服转接的用户反馈）
+3) "下季度 OKR 草案里提到要补一个'分享回流'入口"
+对方是我的直属 leader，他时间紧，喜欢看结论，不喜欢长篇大论。`,
+      constraints:`- 输出 ≤ 200 字
+- 结构：[结论一句] + [3 条需求，每条 1 行：一句话描述 + 初判优先级] + [下周 1 个最重要的下一步动作]
+- 不要使用 emoji 或夸张副词（"非常"、"极大地"等）
+- 我没说的不要编`,
+      deliverable:"直接把内容写到 pm-agent-lab/prompt-lab/backlog-digest.md，并打印到对话里给我看"
+    }
+  },
+  meeting: {
+    name:"会议纪要跟进", emoji:"📝",
+    deliverTree:`pm-agent-lab/
+├── prompt-lab/                           # 三场景共享：模板 + 翻车样本
+│   ├── PROMPT_TEMPLATE.md
+│   └── before-after.md
+└── meeting-lab/L3-demo/
+    └── meeting-followup.md               # Step 2 顺手产出的会议待办`,
+    pbExample:{
+      role:"PM 助手，熟悉跨团队协作的会议跟进场景",
+      context:`我是一个产品经理，本周开了三个会，得到的关键事项是：
+1) 需求评审会：通过了"推荐流冷启动优化"，研发承诺下周一给排期
+2) bug 复盘会：iOS 登录白屏定位为客户端缓存问题，待发版
+3) OKR 对齐会：leader 要求下周三前给出"留存提升"的拆解方案
+对方是我的直属 leader，他时间紧，喜欢看结论，不喜欢长篇大论。`,
+      constraints:`- 输出 ≤ 200 字
+- 结构：[结论一句] + [3 件事，每件 1 行：决策/待办 + 归属人 + 截止] + [下周 1 个最关键的跟进点]
+- 不要使用 emoji 或夸张副词（"非常"、"极大地"等）
+- 我没说的不要编`,
+      deliverable:"直接把内容写到 pm-agent-lab/prompt-lab/meeting-followup.md，并打印到对话里给我看"
+    }
+  },
+  news: {
+    name:"行业 / 竞品周报", emoji:"📰",
+    deliverTree:`pm-agent-lab/
+├── prompt-lab/                           # 三场景共享：模板 + 翻车样本
+│   ├── PROMPT_TEMPLATE.md
+│   └── before-after.md
+└── news-lab/L3-demo/
+    └── weekly-report.md                  # Step 2 顺手产出的周报`,
+    pbExample:{
+      role:"PM 助手，熟悉互联网产品周报场景",
+      context:`我是一个产品经理，本周做了三件事：
+1) 推动某需求评审通过（需求名："推荐流冷启动优化"）
+2) 跟进一个线上 bug 修复（影响：iOS 用户登录后偶发白屏）
+3) 完成下季度 OKR 草案讨论
+对方是我的直属 leader，他时间紧，喜欢看结论，不喜欢长篇大论。`,
+      constraints:`- 输出 ≤ 200 字
+- 结构：[结论一句] + [本周 3 件事，每件 1 行] + [下周 1 个最重要的事]
+- 不要使用 emoji 或夸张副词（"非常"、"极大地"等）
+- 我没说的不要编`,
+      deliverable:"直接把内容写到 pm-agent-lab/prompt-lab/weekly-report.md，并打印到对话里给我看"
+    }
+  }
+};
+
+/* =============== Theme =============== */
+const themeSwitch = document.getElementById("themeSwitch");
+function applyTheme(theme){
+  if(theme!=="dark" && theme!=="stealth") theme="stealth";
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.themeBtn===theme));
+  moveIndicator(themeSwitch);
+  localStorage.setItem(THEME_KEY, theme);
+}
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =============== Track =============== */
+const trackSwitch = document.getElementById("trackSwitch");
+let currentTrack = "backlog";
+function applyTrack(track){
+  if(!TRACK_INFO[track]) track = "backlog";
+  currentTrack = track;
+  localStorage.setItem(TRACK_KEY, track);
+  trackSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
+  moveIndicator(trackSwitch);
+  document.querySelectorAll(".prompt-box").forEach(box=>{
+    const tabs = box.querySelectorAll(".prompt-tab");
+    const bodies = box.querySelectorAll(".prompt-body[data-track-text]");
+    if(!tabs.length) return; // skip the static reference prompt-box (no tabs)
+    tabs.forEach(t=>t.classList.toggle("active", t.dataset.trackTab===track));
+    bodies.forEach(b=>{ b.style.display = b.dataset.trackText===track ? "block" : "none"; });
+  });
+  const info = TRACK_INFO[track];
+  document.getElementById("currentTrackName").textContent = info.name;
+  document.getElementById("sbTrackInfo").textContent = `${info.emoji} ${info.name}`;
+  document.getElementById("deliverTree").textContent = info.deliverTree;
+  // refill prompt builder
+  fillPbExample();
+}
+trackSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTrack(btn.dataset.track));
+});
+
+/* =============== Indicator =============== */
+function moveIndicator(switchEl){
+  const ind = switchEl.querySelector(".ind");
+  const active = switchEl.querySelector("button.active");
+  if(!ind || !active) return;
+  ind.style.width = active.offsetWidth + "px";
+  ind.style.transform = `translateX(${active.offsetLeft - 2}px)`;
+}
+window.addEventListener("resize",()=>{moveIndicator(themeSwitch);moveIndicator(trackSwitch)});
+
+/* =============== Tabs in prompt boxes =============== */
+document.querySelectorAll(".prompt-tab[data-track-tab]").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    const target = tab.dataset.trackTab;
+    if(target==="all") return;
+    applyTrack(target);
+  });
+});
+
+/* =============== Copy =============== */
+document.querySelectorAll(".prompt-copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box = btn.closest(".prompt-box");
+    const visible = [...box.querySelectorAll(".prompt-body")].find(b=>b.style.display!=="none") || box.querySelector(".prompt-body");
+    const text = visible.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = "✓ 已复制";
+      btn.classList.add("copied");
+      showToast("已复制 prompt 到剪贴板");
+      setTimeout(()=>{btn.textContent="📋 复制";btn.classList.remove("copied")}, 1500);
+    });
+  });
+});
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* =============== Prompt Builder =============== */
+const pbRole = document.getElementById("pbRole");
+const pbContext = document.getElementById("pbContext");
+const pbConstraints = document.getElementById("pbConstraints");
+const pbDeliverable = document.getElementById("pbDeliverable");
+const pbPreviewBody = document.getElementById("pbPreviewBody");
+const pbStatusBadge = document.getElementById("pbStatusBadge");
+
+function escapeHtml(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function fillPbExample(){
+  const ex = TRACK_INFO[currentTrack].pbExample;
+  pbRole.value = ex.role;
+  pbContext.value = ex.context;
+  pbConstraints.value = ex.constraints;
+  pbDeliverable.value = ex.deliverable;
+  renderPbPreview();
+}
+function clearPb(){
+  pbRole.value = "";
+  pbContext.value = "";
+  pbConstraints.value = "";
+  pbDeliverable.value = "";
+  renderPbPreview();
+}
+function renderPbPreview(){
+  const role = pbRole.value.trim();
+  const ctx = pbContext.value.trim();
+  const cons = pbConstraints.value.trim();
+  const del = pbDeliverable.value.trim();
+  const miss = [];
+  if(!role) miss.push("角色");
+  if(!ctx) miss.push("上下文");
+  if(!cons) miss.push("约束");
+  if(!del) miss.push("产物");
+
+  const segs = [
+    {title:"[角色]",    val:role, key:"角色"},
+    {title:"[上下文]",  val:ctx,  key:"上下文"},
+    {title:"[约束]",    val:cons, key:"约束"},
+    {title:"[产物]",    val:del,  key:"产物"}
+  ];
+  pbPreviewBody.innerHTML = segs.map(s=>{
+    const body = s.val ? escapeHtml(s.val) : `<span class="miss-mark">❌ 缺少 ${s.key} 要素 → Agent 可能跑偏</span>`;
+    return `<span class="seg-title">${s.title}</span>\n${body}`;
+  }).join("\n\n");
+
+  if(miss.length===0){
+    pbStatusBadge.className = "pb-badge ok";
+    pbStatusBadge.textContent = "✅ 4 要素齐全";
+  } else {
+    pbStatusBadge.className = "pb-badge miss";
+    pbStatusBadge.textContent = `⚠ 缺 ${miss.length} 块：${miss.join(" / ")}`;
+  }
+}
+function getPbPlainText(){
+  const role = pbRole.value.trim();
+  const ctx = pbContext.value.trim();
+  const cons = pbConstraints.value.trim();
+  const del = pbDeliverable.value.trim();
+  return `[角色]\n${role||"（缺）"}\n\n[上下文]\n${ctx||"（缺）"}\n\n[约束]\n${cons||"（缺）"}\n\n[产物]\n${del||"（缺）"}`;
+}
+[pbRole,pbContext,pbConstraints,pbDeliverable].forEach(el=>{
+  el.addEventListener("input", renderPbPreview);
+});
+document.getElementById("pbResetBtn").addEventListener("click", fillPbExample);
+document.getElementById("pbClearBtn").addEventListener("click", clearPb);
+document.getElementById("pbCopyBtn").addEventListener("click",()=>{
+  navigator.clipboard.writeText(getPbPlainText()).then(()=>{
+    showToast("已复制完整 prompt 到剪贴板");
+  });
+});
+
+/* Initialize track */
+applyTrack(localStorage.getItem(TRACK_KEY) || "backlog");
+
+/* =============== Check lists =============== */
+const STATE = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(STATE)); updateProgress(); }
+function bindCheckList(ulId, key){
+  const ul = document.getElementById(ulId);
+  if(!ul) return;
+  STATE[key] = STATE[key] || {};
+  ul.querySelectorAll("li").forEach(li=>{
+    const id = li.dataset.goal || li.dataset.prep || li.dataset.check;
+    if(STATE[key][id]) li.classList.add("done");
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      STATE[key][id] = li.classList.contains("done");
+      saveState();
+    });
+  });
+}
+bindCheckList("learnGoals","goals");
+bindCheckList("prepList","preps");
+bindCheckList("selfCheck","checks");
+
+/* =============== Progress =============== */
+function updateProgress(){
+  const sources = [
+    {key:"goals",  count:3},
+    {key:"preps",  count:3},
+    {key:"checks", count:5},
+    {key:"quiz",   count:3}
+  ];
+  let done = 0, total = 0;
+  sources.forEach(s=>{
+    total += s.count;
+    if(STATE[s.key]) done += Object.values(STATE[s.key]).filter(Boolean).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("sbBar").style.width = pct + "%";
+  document.getElementById("sbText").textContent = pct + "%";
+}
+updateProgress();
+
+/* =============== Quiz =============== */
+document.querySelectorAll(".quiz-q").forEach((q,idx)=>{
+  const opts = q.querySelector(".quiz-opts");
+  const correct = parseInt(opts.dataset.correct, 10);
+  const explain = q.querySelector(".quiz-explain");
+  STATE.quiz = STATE.quiz || {};
+  if(STATE.quiz[`q${idx}`]){
+    opts.children[correct].classList.add("right");
+    explain.classList.add("show");
+  }
+  opts.querySelectorAll(".quiz-opt").forEach((opt,i)=>{
+    opt.addEventListener("click",()=>{
+      if(opts.querySelector(".right")) return;
+      if(i===correct){
+        opt.classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }else{
+        opt.classList.add("wrong");
+        opts.children[correct].classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }
+      explain.classList.add("show");
+    });
+  });
+});
+
+/* =============== Mark complete =============== */
+const completeBtn = document.getElementById("completeBtn");
+const completeText = document.getElementById("completeText");
+function refreshCompleteUI(){
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  const isDone = doneSet.has(LESSON_ID);
+  completeBtn.classList.toggle("done", isDone);
+  completeText.textContent = isDone ? "✓ 已学完（点击取消）" : "✓ 标记本讲已学完";
+}
+completeBtn.addEventListener("click",()=>{
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  if(doneSet.has(LESSON_ID)) doneSet.delete(LESSON_ID);
+  else { doneSet.add(LESSON_ID); showToast(`L3 已标记为完成 · ${doneSet.size}/${TOTAL_LESSONS}`); }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...doneSet]));
+  refreshCompleteUI();
+});
+refreshCompleteUI();
+
+/* =============== TOC active highlight =============== */
+const tocLinks = document.querySelectorAll(".toc-list a");
+const sections = [...document.querySelectorAll(".article section[id]")];
+function onScroll(){
+  let cur = sections[0];
+  const top = window.scrollY + 120;
+  for(const s of sections){ if(s.offsetTop <= top) cur = s; }
+  tocLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#" + cur.id));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* =============== Keyboard shortcuts =============== */
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select")) return;
+  if(e.key==="1") applyTrack("backlog");
+  else if(e.key==="2") applyTrack("meeting");
+  else if(e.key==="3") applyTrack("news");
+  else if(e.key==="t" || e.key==="T") applyTheme(html.getAttribute("data-theme")==="dark"?"stealth":"dark");
+});
+
+/* =============== Cross-tab sync =============== */
+window.addEventListener("storage", e=>{
+  if(e.key===THEME_KEY) applyTheme(e.newValue);
+  else if(e.key===TRACK_KEY) applyTrack(e.newValue);
+  else if(e.key===PROGRESS_KEY) refreshCompleteUI();
+});
+</script>
+</body>
+</html>

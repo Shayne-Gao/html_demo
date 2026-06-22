@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>L2.5 · 让 Agent 操作浏览器 | PM 培训学习平台</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html[data-theme="dark"]{
+    --bg:#0b0d12; --bg-soft:#11141b; --bg-card:#161a23; --bg-card-hover:#1c2230;
+    --border:#252b39; --border-strong:#323a4d;
+    --text:#e6e8ee; --text-soft:#a4abbb; --text-mute:#6b7186;
+    --accent:#7c5cff; --accent-2:#22d3ee; --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399; --danger:#f87171; --warn:#fbbf24;
+    --A:#22d3ee; --code-bg:#0d1018; --code-border:#1f2533;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px; --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8; --bg-soft:#eceff3; --bg-card:#ffffff; --bg-card-hover:#fafbfc;
+    --border:#e4e7eb; --border-strong:#cbd0d8;
+    --text:#1f2329; --text-soft:#4e5969; --text-mute:#8a93a6;
+    --accent:#1664ff; --accent-2:#0e62e3; --accent-soft:#e6f0ff;
+    --success:#00a870; --danger:#f53f3f; --warn:#ff7d00;
+    --A:#1664ff; --code-bg:#f7f8fa; --code-border:#e4e7eb;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px; --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:var(--font-mono);font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+  strong{color:var(--text);font-weight:600}
+  ul,ol{padding-left:1.6em}
+  li{margin:.3em 0}
+
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mute)}
+  .breadcrumb a{color:var(--text-soft)}
+  .breadcrumb .current{color:var(--text);font-weight:500}
+  .breadcrumb .sep{color:var(--text-mute)}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+  .theme-switch,.track-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  .theme-switch button,.track-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1;white-space:nowrap}
+  .theme-switch button.active,.track-switch button.active{color:#fff}
+  .theme-switch .ind,.track-switch .ind{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s}
+  .nav-btn{font-size:12px;color:var(--text-soft);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  .layout{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:flex-start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static !important}}
+  .article{padding:32px 0 96px;min-width:0}
+  .sidebar{position:sticky;top:64px;padding:24px 0;max-height:calc(100vh - 64px);overflow:auto}
+
+  .lesson-header{margin-bottom:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  .lesson-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-mute);margin-bottom:12px;align-items:center}
+  .lesson-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-weight:600}
+  .lesson-meta .sep{width:1px;height:12px;background:var(--border)}
+  h1.lesson-title{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.3;margin-bottom:10px}
+  .lesson-tagline{color:var(--text-soft);font-size:15px;font-style:italic;border-left:3px solid var(--accent);padding-left:12px;margin-top:8px}
+  h2.section-h{font-size:20px;font-weight:600;letter-spacing:-.3px;margin:48px 0 14px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h2.section-h .num{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--accent)}
+  h3.step-h{font-size:17px;font-weight:600;margin:28px 0 10px;color:var(--text);display:flex;align-items:center;gap:10px}
+  h3.step-h .badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+  .step-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+  .label-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--text)}
+  .label-row .icon{font-size:14px}
+  .label-row.tone-warn{color:var(--warn)}
+
+  .prompt-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);overflow:hidden;margin:8px 0 4px;position:relative}
+  .prompt-tabs{display:flex;align-items:center;gap:0;background:var(--bg-soft);border-bottom:1px solid var(--code-border);padding:0 6px}
+  .prompt-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text-mute);border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .prompt-tab:hover{color:var(--text-soft)}
+  .prompt-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .prompt-spacer{flex:1}
+  .prompt-copy{font-size:11px;color:var(--text-mute);padding:4px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s;display:inline-flex;align-items:center;gap:4px;margin-right:8px}
+  .prompt-copy:hover{color:var(--accent);border-color:var(--accent)}
+  .prompt-copy.copied{color:var(--success);border-color:var(--success);background:var(--bg-card)}
+  .prompt-body{font-family:var(--font-mono);font-size:13px;line-height:1.65;padding:14px 16px;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+  .note-tip{background:var(--accent-soft);border:1px solid var(--accent);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-soft);margin:10px 0}
+  .note-tip strong{color:var(--accent)}
+  .note-warn{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;margin:10px 0}
+  .note-shock{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:14px;margin:14px 0}
+  .note-shock h4{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:700}
+
+  .track-info{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;font-size:13px;color:var(--text-soft)}
+  .track-info table{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}
+  .track-info td{padding:4px 10px 4px 0;border-top:1px dashed var(--border)}
+  .track-info tr:first-child td{border-top:none;font-weight:600;color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .track-info code{font-size:.85em}
+
+  .check-list{list-style:none;padding-left:0;margin:8px 0}
+  .check-list li{padding-left:28px;position:relative;margin:6px 0;font-size:14px;cursor:pointer}
+  .check-list li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;background:var(--bg-card);transition:.15s}
+  .check-list li.done::before{background:var(--success);border-color:var(--success);content:"✓";color:#fff;font-size:11px;text-align:center;line-height:11px;font-weight:700}
+  .check-list li:hover::before{border-color:var(--accent)}
+  .check-list li.done{color:var(--text-soft)}
+
+  .deliv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card)}
+  .deliv-card h4{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .deliv-card pre{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--text-soft);background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:10px 12px;white-space:pre;overflow:auto}
+
+  .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card)}
+  .sb-card h4{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .sb-progress{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mute);font-weight:400;text-transform:none;letter-spacing:0}
+  .sb-progress-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .sb-progress-bar div{height:100%;background:var(--success);transition:width .4s}
+  .toc-list{list-style:none;padding:0;margin:0}
+  .toc-list a{display:block;padding:6px 10px;font-size:13px;color:var(--text-soft);border-radius:var(--radius-sm);transition:.15s;text-decoration:none}
+  .toc-list a:hover{background:var(--bg-soft);color:var(--text)}
+  .toc-list a.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+  .complete-btn{width:100%;padding:12px;background:var(--success);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+  .complete-btn:hover{filter:brightness(1.05)}
+  .complete-btn.done{background:var(--bg-card);color:var(--success);border:1.5px solid var(--success)}
+
+  .mini-nav{display:flex;gap:8px;margin-top:32px}
+  .mini-nav a{flex:1;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-soft);transition:.15s;text-decoration:none}
+  .mini-nav a:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-nav .label{font-size:11px;color:var(--text-mute);margin-bottom:4px;display:block}
+  .mini-nav .title{color:var(--text);font-weight:500}
+  .mini-nav .next{text-align:right}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .quiz{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:var(--shadow-card)}
+  .quiz h4{font-size:14px;margin-bottom:12px;font-weight:600}
+  .quiz-q{margin:12px 0;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .quiz-q .q{font-size:13px;margin-bottom:8px;font-weight:500}
+  .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .quiz-opt{padding:5px 14px;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.15s;cursor:pointer}
+  .quiz-opt:hover{border-color:var(--accent)}
+  .quiz-opt.right{background:var(--success);color:#fff;border-color:var(--success)}
+  .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .quiz-explain{margin-top:8px;font-size:12px;color:var(--text-soft);display:none}
+  .quiz-explain.show{display:block}
+  .quiz-explain .right-tag{color:var(--success);font-weight:600}
+
+  .lesson-footer{margin-top:48px;padding:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);text-align:center;font-size:13px;color:var(--text-soft)}
+
+  details.fold-card{background:var(--bg-soft);border:1px dashed var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin:8px 0;font-size:13px;color:var(--text-soft)}
+  details.fold-card[open]{background:var(--bg-card);border-style:solid}
+  details.fold-card summary{cursor:pointer;font-weight:500;color:var(--text);user-select:none;font-size:13px}
+  details.fold-card summary:hover{color:var(--accent)}
+  details.fold-card[open] summary{margin-bottom:8px}
+  details.fold-card ul{margin:6px 0}
+
+  /* === Browser vs API 决策器 === */
+  .decider{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0;box-shadow:var(--shadow-card)}
+  .decider h3{font-size:15px;font-weight:600;margin-bottom:4px}
+  .decider .demo-sub{font-size:13px;color:var(--text-soft);margin-bottom:14px}
+  .decider-stepper{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+  .decider-step{padding:5px 11px;border:1px solid var(--border);border-radius:999px;font-size:12px;font-weight:500;color:var(--text-mute);background:var(--bg-soft);display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .decider-step.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .decider-step.done{background:var(--success);color:#fff;border-color:var(--success)}
+  .decider-step .pill-num{display:inline-flex;width:18px;height:18px;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,.12);font-size:10px;font-weight:700}
+  .decider-step.active .pill-num,.decider-step.done .pill-num{background:rgba(255,255,255,.25)}
+  .decider-frame{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg-soft)}
+  .decider-browser-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--bg-card);border-bottom:1px solid var(--border)}
+  .decider-dot{width:10px;height:10px;border-radius:50%;background:var(--border-strong)}
+  .decider-dot.r{background:#f87171}.decider-dot.y{background:#fbbf24}.decider-dot.g{background:#34d399}
+  .decider-url{flex:1;background:var(--bg-soft);padding:3px 10px;border-radius:4px;font-family:var(--font-mono);font-size:11px;color:var(--text-mute);margin-left:8px}
+  .decider-body{padding:18px;min-height:200px;background:var(--bg-card)}
+  .decider-question{font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text)}
+  .decider-question .q-num{display:inline-block;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);padding:1px 8px;border-radius:var(--radius-sm);font-size:11px;font-weight:700;margin-right:8px;vertical-align:middle}
+  .decider-opts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .decider-opt{padding:8px 18px;border:1px solid var(--border);background:var(--bg-soft);border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--text);transition:.15s;cursor:pointer}
+  .decider-opt:hover{border-color:var(--accent);color:var(--accent)}
+  .decider-opt.picked{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .decider-history{font-size:12px;color:var(--text-mute);margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+  .decider-history span{display:inline-block;background:var(--bg-soft);border:1px solid var(--border);padding:1px 8px;border-radius:var(--radius-sm);margin-right:6px;color:var(--text-soft)}
+  .decider-result{padding:14px;background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius-sm);margin-bottom:10px}
+  .decider-result.warn{background:linear-gradient(135deg,rgba(245,158,11,.12),transparent);border-color:var(--warn)}
+  .decider-result.success{background:linear-gradient(135deg,rgba(0,168,112,.12),transparent);border-color:var(--success)}
+  .decider-result h4{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--accent)}
+  .decider-result.warn h4{color:var(--warn)}
+  .decider-result.success h4{color:var(--success)}
+  .decider-result p{font-size:13px;color:var(--text);line-height:1.7;margin-top:4px}
+  .decider-result .tag-pills{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+  .decider-result .tag-pills span{font-size:11px;padding:2px 8px;background:var(--bg-card);border:1px solid var(--border);border-radius:999px;color:var(--text-soft)}
+  .decider-reset{margin-top:8px;font-size:12px;color:var(--text-mute);border:1px solid var(--border);background:var(--bg-card);padding:5px 14px;border-radius:var(--radius-sm);transition:.15s}
+  .decider-reset:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">PM 培训学习平台</a>
+      <span class="sep">/</span>
+      <a href="../index.html#map">课程地图</a>
+      <span class="sep">/</span>
+      <span class="current">L2.5 · 让 Agent 操作浏览器</span>
+    </div>
+    <div class="topbar-right">
+      <div class="track-switch" id="trackSwitch" title="切换练手场景">
+        <div class="ind"></div>
+        <button data-track="backlog">📋 需求池</button>
+        <button data-track="meeting">📝 会议纪要</button>
+        <button data-track="news">📰 行业周报</button>
+      </div>
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button data-theme-btn="stealth">📊 摸鱼</button>
+        <button data-theme-btn="dark">🌙 暗色</button>
+      </div>
+      <a class="nav-btn" href="../index.html">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <article class="article">
+
+    <header class="lesson-header">
+      <div class="lesson-meta">
+        <span class="lesson-badge">L2.5 · 模块 A 认知与上手</span>
+        <span>⏱ 60 min</span>
+        <span class="sep"></span>
+        <span>难度 ⭐⭐⭐</span>
+        <span class="sep"></span>
+        <span>当前练手场景：<strong id="currentTrackName" style="color:var(--accent)">行业 / 竞品周报</strong></span>
+      </div>
+      <h1 class="lesson-title">让 Agent 操作浏览器：突破 API 与公开数据的边界</h1>
+      <p class="lesson-tagline">当数据在登录态后面、当任务是"重复点点点"、当系统没有 API——让 Agent 接管你的浏览器。</p>
+    </header>
+
+    <!-- ===== 1. 你将学会 ===== -->
+    <section id="s1">
+      <h2 class="section-h"><span class="num">1</span>你将学会</h2>
+      <p>勾选完成情况会自动同步到首页学习进度。</p>
+      <ul class="check-list" id="learnGoals">
+        <li data-goal="g1">我能让 Agent <strong>真的打开一个网页、登录、点击、填写、截图、抓数据</strong></li>
+        <li data-goal="g2">我能判断哪些任务该走"浏览器操作"、哪些该走"API/CLI"</li>
+        <li data-goal="g3">我能为浏览器操作任务写一份<strong>安全清单</strong>：不让 Agent 误点破坏性按钮</li>
+      </ul>
+    </section>
+
+    <!-- ===== 2. 背景小知识 ===== -->
+    <section id="s2">
+      <h2 class="section-h"><span class="num">2</span>背景小知识</h2>
+      <p>到 L2 为止，你让 Agent 做的所有事都属于"模型 + 文件系统 + 公开网页搜索"。但 PM 工作里很多场景<strong>不在公开互联网上</strong>：</p>
+      <ul>
+        <li>公司后台运营数据：必须登录才能看</li>
+        <li>飞书文档列表 / 多维表格筛选结果：你自己看着比 API 更直观</li>
+        <li>竞品 SaaS 的功能演示：公开页就能点，但要真点一遍才知道交互长什么样</li>
+        <li>各种"重复点 30 次"的体力活：批量下载附件、批量改字段、批量发送邀请</li>
+      </ul>
+      <p><strong>浏览器操作（Browser Use）就是给 Agent 一个真实浏览器的钥匙</strong>。它能像人一样：打开网页 → 看到页面截图 → 决定点哪 → 真的点下去 → 看新页面 → 继续……</p>
+      <div class="note-shock">
+        <h4>💡 直觉口诀</h4>
+        <strong>没 API 的地方，浏览器就是兜底 API。</strong>
+      </div>
+      <div class="note-warn"><strong>⚠️ 重要前置：</strong>浏览器操作 = Agent 真的在你电脑上点击。所以<strong>风险也最大</strong>——它点错按钮和你点错没区别。本讲会专门给你一份"安全清单"。</div>
+    </section>
+
+    <!-- ===== Interactive: Browser vs API 决策器 ===== -->
+    <div class="decider" id="decider">
+      <h3>🧭 互动决策器：Browser Use 还是 API？</h3>
+      <p class="demo-sub">回答 3 个问题，告诉你这个任务该走哪条路。可以反复重置——这就是 PM 拿到一个新任务时心里要过的清单。</p>
+      <div class="decider-stepper" id="deciderStepper">
+        <span class="decider-step" data-step="0"><span class="pill-num">1</span>有没有 API</span>
+        <span class="decider-step" data-step="1"><span class="pill-num">2</span>要不要登录</span>
+        <span class="decider-step" data-step="2"><span class="pill-num">3</span>会不会写</span>
+        <span class="decider-step" data-step="3"><span class="pill-num">✓</span>建议</span>
+      </div>
+      <div class="decider-frame">
+        <div class="decider-browser-bar">
+          <span class="decider-dot r"></span><span class="decider-dot y"></span><span class="decider-dot g"></span>
+          <span class="decider-url" id="deciderUrl">decision://browser-vs-api</span>
+        </div>
+        <div class="decider-body" id="deciderBody"></div>
+      </div>
+    </div>
+
+    <!-- ===== 3. 准备工作 ===== -->
+    <section id="s3">
+      <h2 class="section-h"><span class="num">3</span>准备工作</h2>
+      <ul class="check-list" id="prepList">
+        <li data-prep="p1">已完成 <a href="L2.html">L2</a>，能让 Agent 自由读写本地文件</li>
+        <li data-prep="p2">一款支持浏览器操作的 Agent 客户端：Codex / ChatGPT Agent Mode / Claude Computer Use / Trae（开通 browser 能力）；退而求其次让 Agent 用 <code>playwright</code> / <code>puppeteer</code> 起一个无头浏览器</li>
+        <li data-prep="p3">一个<strong>可以随便折腾的浏览器 Profile</strong>：建议新建独立 profile，<strong>不要用你日常那个登满了所有账号的</strong></li>
+        <li data-prep="p4">工作目录：<code id="prepLabPath">pm-agent-lab/news-lab/L2.5-demo/</code></li>
+      </ul>
+
+      <div class="track-info">
+        <strong>🎯 三选一练手主线</strong>
+        <p style="margin-top:6px">本讲示例默认演示当前选中的场景（顶栏可一键切换）。每讲只需选 1 个跑透即可。三场景在浏览器操作里的具体抓取对象不同：</p>
+        <table>
+          <tr><td>场景</td><td>本讲产物路径</td><td>抓取对象</td></tr>
+          <tr><td>📋 需求池整理</td><td><code>pm-agent-lab/backlog-lab/L2.5-demo/</code></td><td>飞书 IM/邮件搜索结果页 → "建议/想要/希望"等关键词</td></tr>
+          <tr><td>📝 会议纪要跟进</td><td><code>pm-agent-lab/meeting-lab/L2.5-demo/</code></td><td>飞书日历/妙记列表 → 最近 7 天会议清单</td></tr>
+          <tr><td>📰 行业 / 竞品周报</td><td><code>pm-agent-lab/news-lab/L2.5-demo/</code></td><td>飞书云空间"最近"页 → 最近 30 天打开过的文档</td></tr>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--text-mute);margin-top:8px">下面 prompt 以 lark-cli 风格示例；如果你用钉钉/企微/Notion/Slack，请代入对应 CLI/SDK 或浏览器入口。</p>
+    </section>
+
+    <!-- ===== 4. 实战任务 ===== -->
+    <section id="s4">
+      <h2 class="section-h"><span class="num">4</span>实战任务</h2>
+      <p>我们做一件 PM 真实会做的事：<strong>抓取一个登录态后台的数据 → 截图存证 → 落到本地表格 → 自动生成报告</strong>。</p>
+      <p>为了不依赖你公司的具体后台，本讲使用<strong>飞书</strong>作为练手对象（你已经登录的那个）。三个场景共用同一套"截图 + 抓数据 + 出报告"流程，只是抓取页面和字段不同。</p>
+
+      <!-- Step 1 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">1</span>让 Agent 打开浏览器，先"看到"页面</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">不要一上来就让它干大事。先让它<strong>只打开页面、只截图、只描述</strong>，建立你对它操作能力的信心。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step1">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">启动一个浏览器，打开 https://www.feishu.cn ，等页面完全加载后：
+1) 截一张当前可视区域的图，存到 pm-agent-lab/backlog-lab/L2.5-demo/screenshots/01-feishu-home.png
+2) 告诉我你看到了哪些主要导航入口（重点关注消息、邮件、文档入口，不要点击）
+3) 不要登录、不要填任何东西
+完成后等我下一步指令。</pre>
+          <pre class="prompt-body" data-track-text="meeting">启动一个浏览器，打开 https://www.feishu.cn ，等页面完全加载后：
+1) 截一张当前可视区域的图，存到 pm-agent-lab/meeting-lab/L2.5-demo/screenshots/01-feishu-home.png
+2) 告诉我你看到了哪些主要导航入口（重点关注日历、视频会议、妙记入口，不要点击）
+3) 不要登录、不要填任何东西
+完成后等我下一步指令。</pre>
+          <pre class="prompt-body" data-track-text="news">启动一个浏览器，打开 https://www.feishu.cn ，等页面完全加载后：
+1) 截一张当前可视区域的图，存到 pm-agent-lab/news-lab/L2.5-demo/screenshots/01-feishu-home.png
+2) 告诉我你看到了哪些主要导航入口（不要点击）
+3) 不要登录、不要填任何东西
+完成后等我下一步指令。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>Agent 真的启动了一个浏览器窗口（你能看到它）</li>
+          <li>本地截图存好了</li>
+          <li>它给你一个简短描述："首页主要有 X、Y、Z 入口"</li>
+        </ul>
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：客户端不支持 Browser Use</strong> → 先改成"用 playwright 起 headless 浏览器，截图存到指定路径"</li>
+          <li><strong>偏差 B：截图是黑屏 / 加载未完</strong> → 纠偏：<br><code>截图前请等待页面完全加载（document.readyState === 'complete' 且没有 loading spinner），最多等 8 秒；如果还在 loading，告诉我而不是硬截。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">2</span>让 Agent 用你已登录状态进入"我的文档"</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">进入登录态后的页面。注意：<strong>Agent 不应该让你输入密码</strong>——更安全的姿势是"复用你已登录的浏览器 Profile"，或者你<strong>手动登录后再让 Agent 接管</strong>。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step2">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">我会自己手动完成登录（你不要替我输入密码或验证码）。
+请：
+1) 启动浏览器并打开 https://www.feishu.cn ，停在登录页
+2) 暂停操作，告诉我"已就绪，请你手动登录"
+3) 等我说"我登录好了"之后，再继续：
+   - 进入消息（IM）页面，使用搜索栏搜索关键词"建议"（一次只搜一个）
+   - 截图存到 pm-agent-lab/backlog-lab/L2.5-demo/screenshots/02-search-result.png
+   - 告诉我当前搜索结果大约有多少条消息，是否有滚动加载</pre>
+          <pre class="prompt-body" data-track-text="meeting">我会自己手动完成登录（你不要替我输入密码或验证码）。
+请：
+1) 启动浏览器并打开 https://www.feishu.cn ，停在登录页
+2) 暂停操作，告诉我"已就绪，请你手动登录"
+3) 等我说"我登录好了"之后，再继续：
+   - 进入日历或妙记列表页，定位到本周（最近 7 天）的会议/纪要清单
+   - 截图存到 pm-agent-lab/meeting-lab/L2.5-demo/screenshots/02-meetings.png
+   - 告诉我本周大约有多少场会议/几条纪要，是否有滚动加载</pre>
+          <pre class="prompt-body" data-track-text="news">我会自己手动完成登录（你不要替我输入密码或验证码）。
+请：
+1) 启动浏览器并打开 https://docs.feishu.cn ，停在登录页
+2) 暂停操作，告诉我"已就绪，请你手动登录"
+3) 等我说"我登录好了"之后，再继续：
+   - 进入"最近"或"我的空间"页
+   - 截图存到 pm-agent-lab/news-lab/L2.5-demo/screenshots/02-recent.png
+   - 告诉我当前页能看到大约多少个文档条目，是否有滚动加载</pre>
+        </div>
+        <div class="note-shock">
+          <h4>📝 这一步教会你什么</h4>
+          <strong>人在环路</strong>：登录 / 验证码 / 二次验证一律由人来做，Agent 只做之后的事。<br>
+          <strong>断点协作</strong>：Agent 主动停下等你确认，是浏览器操作的标配姿势。
+        </div>
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：Agent 自作聪明开始填密码</strong> → 立刻打断：<br><code>停下，不要替我登录。把当前页留在登录页，等我说"我登录好了"再继续。后续所有需要凭证的步骤都同样处理。</code></li>
+          <li><strong>偏差 B：登录后跳到了"个人版"而不是"企业版"</strong> → 让它读 URL 自检：<br><code>请先 print 出当前页面的 URL 和 title 给我看，确认是不是企业空间。如果不是，停下来问我怎么切。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">3</span>让 Agent 抓取列表数据（核心）</h3>
+        <div class="note-tip"><strong>💡 节奏：</strong>这一步是本讲价值最高的一步——让 Agent 把"肉眼能看到的列表"变成<strong>结构化数据</strong>。完成它你就解锁了"登录态后的世界"。</div>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step3">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">现在抓取当前 IM 搜索结果页里所有可见的消息条目，输出成结构化数据：
+- 字段：snippet（消息片段）/ sender（发件人）/ chat_name（来自哪个群或私聊）/ sent_at / url（消息深链）
+- 滚动到底加载更多，但只抓最近 14 天内的；早于 14 天就停
+- 写入：pm-agent-lab/backlog-lab/L2.5-demo/data/raw-leads.json
+- 同时给我一段文字汇报：本次共抓 N 条 / 各 chat_name 分布 / 滚动了几次
+
+约束：
+1) 不要点开任何消息进入聊天详情，只在搜索结果列表页读取
+2) 不要做任何会改数据的操作（不要回复、点赞、转发）
+3) 抓完发我看，不要自动进入下一步</pre>
+          <pre class="prompt-body" data-track-text="meeting">现在抓取当前会议/妙记列表页里所有可见的条目，输出成结构化数据：
+- 字段：meeting_title / type（视频会议/纪要/线下会）/ host（主持人）/ start_at / duration_min / url
+- 滚动到底加载更多，但只抓最近 7 天内的；早于 7 天就停
+- 写入：pm-agent-lab/meeting-lab/L2.5-demo/data/recent-meetings.json
+- 同时给我一段文字汇报：本次共抓 N 条 / 各 type 分布 / 滚动了几次
+
+约束：
+1) 不要点开任何会议/纪要进入详情页，只在列表页读取
+2) 不要做任何会改数据的操作（不要重命名、删除、修改参会人）
+3) 抓完发我看，不要自动进入下一步</pre>
+          <pre class="prompt-body" data-track-text="news">现在抓取"最近"页里所有可见的文档条目，输出成结构化数据：
+- 字段：title / type（文档/表格/多维表格/Wiki/其它）/ owner / last_visited_at / url
+- 滚动到底加载更多，但只抓最近 30 天内打开的；早于 30 天就停
+- 写入：pm-agent-lab/news-lab/L2.5-demo/data/recent-docs.json
+- 同时给我一段文字汇报：本次共抓 N 条 / 各 type 分布 / 滚动了几次
+
+约束：
+1) 不要点开任何文档，只在列表页读取
+2) 不要做任何会改数据的操作（不要点收藏/取消收藏/删除）
+3) 抓完发我看，不要自动进入下一步</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>真的产生结构化 JSON 文件，字段齐全</li>
+          <li>一段汇报：滚动了 X 次、抓了 N 条、最早一条是什么时间</li>
+          <li>Agent <strong>停在原地</strong>等你确认</li>
+        </ul>
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：滚动一次就停了</strong> → 纠偏：<br><code>你只滚了 1 次，但页面下方还有更多内容。请继续滚动直到出现"没有更多"或最早条目超出时间范围为止；每次滚动后等 1 秒让数据加载完。</code></li>
+          <li><strong>偏差 B：URL 字段抓的是相对路径</strong> → 纠偏：<br><code>url 必须是完整的可点击链接。如果只能拿到相对路径，请基于 location.origin 拼成完整 URL。</code></li>
+          <li><strong>偏差 C：抓到了重复条目</strong> → 纠偏：<br><code>按 url 去重，重复的只保留时间最新那条。给我去重前后各多少条。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">4</span>让 Agent 顺手做一份"个人文档健康报告"</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">把刚抓到的数据用上——这是 PM 视角才会想到的二次加工。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step4">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">基于 raw-leads.json 写一份 markdown 报告：
+pm-agent-lab/backlog-lab/L2.5-demo/data/lead-report.md
+
+至少包含：
+1) 这一批线索里出现频次最高的 TOP 5 关键诉求（按语义聚类，简单聚类即可）
+2) 按 chat_name 分布：哪些群/私聊提需求最频繁
+3) 14 天内还未被处理（你能从上下文推断的）线索候选 TOP 10
+4) 一句话洞察：从这批线索看，过去两周用户/同事最关心的是什么主题？
+
+不要加你不知道的字段，找不到就老老实实说找不到。</pre>
+          <pre class="prompt-body" data-track-text="meeting">基于 recent-meetings.json 写一份 markdown 报告：
+pm-agent-lab/meeting-lab/L2.5-demo/data/weekly-meeting-report.md
+
+至少包含：
+1) 本周时长 TOP 5 的会议（按 duration_min 倒序）
+2) 按 type 分布：视频会议 / 纪要 / 线下会各占比
+3) 本周没有产生纪要的会议候选清单（提醒补纪要）
+4) 一句话洞察：从这份数据看，本周我主要在和哪些主题/团队对齐？
+
+不要加你不知道的字段，找不到就老老实实说找不到。</pre>
+          <pre class="prompt-body" data-track-text="news">基于 recent-docs.json 写一份 markdown 报告：
+pm-agent-lab/news-lab/L2.5-demo/data/personal-doc-report.md
+
+至少包含：
+1) 我最近 30 天最常打开的文档 TOP 5（按访问次数推断不出来就标注"无法获知"）
+2) 按 type 分布：文档 / 表格 / 多维表格 / Wiki 各占比
+3) 30 天内未再打开过、可能可以归档的文档候选（按 last_visited_at 升序前 10 条）
+4) 一句话洞察：从这份数据看，过去 30 天我主要在做什么类型的工作？
+
+不要加你不知道的字段，找不到就老老实实说找不到。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>一份直接可发给自己 / 老板的报告</li>
+          <li>你会突然意识到：<strong>这是一份只有"打开真实浏览器"才能产生的报告</strong>——纯 web search 永远做不到，因为这数据在登录态后面</li>
+        </ul>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">5</span>给浏览器操作上"安全护栏"</h3>
+        <p>浏览器操作威力 ≈ 风险。本节做完，把这份清单贴在你的 lab 目录下，以后每次跑浏览器任务前过一遍。</p>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 帮你产出 <code>BROWSER_SAFETY.md</code>，并且约束以后所有浏览器任务都先读它。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step5">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我产出一份 BROWSER_SAFETY.md，存到 pm-agent-lab/backlog-lab/L2.5-demo/BROWSER_SAFETY.md，内容包含：
+
+1) 我永远自己来做的事（凭证、二次验证、点"撤回/删除消息"按钮）
+2) 默认人工确认的操作（在 IM 里回复/点赞/转发、跨群转发可能涉密的需求线索）
+3) 你可以独立做的事（只读搜索、滚动、截图、复制消息片段）
+4) 出错时的兜底动作（截图存证 → 暂停 → 等我决定）
+5) 数据红线（用户的 verbatim 不能上传到外部 LLM 做处理；脱敏后才能流转）
+
+写完后告诉我：以后所有 pm-agent-lab/backlog-lab/L2.5-demo/ 下的浏览器任务，你都要先读这份文档再开始操作。</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我产出一份 BROWSER_SAFETY.md，存到 pm-agent-lab/meeting-lab/L2.5-demo/BROWSER_SAFETY.md，内容包含：
+
+1) 我永远自己来做的事（凭证、二次验证、点"删除会议/解散群/退出参会"按钮）
+2) 默认人工确认的操作（修改会议参会人、重命名纪要、把纪要转发给非参会人）
+3) 你可以独立做的事（只读浏览会议/纪要列表、滚动、截图、复制纪要内容）
+4) 出错时的兜底动作（截图存证 → 暂停 → 等我决定）
+5) 数据红线（会议纪要内容不能上传到外部 LLM 服务做处理；只能在本地处理）
+
+写完后告诉我：以后所有 pm-agent-lab/meeting-lab/L2.5-demo/ 下的浏览器任务，你都要先读这份文档再开始操作。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我产出一份 BROWSER_SAFETY.md，存到 pm-agent-lab/news-lab/L2.5-demo/BROWSER_SAFETY.md，内容包含：
+
+1) 我永远自己来做的事（凭证、二次验证、支付、点"删除/退订/解散群"按钮）
+2) 默认人工确认的操作（任何 POST/PUT/DELETE 类的按钮、群发/邀请、跨域跳转）
+3) 你可以独立做的事（只读浏览、滚动、截图、复制文本、点击只读 tab）
+4) 出错时的兜底动作（截图存证 → 暂停 → 等我决定）
+5) 数据红线（公司机密文档不能上传到外部 LLM 服务做处理；只能在本地处理）
+
+写完后告诉我：以后所有 pm-agent-lab/news-lab/L2.5-demo/ 下的浏览器任务，你都要先读这份文档再开始操作。</pre>
+        </div>
+        <div class="note-shock">
+          <h4>📝 PM 决策时刻</h4>
+          review 这份清单，<strong>改成你公司真实场景</strong>：
+          <ul style="margin-top:6px">
+            <li>你们公司的"破坏性按钮"叫什么？</li>
+            <li>哪些后台操作必须留 trace（你不希望 Agent 替你做）？</li>
+            <li>哪些数据是绝对不能截图外发的？</li>
+          </ul>
+          把这些补进去，就是你团队的第一份"AI 浏览器使用规范"。
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5. 自检 ===== -->
+    <section id="s5">
+      <h2 class="section-h"><span class="num">5</span>自检清单</h2>
+      <ul class="check-list" id="selfCheck">
+        <li data-check="c1">我能在浏览器里看到 Agent 真的在动（鼠标移动 / 点击高亮）</li>
+        <li data-check="c2">我能让它在登录页<strong>停下来</strong>等我手动操作</li>
+        <li data-check="c3">我能从结构化 JSON 文件里看出它真抓到了登录态数据</li>
+        <li data-check="c4">我有一份 <code>BROWSER_SAFETY.md</code>，并能 30 秒讲清"哪些事它不能独立做"</li>
+        <li data-check="c5">我能判断一个新任务该走浏览器操作还是 API/CLI（提示：<strong>有 API 永远优先 API</strong>）</li>
+      </ul>
+
+      <div class="quiz">
+        <h4>🧠 快速自测（呼应"三问"）</h4>
+        <div class="quiz-q">
+          <div class="q">Q1. 同一个任务既能走 API 也能走 Browser Use，应该优先？</div>
+          <div class="quiz-opts" data-correct="1">
+            <button class="quiz-opt">A. Browser Use——可视化直观</button>
+            <button class="quiz-opt">B. API——更稳、更便宜、更安全、可重跑</button>
+            <button class="quiz-opt">C. 都一样，看心情</button>
+            <button class="quiz-opt">D. 先 Browser Use 跑通再说</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 B</span>：有 API 永远优先 API。Browser Use 是"没 API 时的兜底"，不是首选。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q2. 浏览器任务要登录，PM 该怎么做？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. 把账号密码贴在 prompt 里，方便 Agent 操作</button>
+            <button class="quiz-opt">B. 让 Agent 自己去注册一个新账号</button>
+            <button class="quiz-opt">C. 人工登录 + Agent 接管，绝不让 Agent 输密码或验证码</button>
+            <button class="quiz-opt">D. 把 cookie 文件发给 Agent 让它解析</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：人在环路是浏览器操作的铁律。凭证 / 二次验证一律自己来，Agent 只做之后的事。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q3. 只读浏览 vs 写操作（点删除/发送/支付），应该怎么处理？</div>
+          <div class="quiz-opts" data-correct="1">
+            <button class="quiz-opt">A. 一视同仁，反正都让 Agent 做</button>
+            <button class="quiz-opt">B. 只读放手让 Agent 跑；写操作默认人工确认每一步</button>
+            <button class="quiz-opt">C. 都需要人工确认，每点一下都问</button>
+            <button class="quiz-opt">D. 都不需要人工确认，Agent 自己判断</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 B</span>：写操作（POST/PUT/DELETE）默认要人工确认，是浏览器操作的安全护栏；只读任务再放手让 Agent 自己跑。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. 思考题 ===== -->
+    <section id="s6">
+      <h2 class="section-h"><span class="num">6</span>思考题 & 下一讲引子</h2>
+      <p><strong>思考题</strong></p>
+      <ul>
+        <li>把"抓最近 30 天文档"改成"每周一早 9 点自动跑一次"，需要再加什么？（提示：人工登录这步怎么办？）</li>
+        <li>你公司里有哪 3 个<strong>没有 API、但每周都点 30 次</strong>的网页操作？这就是你下一个 Skill 候选。</li>
+      </ul>
+      <p style="margin-top:12px"><strong>下一讲引子</strong></p>
+      <p>你已经会"喊一声 Agent 做事"，但你会发现命中率忽高忽低。L3 我们用 PM 视角的 4 要素模板（角色 / 上下文 / 约束 / 产物），把"碰运气"变成"高命中率"。</p>
+    </section>
+
+    <!-- ===== 7. 交付物 ===== -->
+    <section id="s7">
+      <h2 class="section-h"><span class="num">7</span>本讲交付物</h2>
+      <p>按你选定的场景，下面三选一即可：</p>
+      <div class="deliv-card">
+        <h4>📁 目录结构</h4>
+        <pre id="deliverTree">pm-agent-lab/news-lab/L2.5-demo/
+├── BROWSER_SAFETY.md           # ← 本讲新增：安全清单
+├── screenshots/
+│   ├── 01-feishu-home.png
+│   └── 02-recent.png
+└── data/
+    ├── recent-docs.json        # ← 本讲新增：抓到的结构化数据
+    └── personal-doc-report.md  # ← 本讲新增：二次加工报告</pre>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--text-soft)">三个场景共用同一套"截图 + 抓数据 + 出报告"流程，只是抓取页面和字段不同。</p>
+    </section>
+
+    <!-- ===== 8. 副线 ===== -->
+    <section id="s8">
+      <h2 class="section-h"><span class="num">8</span>副线练习（可选）</h2>
+      <p>本讲主线已可在三个场景切换，副线建议挑战更进阶的玩法。把"浏览器抓登录态数据 → 落本地 → 出报告"这套姿势用在你真实的工作场景上：</p>
+      <ul>
+        <li><strong>竞品 SaaS 公开页全功能截图</strong>：访问竞品官网 + 公开 demo 站，让 Agent 把"产品功能列表 / 各 Tab 截图 / 关键交互 GIF"批量抓下来归档</li>
+        <li><strong>公司运营后台日常巡检</strong>：让 Agent 每天抓你最关心的几个核心指标看板截图，存成"日巡检包"</li>
+        <li><strong>批量整理网页书签 / 飞书收藏夹</strong>：让 Agent 把你混乱的收藏全部分类、去重、写成一份索引</li>
+      </ul>
+      <div class="note-tip"><strong>💡</strong> 副线产物挂在对应 lab 目录，命名保持和主线一致——这样 L5 一次封装就能服务所有副线场景。</div>
+    </section>
+
+    <!-- ===== 9. 小结 ===== -->
+    <section id="s9">
+      <h2 class="section-h"><span class="num">9</span>给 PM 的小结：浏览器操作的"三问"</h2>
+      <p>任何浏览器任务开始前，先问自己：</p>
+      <table style="width:100%;font-size:13px;border-collapse:collapse">
+        <thead><tr style="text-align:left;color:var(--text-mute);border-bottom:1px solid var(--border)">
+          <th style="padding:8px 10px 8px 0">问</th><th style="padding:8px 10px">怎么决策</th><th style="padding:8px 0">为什么</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:6px 10px 6px 0"><strong>1. 有没有 API？</strong></td><td style="padding:6px 10px">有就走 API</td><td style="padding:6px 0">更稳、更便宜、更安全、可重跑</td></tr>
+          <tr><td style="padding:6px 10px 6px 0"><strong>2. 要不要登录？</strong></td><td style="padding:6px 10px">人工登录 + Agent 接管</td><td style="padding:6px 0">凭证不喂模型；二次验证人工来</td></tr>
+          <tr><td style="padding:6px 10px 6px 0"><strong>3. 会不会改东西？</strong></td><td style="padding:6px 10px">写操作默认人工确认</td><td style="padding:6px 0">只读任务再放手让 Agent 自己跑</td></tr>
+        </tbody>
+      </table>
+      <div class="note-shock" style="margin-top:14px">
+        <h4>🎯 一句话带走</h4>
+        <strong>三问做对，浏览器操作就从"高风险炫技"变成"PM 日常工具"。</strong>
+      </div>
+    </section>
+
+    <!-- 上一讲 / 下一讲 -->
+    <nav class="mini-nav">
+      <a href="L2.html"><span class="label">← 上一讲</span><span class="title">L2 · Vibe Coding 初体验</span></a>
+      <a href="L3.html" class="next"><span class="label">下一讲 →</span><span class="title">L3 · 高命中率 Prompt 4 要素</span></a>
+    </nav>
+
+    <div class="lesson-footer">学完这一讲，你已经能让 Agent 替你操作浏览器抓登录态数据。L3 我们教你写出"高命中率"的 prompt。</div>
+
+  </article>
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sb-card">
+      <h4>本讲进度
+        <span class="sb-progress">
+          <span class="sb-progress-bar"><div id="sbBar" style="width:0%"></div></span>
+          <span id="sbText">0%</span>
+        </span>
+      </h4>
+      <ul class="toc-list">
+        <li><a href="#s1">1. 你将学会</a></li>
+        <li><a href="#s2">2. 背景小知识</a></li>
+        <li><a href="#s3">3. 准备工作</a></li>
+        <li><a href="#s4">4. 实战任务</a></li>
+        <li><a href="#s5">5. 自检清单</a></li>
+        <li><a href="#s6">6. 思考题</a></li>
+        <li><a href="#s7">7. 交付物</a></li>
+        <li><a href="#s8">8. 副线练习</a></li>
+        <li><a href="#s9">9. 浏览器三问</a></li>
+      </ul>
+    </div>
+
+    <div class="sb-card">
+      <h4>当前练手场景</h4>
+      <p style="font-size:13px;color:var(--text-soft)" id="sbTrackInfo">📰 行业 / 竞品周报</p>
+      <p style="font-size:11px;color:var(--text-mute);margin-top:4px">顶栏可一键切换三场景，所有 prompt 联动更新。</p>
+    </div>
+
+    <div class="sb-card">
+      <h4>键盘快捷键</h4>
+      <p style="font-size:12px;color:var(--text-soft)">
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">1</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">2</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">3</kbd> 切换三场景<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">T</kbd> 切换主题
+      </p>
+    </div>
+
+    <button class="complete-btn" id="completeBtn">
+      <span id="completeText">✓ 标记本讲已学完</span>
+    </button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+const LESSON_ID = "L2.5";
+const TOTAL_LESSONS = 14;
+const THEME_KEY = "agentOnboarding.theme";
+const TRACK_KEY = "agentOnboarding.track";
+const PROGRESS_KEY = "agentOnboarding.progress.v1";
+const STATE_KEY = `agentOnboarding.${LESSON_ID}.state`;
+const html = document.documentElement;
+
+const TRACK_INFO = {
+  backlog: {
+    name:"需求池整理", emoji:"📋",
+    labPath:"pm-agent-lab/backlog-lab/L2.5-demo/",
+    deliverTree:`pm-agent-lab/backlog-lab/L2.5-demo/
+├── BROWSER_SAFETY.md           # ← 本讲新增：安全清单
+├── screenshots/
+│   ├── 01-feishu-home.png
+│   └── 02-search-result.png
+└── data/
+    ├── raw-leads.json          # ← 本讲新增：抓到的结构化数据
+    └── lead-report.md          # ← 本讲新增：二次加工报告`
+  },
+  meeting: {
+    name:"会议纪要跟进", emoji:"📝",
+    labPath:"pm-agent-lab/meeting-lab/L2.5-demo/",
+    deliverTree:`pm-agent-lab/meeting-lab/L2.5-demo/
+├── BROWSER_SAFETY.md           # ← 本讲新增：安全清单
+├── screenshots/
+│   ├── 01-feishu-home.png
+│   └── 02-meetings.png
+└── data/
+    ├── recent-meetings.json    # ← 本讲新增：抓到的结构化数据
+    └── weekly-meeting-report.md# ← 本讲新增：二次加工报告`
+  },
+  news: {
+    name:"行业 / 竞品周报", emoji:"📰",
+    labPath:"pm-agent-lab/news-lab/L2.5-demo/",
+    deliverTree:`pm-agent-lab/news-lab/L2.5-demo/
+├── BROWSER_SAFETY.md           # ← 本讲新增：安全清单
+├── screenshots/
+│   ├── 01-feishu-home.png
+│   └── 02-recent.png
+└── data/
+    ├── recent-docs.json        # ← 本讲新增：抓到的结构化数据
+    └── personal-doc-report.md  # ← 本讲新增：二次加工报告`
+  }
+};
+
+/* =============== Theme =============== */
+const themeSwitch = document.getElementById("themeSwitch");
+function applyTheme(theme){
+  if(theme!=="dark" && theme!=="stealth") theme="stealth";
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.themeBtn===theme));
+  moveIndicator(themeSwitch);
+  localStorage.setItem(THEME_KEY, theme);
+}
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =============== Track =============== */
+const trackSwitch = document.getElementById("trackSwitch");
+let currentTrack = "news";
+function applyTrack(track){
+  if(!TRACK_INFO[track]) track = "news";
+  currentTrack = track;
+  localStorage.setItem(TRACK_KEY, track);
+  trackSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
+  moveIndicator(trackSwitch);
+  document.querySelectorAll(".prompt-box").forEach(box=>{
+    const tabs = box.querySelectorAll(".prompt-tab");
+    const bodies = box.querySelectorAll(".prompt-body");
+    tabs.forEach(t=>t.classList.toggle("active", t.dataset.trackTab===track));
+    bodies.forEach(b=>{ b.style.display = b.dataset.trackText===track ? "block" : "none"; });
+  });
+  const info = TRACK_INFO[track];
+  document.getElementById("currentTrackName").textContent = info.name;
+  document.getElementById("sbTrackInfo").textContent = `${info.emoji} ${info.name}`;
+  document.getElementById("prepLabPath").textContent = info.labPath;
+  document.getElementById("deliverTree").textContent = info.deliverTree;
+}
+trackSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTrack(btn.dataset.track));
+});
+
+/* =============== Indicator =============== */
+function moveIndicator(switchEl){
+  const ind = switchEl.querySelector(".ind");
+  const active = switchEl.querySelector("button.active");
+  if(!ind || !active) return;
+  ind.style.width = active.offsetWidth + "px";
+  ind.style.transform = `translateX(${active.offsetLeft - 2}px)`;
+}
+window.addEventListener("resize",()=>{moveIndicator(themeSwitch);moveIndicator(trackSwitch)});
+
+/* =============== Tabs in prompt boxes =============== */
+document.querySelectorAll(".prompt-tab[data-track-tab]").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    const target = tab.dataset.trackTab;
+    applyTrack(target);
+  });
+});
+
+/* =============== Copy =============== */
+document.querySelectorAll(".prompt-copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box = btn.closest(".prompt-box");
+    const visible = [...box.querySelectorAll(".prompt-body")].find(b=>b.style.display!=="none") || box.querySelector(".prompt-body");
+    const text = visible.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = "✓ 已复制";
+      btn.classList.add("copied");
+      showToast("已复制 prompt 到剪贴板");
+      setTimeout(()=>{btn.textContent="📋 复制";btn.classList.remove("copied")}, 1500);
+    });
+  });
+});
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* =============== Browser vs API Decider =============== */
+const DECIDER_QUESTIONS = [
+  {
+    q:"这个平台/系统有没有 API？",
+    opts:[
+      {label:"✅ 有",        value:"yes"},
+      {label:"❌ 没有",      value:"no"},
+      {label:"🤔 不确定",    value:"unknown"}
+    ]
+  },
+  {
+    q:"任务要不要登录态？",
+    opts:[
+      {label:"🔐 要登录",    value:"login"},
+      {label:"🌐 不用登录",  value:"public"}
+    ]
+  },
+  {
+    q:"会不会改数据（写操作）？",
+    opts:[
+      {label:"✍️ 会改",      value:"write"},
+      {label:"👀 只读",      value:"read"}
+    ]
+  }
+];
+
+let deciderAnswers = [];
+
+function renderDecider(){
+  const body = document.getElementById("deciderBody");
+  const stepper = document.getElementById("deciderStepper");
+  const idx = deciderAnswers.length;
+  stepper.querySelectorAll(".decider-step").forEach(s=>{
+    const i = parseInt(s.dataset.step,10);
+    s.classList.toggle("done", i<idx);
+    s.classList.toggle("active", i===idx);
+  });
+  // 如果用户在第 1 题答了"有 API"，直接跳到结论
+  if(deciderAnswers[0]==="yes"){
+    showDeciderResult();
+    return;
+  }
+  // 第 1 题答"不确定" → 也直接给一个软性建议
+  if(deciderAnswers[0]==="unknown"){
+    showDeciderResult();
+    return;
+  }
+  if(idx >= DECIDER_QUESTIONS.length){
+    showDeciderResult();
+    return;
+  }
+  const q = DECIDER_QUESTIONS[idx];
+  body.innerHTML = `
+    <div class="decider-question"><span class="q-num">Q${idx+1}</span>${q.q}</div>
+    <div class="decider-opts">
+      ${q.opts.map(o=>`<button class="decider-opt" data-val="${o.value}">${o.label}</button>`).join("")}
+    </div>
+    ${deciderAnswers.length?`<div class="decider-history">已选：${deciderAnswers.map((a,i)=>`<span>Q${i+1}: ${labelOf(i,a)}</span>`).join("")}</div>`:""}
+  `;
+  body.querySelectorAll(".decider-opt").forEach(b=>{
+    b.addEventListener("click",()=>{
+      deciderAnswers.push(b.dataset.val);
+      renderDecider();
+    });
+  });
+  document.getElementById("deciderUrl").textContent = `decision://step-${idx+1}-of-3`;
+}
+
+function labelOf(qIdx, val){
+  const found = DECIDER_QUESTIONS[qIdx].opts.find(o=>o.value===val);
+  return found ? found.label : val;
+}
+
+function showDeciderResult(){
+  const body = document.getElementById("deciderBody");
+  const [a1, a2, a3] = deciderAnswers;
+  let cls = "", title = "", body_html = "", tags = [];
+  if(a1==="yes"){
+    cls = "success";
+    title = "✅ 首选 API";
+    body_html = "稳、便宜、可重跑——还可以加 retry 和监控。<strong>把本讲 Browser Use 收藏起来作为兜底</strong>，等下个没 API 的任务再用。";
+    tags = ["lark-cli / SDK", "可重跑", "可定时", "无登录态烦恼"];
+  } else if(a1==="unknown"){
+    cls = "warn";
+    title = "🔍 先花 10 分钟查文档/问研发";
+    body_html = "API 比 Browser Use 香太多——花 10 分钟确认下值得。找到了就走 API；真的没找到再回来答 Q2/Q3。";
+    tags = ["看官网开放平台", "问研发同学", "搜 GitHub openapi", "找到了走 API"];
+  } else if(a1==="no" && a2==="login" && a3==="write"){
+    cls = "warn";
+    title = "⚠️ 高风险 Browser Use";
+    body_html = "默认<strong>人工确认每一步写操作</strong>，先读 <code>BROWSER_SAFETY.md</code>。凭证/二次验证由你自己来，Agent 只接管确认后的点击。";
+    tags = ["人在环路", "断点协作", "写操作要确认", "截图存证"];
+  } else if(a1==="no" && a2==="login" && a3==="read"){
+    cls = "";
+    title = "🌐 适合 Browser Use（只读模式）";
+    body_html = "这是本讲主线场景：<strong>人工登录 → Agent 接管 → 截图存证 → 抓数据落本地</strong>。可以放心放手让 Agent 自己跑。";
+    tags = ["人工登录", "Agent 接管", "只读浏览", "截图+JSON"];
+  } else if(a1==="no" && a2==="public" && a3==="read"){
+    cls = "success";
+    title = "🕷 公开页抓取";
+    body_html = "可以尝试 <code>fetch + 解析</code>（更快更省），也可以 Browser Use（更直观但更重）。建议优先 fetch，HTML 复杂时再上 Browser Use。";
+    tags = ["fetch 优先", "playwright 备选", "无登录烦恼", "可定时"];
+  } else if(a1==="no" && a2==="public" && a3==="write"){
+    cls = "warn";
+    title = "⚠️ 公开页 + 写操作 = 注意账号";
+    body_html = "虽然不用登录，但写操作往往会触发账号或匿名行为风控。<strong>默认人工确认每一步</strong>，并准备好降级（限频、加 sleep）。";
+    tags = ["注意风控", "限频", "人工确认", "降级方案"];
+  } else {
+    cls = "";
+    title = "🤔 信息不全";
+    body_html = "请把三个问题答完，再给你具体建议。";
+  }
+  body.innerHTML = `
+    <div class="decider-result ${cls}">
+      <h4>${title}</h4>
+      <p>${body_html}</p>
+      ${tags.length?`<div class="tag-pills">${tags.map(t=>`<span>${t}</span>`).join("")}</div>`:""}
+    </div>
+    <div class="decider-history">已选：${deciderAnswers.map((a,i)=>`<span>Q${i+1}: ${labelOf(i,a)}</span>`).join("")}</div>
+    <button class="decider-reset" id="deciderReset">↻ 重新回答</button>
+  `;
+  document.getElementById("deciderReset").addEventListener("click",()=>{
+    deciderAnswers = [];
+    renderDecider();
+  });
+  // 完成态：让所有 step 都 done
+  document.getElementById("deciderStepper").querySelectorAll(".decider-step").forEach(s=>{
+    s.classList.remove("active");
+    s.classList.add("done");
+  });
+  document.getElementById("deciderUrl").textContent = "decision://done";
+}
+renderDecider();
+
+/* Initialize track */
+applyTrack(localStorage.getItem(TRACK_KEY) || "news");
+
+/* =============== Check lists =============== */
+const STATE = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(STATE)); updateProgress(); }
+function bindCheckList(ulId, key){
+  const ul = document.getElementById(ulId);
+  if(!ul) return;
+  STATE[key] = STATE[key] || {};
+  ul.querySelectorAll("li").forEach(li=>{
+    const id = li.dataset.goal || li.dataset.prep || li.dataset.check;
+    if(STATE[key][id]) li.classList.add("done");
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      STATE[key][id] = li.classList.contains("done");
+      saveState();
+    });
+  });
+}
+bindCheckList("learnGoals","goals");
+bindCheckList("prepList","preps");
+bindCheckList("selfCheck","checks");
+
+/* =============== Progress =============== */
+function updateProgress(){
+  const sources = [
+    {key:"goals",  count:3},
+    {key:"preps",  count:4},
+    {key:"checks", count:5},
+    {key:"quiz",   count:3}
+  ];
+  let done = 0, total = 0;
+  sources.forEach(s=>{
+    total += s.count;
+    if(STATE[s.key]) done += Object.values(STATE[s.key]).filter(Boolean).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("sbBar").style.width = pct + "%";
+  document.getElementById("sbText").textContent = pct + "%";
+}
+updateProgress();
+
+/* =============== Quiz =============== */
+document.querySelectorAll(".quiz-q").forEach((q,idx)=>{
+  const opts = q.querySelector(".quiz-opts");
+  const correct = parseInt(opts.dataset.correct, 10);
+  const explain = q.querySelector(".quiz-explain");
+  STATE.quiz = STATE.quiz || {};
+  if(STATE.quiz[`q${idx}`]){
+    opts.children[correct].classList.add("right");
+    explain.classList.add("show");
+  }
+  opts.querySelectorAll(".quiz-opt").forEach((opt,i)=>{
+    opt.addEventListener("click",()=>{
+      if(opts.querySelector(".right")) return;
+      if(i===correct){
+        opt.classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }else{
+        opt.classList.add("wrong");
+        opts.children[correct].classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }
+      explain.classList.add("show");
+    });
+  });
+});
+
+/* =============== Mark complete =============== */
+const completeBtn = document.getElementById("completeBtn");
+const completeText = document.getElementById("completeText");
+function refreshCompleteUI(){
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  const isDone = doneSet.has(LESSON_ID);
+  completeBtn.classList.toggle("done", isDone);
+  completeText.textContent = isDone ? "✓ 已学完（点击取消）" : "✓ 标记本讲已学完";
+}
+completeBtn.addEventListener("click",()=>{
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  if(doneSet.has(LESSON_ID)) doneSet.delete(LESSON_ID);
+  else { doneSet.add(LESSON_ID); showToast(`L2.5 已标记为完成 · ${doneSet.size}/${TOTAL_LESSONS}`); }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...doneSet]));
+  refreshCompleteUI();
+});
+refreshCompleteUI();
+
+/* =============== TOC active highlight =============== */
+const tocLinks = document.querySelectorAll(".toc-list a");
+const sections = [...document.querySelectorAll(".article section[id]")];
+function onScroll(){
+  let cur = sections[0];
+  const top = window.scrollY + 120;
+  for(const s of sections){ if(s.offsetTop <= top) cur = s; }
+  tocLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#" + cur.id));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* =============== Keyboard shortcuts =============== */
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select")) return;
+  if(e.key==="1") applyTrack("backlog");
+  else if(e.key==="2") applyTrack("meeting");
+  else if(e.key==="3") applyTrack("news");
+  else if(e.key==="t" || e.key==="T") applyTheme(html.getAttribute("data-theme")==="dark"?"stealth":"dark");
+});
+
+/* =============== Cross-tab sync =============== */
+window.addEventListener("storage", e=>{
+  if(e.key===THEME_KEY) applyTheme(e.newValue);
+  else if(e.key===TRACK_KEY) applyTrack(e.newValue);
+  else if(e.key===PROGRESS_KEY) refreshCompleteUI();
+});
+</script>
+</body>
+</html>
