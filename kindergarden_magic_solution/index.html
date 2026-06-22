@@ -3,1823 +3,524 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>幼儿园毕业典礼哈利波特主题亲子魔术节目策划案</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
+  <title>幼儿园毕业典礼哈利波特主题亲子魔术节目执行页</title>
   <style>
-    :root {
-      --bg: #0d1220;
-      --bg-soft: rgba(16, 22, 38, 0.86);
-      --panel: rgba(247, 239, 219, 0.08);
-      --panel-strong: rgba(247, 239, 219, 0.13);
-      --line: rgba(230, 199, 124, 0.18);
-      --text: #f7f0de;
-      --text-soft: #cbc2aa;
-      --gold: #e0b85a;
-      --gold-strong: #f4ce74;
-      --blue: #7ba4ff;
-      --paper: #efe5c8;
-      --success: #9ad0b0;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-      --max-width: 1440px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Noto Sans SC", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(106, 129, 255, 0.18), transparent 26%),
-        radial-gradient(circle at top right, rgba(236, 191, 97, 0.2), transparent 24%),
-        linear-gradient(180deg, #0c1020 0%, #10172c 52%, #0a1020 100%);
-      min-height: 100vh;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 90%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .page-shell {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    .top-bar {
-      position: sticky;
-      top: 16px;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 18px;
-      margin-bottom: 22px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(8, 12, 24, 0.78);
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-    }
-
-    .top-bar__brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .top-bar__crest {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255, 236, 180, 0.34), transparent 50%),
-        linear-gradient(145deg, rgba(224, 184, 90, 0.32), rgba(123, 164, 255, 0.22));
-      border: 1px solid rgba(224, 184, 90, 0.24);
-      color: var(--gold-strong);
-      font-size: 22px;
-    }
-
-    .top-bar__text {
-      min-width: 0;
-    }
-
-    .top-bar__eyebrow {
-      font-size: 12px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-    }
-
-    .top-bar__title {
-      margin-top: 2px;
-      font-size: 16px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .top-bar__actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .ghost-button,
-    .gold-button {
-      border-radius: 999px;
-      border: 1px solid transparent;
-      padding: 10px 14px;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .ghost-button {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .gold-button {
-      background: linear-gradient(135deg, rgba(241, 208, 120, 0.96), rgba(216, 160, 55, 0.96));
-      color: #241a08;
-      font-weight: 700;
-      box-shadow: 0 16px 32px rgba(205, 154, 53, 0.22);
-    }
-
-    .ghost-button:hover,
-    .gold-button:hover,
-    .scene-jump:hover,
-    .mini-button:hover {
-      transform: translateY(-1px);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .main-column {
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-      min-width: 0;
-    }
-
-    .side-column {
-      position: sticky;
-      top: 96px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .hero,
-    .panel,
-    .scene-card,
-    .props-panel,
-    .floating-panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.03));
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 34px;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto -80px -80px auto;
-      width: 240px;
-      height: 240px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(224, 184, 90, 0.22) 0%, transparent 68%);
-      pointer-events: none;
-    }
-
-    .hero__eyebrow {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(224, 184, 90, 0.18);
-      background: rgba(224, 184, 90, 0.08);
-      color: var(--gold-strong);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .hero h1 {
-      margin: 18px 0 16px;
-      font-family: "Noto Serif SC", serif;
-      font-size: clamp(32px, 4vw, 54px);
-      line-height: 1.15;
-      letter-spacing: 0.02em;
-    }
-
-    .hero p {
-      margin: 0;
-      max-width: 720px;
-      color: var(--text-soft);
-      font-size: 15px;
-      line-height: 1.9;
-    }
-
-    .hero__meta {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 28px;
-    }
-
-    .meta-card {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .meta-card__label {
-      color: var(--text-soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .meta-card__value {
-      margin-top: 8px;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .meta-card__sub {
-      margin-top: 8px;
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .panel {
-      padding: 24px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-head__title {
-      font-family: "Noto Serif SC", serif;
-      font-size: 28px;
-      margin: 0;
-    }
-
-    .section-head__desc {
-      margin: 8px 0 0;
-      color: var(--text-soft);
-      line-height: 1.8;
-      font-size: 14px;
-      max-width: 760px;
-    }
-
-    .section-head__actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .mini-button {
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-    }
-
-    .scene-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 10px;
-    }
-
-    .scene-jump {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03)),
-        radial-gradient(circle at top right, rgba(224, 184, 90, 0.12), transparent 44%);
-      text-align: left;
-      color: var(--text);
-      min-height: 134px;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .scene-jump:hover,
-    .scene-jump.active {
-      border-color: rgba(224, 184, 90, 0.36);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)),
-        radial-gradient(circle at top right, rgba(224, 184, 90, 0.2), transparent 48%);
-    }
-
-    .scene-jump__index {
-      color: var(--gold-strong);
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .scene-jump__title {
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.5;
-    }
-
-    .scene-jump__summary {
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.75;
-    }
-
-    .scene-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .scene-card {
-      overflow: hidden;
-    }
-
-    .scene-card[open] {
-      border-color: rgba(224, 184, 90, 0.28);
-    }
-
-    .scene-card > summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 22px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-        radial-gradient(circle at top right, rgba(123, 164, 255, 0.15), transparent 44%);
-    }
-
-    .scene-card > summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .scene-summary__main {
-      min-width: 0;
-    }
-
-    .scene-summary__eyebrow {
-      color: var(--gold-strong);
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .scene-summary__title {
-      margin-top: 6px;
-      font-family: "Noto Serif SC", serif;
-      font-size: 28px;
-      line-height: 1.32;
-    }
-
-    .scene-summary__sub {
-      margin-top: 10px;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.8;
-      max-width: 760px;
-    }
-
-    .scene-summary__side {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .tag--gold {
-      background: rgba(224, 184, 90, 0.1);
-      border-color: rgba(224, 184, 90, 0.18);
-      color: var(--gold-strong);
-    }
-
-    .scene-body {
-      padding: 0 24px 24px;
-    }
-
-    .scene-overview {
-      display: grid;
-      grid-template-columns: 1.1fr 0.95fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .info-card {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .info-card__title {
-      margin: 0 0 12px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--gold-strong);
-      letter-spacing: 0.04em;
-    }
-
-    .info-card p,
-    .info-card ul {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.85;
-      color: var(--text-soft);
-    }
-
-    .info-card ul {
-      padding-left: 18px;
-    }
-
-    .nested-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .nested-card {
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--radius-md);
-      background: rgba(5, 10, 18, 0.28);
-      overflow: hidden;
-    }
-
-    .nested-card[open] {
-      border-color: rgba(123, 164, 255, 0.22);
-    }
-
-    .nested-card > summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .nested-card > summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .nested-card__label {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .nested-card__dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: linear-gradient(180deg, var(--gold-strong), #d08b1a);
-      box-shadow: 0 0 14px rgba(224, 184, 90, 0.45);
-    }
-
-    .nested-card__count {
-      color: var(--text-soft);
-      font-size: 12px;
-    }
-
-    .nested-card__body {
-      padding: 0 18px 18px;
-    }
-
-    .script-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .script-item {
-      display: grid;
-      grid-template-columns: 96px 1fr;
-      gap: 12px;
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .script-item__speaker {
-      color: var(--gold-strong);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.03em;
-    }
-
-    .script-item__text {
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .script-item.is-action .script-item__speaker {
-      color: var(--blue);
-    }
-
-    .magic-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .magic-card {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(224, 184, 90, 0.14);
-      background:
-        linear-gradient(180deg, rgba(224, 184, 90, 0.08), rgba(255, 255, 255, 0.03)),
-        rgba(255, 255, 255, 0.02);
-    }
-
-    .magic-card h4 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      font-family: "Noto Serif SC", serif;
-    }
-
-    .magic-card__meta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-soft);
-      font-size: 12px;
-      margin-bottom: 14px;
-    }
-
-    .magic-card dl {
-      margin: 0;
-      display: grid;
-      gap: 12px;
-    }
-
-    .magic-card dt {
-      color: var(--gold-strong);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 6px;
-    }
-
-    .magic-card dd {
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .magic-card ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .procurement-summary {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .procurement-stat {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(224, 184, 90, 0.14);
-      background:
-        linear-gradient(180deg, rgba(224, 184, 90, 0.08), rgba(255, 255, 255, 0.03)),
-        rgba(255, 255, 255, 0.02);
-    }
-
-    .procurement-stat__label {
-      color: var(--text-soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .procurement-stat__value {
-      margin-top: 10px;
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--gold-strong);
-    }
-
-    .procurement-stat__sub {
-      margin-top: 8px;
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .magic-procurement-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .magic-procurement-card {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .magic-procurement-card h3 {
-      margin: 0 0 12px;
-      font-size: 18px;
-      font-family: "Noto Serif SC", serif;
-    }
-
-    .magic-procurement-card__top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .magic-procurement-card__scene {
-      color: var(--text-soft);
-      font-size: 13px;
-    }
-
-    .magic-procurement-card dl {
-      margin: 0;
-      display: grid;
-      gap: 12px;
-    }
-
-    .magic-procurement-card dt {
-      color: var(--gold-strong);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 6px;
-    }
-
-    .magic-procurement-card dd {
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .magic-procurement-card ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .props-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-      gap: 18px;
-    }
-
-    .props-table-wrap {
-      overflow: auto;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 920px;
-      background: rgba(255, 255, 255, 0.025);
-    }
-
-    th,
-    td {
-      text-align: left;
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      vertical-align: top;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      background: rgba(15, 20, 34, 0.96);
-      color: var(--gold-strong);
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      z-index: 1;
-    }
-
-    .table-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      margin-bottom: 6px;
-    }
-
-    .table-badge--must {
-      background: rgba(224, 82, 82, 0.18);
-      color: #ffb3b3;
-    }
-
-    .table-badge--buy {
-      background: rgba(224, 184, 90, 0.18);
-      color: #f3d79b;
-    }
-
-    .table-badge--own {
-      background: rgba(84, 189, 133, 0.18);
-      color: #a9efc2;
-    }
-
-    .table-badge--backup {
-      background: rgba(86, 156, 214, 0.18);
-      color: #a9d7ff;
-    }
-
-    .table-badge--optional {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-soft);
-    }
-
-    .table-note {
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .prep-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .check-card {
-      padding: 18px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .check-card h4 {
-      margin: 0 0 10px;
-      font-size: 15px;
-      color: var(--gold-strong);
-    }
-
-    .check-card ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .floating-panel {
-      padding: 20px;
-    }
-
-    .floating-panel__title {
-      margin: 0 0 12px;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--gold-strong);
-    }
-
-    .floating-panel__text {
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.8;
-      margin: 0 0 16px;
-    }
-
-    .mini-scene-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .mini-scene {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .mini-scene button {
-      flex: 1;
-      text-align: left;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      padding: 0;
-      min-width: 0;
-    }
-
-    .mini-scene__hint {
-      color: var(--text-soft);
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .footer-note {
-      padding: 20px 22px;
-      text-align: center;
-      color: var(--text-soft);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .pill-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .pill {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--text-soft);
-      font-size: 12px;
-    }
-
-    @media (max-width: 1200px) {
-      .layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .side-column {
-        position: static;
-      }
-
-      .hero__meta,
-      .procurement-summary,
-      .magic-procurement-grid,
-      .scene-grid,
-      .scene-overview,
-      .magic-grid,
-      .props-layout {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 820px) {
-      .page-shell {
-        padding: 16px;
-      }
-
-      .top-bar {
-        top: 12px;
-        border-radius: 26px;
-        padding: 14px;
-      }
-
-      .top-bar,
-      .section-head {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .top-bar__actions,
-      .section-head__actions {
-        justify-content: flex-start;
-      }
-
-      .hero,
-      .panel,
-      .floating-panel {
-        padding: 20px;
-      }
-
-      .hero__meta,
-      .procurement-summary,
-      .magic-procurement-grid,
-      .scene-grid,
-      .scene-overview,
-      .magic-grid,
-      .props-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .scene-card > summary,
-      .nested-card > summary {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .script-item {
-        grid-template-columns: 1fr;
-      }
+    :root{--bg:#0b1020;--bg2:#11182e;--panel:rgba(255,255,255,.06);--line:rgba(255,255,255,.08);--text:#f7f0df;--muted:#cfc2a7;--gold:#ffd57d;--blue:#97b7ff;--green:#8de2ae;--orange:#ffc293;--gray:#c3cad9;--danger:#ffb5b5;--shadow:0 20px 50px rgba(0,0,0,.35);--r1:28px;--r2:20px;--r3:14px;--max:1280px}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI","Noto Sans SC",sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(123,164,255,.18),transparent 26%),radial-gradient(circle at top right,rgba(255,213,125,.15),transparent 24%),linear-gradient(180deg,#09101e,#10172c 45%,#0b1020);min-height:100vh}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(180deg,rgba(0,0,0,.55),transparent 92%)}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .page{max-width:var(--max);margin:0 auto;padding:24px}
+    .hero,.panel,.scene-card,.accordion,.material-card{border:1px solid var(--line);border-radius:var(--r1);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));box-shadow:var(--shadow)}
+    .hero{padding:32px;overflow:hidden;position:relative}
+    .hero::after{content:"";position:absolute;width:240px;height:240px;right:-60px;bottom:-100px;border-radius:50%;background:radial-gradient(circle,rgba(123,164,255,.28),transparent 68%)}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,213,125,.11);border:1px solid rgba(255,213,125,.18);color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    h1{margin:16px 0 12px;font-size:clamp(30px,4.2vw,52px);line-height:1.15}
+    .hero p{margin:0;max-width:840px;color:var(--muted);line-height:1.85}
+    .hero-facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .tabs{position:sticky;top:12px;z-index:20;margin-top:18px;padding:12px;border-radius:22px;border:1px solid rgba(255,255,255,.1);background:rgba(8,12,24,.9);backdrop-filter:blur(16px);box-shadow:var(--shadow)}
+    .tab-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;scrollbar-width:none}
+    .tab-list::-webkit-scrollbar{display:none}
+    .tab-btn{padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--muted);white-space:nowrap;font-weight:700}
+    .tab-btn.active{background:linear-gradient(135deg,#ffd57d,#dfa74f);color:#241807;font-weight:800;border-color:rgba(255,213,125,.38);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+    .tab-panel{display:none;margin-top:18px;flex-direction:column;gap:18px}
+    .tab-panel.active{display:flex}
+    .panel{padding:24px}
+    .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}
+    .head h2{margin:0;font-size:clamp(24px,2.5vw,34px)}
+    .head p{margin:8px 0 0;color:var(--muted);line-height:1.8;font-size:14px;max-width:760px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px}
+    .chip-btn,.ghost{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--text)}
+    .chip-btn.active{background:rgba(255,213,125,.12);border-color:rgba(255,213,125,.26);color:var(--gold)}
+    .jump-list,.material-summary,.material-grid{display:grid;gap:14px}
+    .jump-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .material-summary{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .jump{padding:16px;border-radius:18px;text-align:left;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));color:var(--text)}
+    .jump.active{border-color:rgba(255,213,125,.3);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04))}
+    .jump small{display:block;color:var(--gold);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+    .jump strong{display:block;margin-top:8px;font-size:18px;line-height:1.45}
+    .jump span{display:block;margin-top:10px;color:var(--muted);font-size:13px;line-height:1.75}
+    .stack{display:flex;flex-direction:column;gap:16px}
+    .scene-card{overflow:hidden}
+    .scene-card[open]{border-color:rgba(255,213,125,.28)}
+    .scene-card>summary{list-style:none;padding:22px 24px;cursor:pointer;display:flex;justify-content:space-between;gap:16px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.03)),radial-gradient(circle at top right,rgba(123,164,255,.16),transparent 42%)}
+    .scene-card>summary::-webkit-details-marker,.accordion>summary::-webkit-details-marker{display:none}
+    .scene-main small{display:block;color:var(--gold);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+    .scene-main h3{margin:8px 0 0;font-size:clamp(22px,2.3vw,30px);line-height:1.35}
+    .scene-main p{margin:10px 0 0;color:var(--muted);line-height:1.8;font-size:14px}
+    .scene-tags{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .tag{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05)}
+    .tag.gold{color:var(--gold);background:rgba(255,213,125,.1);border-color:rgba(255,213,125,.18)}
+    .tag.green{color:var(--green);background:rgba(141,226,174,.1);border-color:rgba(141,226,174,.18)}
+    .scene-body{padding:0 24px 24px}
+    .scene-meta{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-bottom:16px}
+    .info{padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.04)}
+    .info h4{margin:0 0 10px;color:var(--gold);font-size:14px}
+    .info p,.info ul{margin:0;color:var(--muted);font-size:14px;line-height:1.85}
+    .info ul{padding-left:18px}
+    .beat-list{display:flex;flex-direction:column;gap:14px}
+    .beat{display:grid;grid-template-columns:156px minmax(0,1fr);border-radius:20px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.04);overflow:hidden}
+    .beat.magic{border-color:rgba(141,226,174,.22)}
+    .speaker-panel{padding:18px 16px;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+    .speaker-panel.mom{background:linear-gradient(180deg,rgba(255,194,147,.22),rgba(255,194,147,.08))}
+    .speaker-panel.kid{background:linear-gradient(180deg,rgba(151,183,255,.22),rgba(151,183,255,.08))}
+    .speaker-panel.crowd{background:linear-gradient(180deg,rgba(195,202,217,.18),rgba(195,202,217,.07))}
+    .speaker-role{font-size:22px;font-weight:800;line-height:1.2}
+    .speaker-type{display:inline-flex;align-self:flex-start;padding:8px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.12)}
+    .speaker-type.dialogue{background:rgba(255,213,125,.12);color:var(--gold)}
+    .speaker-type.magic{background:rgba(141,226,174,.12);color:var(--green)}
+    .speaker-index{font-size:12px;color:rgba(247,240,223,.72)}
+    .beat-content{padding:16px}
+    .beat-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .b{display:inline-flex;padding:7px 11px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05)}
+    .b.dialogue{color:var(--gold);background:rgba(255,213,125,.1);border-color:rgba(255,213,125,.18)}
+    .b.magic{color:var(--green);background:rgba(141,226,174,.1);border-color:rgba(141,226,174,.18)}
+    .b.mom{color:var(--orange);background:rgba(255,194,147,.1);border-color:rgba(255,194,147,.18)}
+    .b.kid{color:var(--blue);background:rgba(151,183,255,.1);border-color:rgba(151,183,255,.18)}
+    .b.crowd{color:var(--gray);background:rgba(195,202,217,.1);border-color:rgba(195,202,217,.18)}
+    .b.core{color:var(--danger);background:rgba(255,181,181,.12);border-color:rgba(255,181,181,.18)}
+    .beat-index{color:var(--muted);font-size:12px}
+    .beat-grid{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:14px}
+    .quote{padding:12px 14px;border-left:3px solid rgba(255,213,125,.58);border-radius:0 12px 12px 0;background:rgba(255,255,255,.03);margin-bottom:10px}
+    .quote strong{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+    .quote div{line-height:1.8;font-size:14px}
+    .dialogue-box{padding:14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05)}
+    .dialogue-box strong{display:block;color:var(--text);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+    .lines{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px;line-height:1.82}
+    .prep{padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.06);background:rgba(8,12,24,.45)}
+    .prep strong{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+    .prep div{color:var(--muted);font-size:13px;line-height:1.8}
+    .accordion{overflow:hidden}
+    .accordion[open]{border-color:rgba(255,213,125,.24)}
+    .accordion>summary{list-style:none;padding:18px 20px;cursor:pointer;display:flex;justify-content:space-between;gap:14px}
+    .accordion h3{margin:0;font-size:18px}
+    .accordion p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.75}
+    .accordion .body{padding:0 20px 20px}
+    .accordion ul{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:10px;line-height:1.85;font-size:14px}
+    .toolbar{display:grid;grid-template-columns:minmax(0,1.1fr) 220px 220px;gap:12px;margin-bottom:18px}
+    .field{width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);outline:none}
+    .field::placeholder{color:rgba(207,194,167,.85)}
+    .material-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .material-card{padding:18px;display:flex;flex-direction:column;gap:12px}
+    .material-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .material-card h3{margin:0;font-size:18px;line-height:1.42}
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .material-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.8}
+    .empty{padding:26px;border-radius:18px;border:1px dashed rgba(255,255,255,.12);text-align:center;color:var(--muted);line-height:1.8}
+    @media (max-width:1100px){
+      .material-summary,.jump-list,.material-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .scene-meta,.beat-grid,.toolbar{grid-template-columns:1fr}
+      .head{flex-direction:column;align-items:stretch}
+      .actions{justify-content:flex-start}
+    }
+    @media (max-width:720px){
+      .page{padding:16px}
+      .hero,.panel{padding:20px;border-radius:22px}
+      .tab-list{grid-template-columns:1fr}
+      .material-summary,.jump-list,.material-grid{grid-template-columns:1fr}
+      .scene-card>summary,.beat-top,.material-top,.beat{flex-direction:column;align-items:stretch}
+      .beat{display:flex}
+      .speaker-panel{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
+      .scene-tags{justify-content:flex-start}
     }
   </style>
 </head>
 <body>
-  <div class="page-shell">
-    <header class="top-bar">
-      <div class="top-bar__brand">
-        <div class="top-bar__crest">✦</div>
-        <div class="top-bar__text">
-          <div class="top-bar__eyebrow">Magic Review Doc</div>
-          <div class="top-bar__title">幼儿园毕业典礼哈利波特主题亲子魔术节目策划案</div>
-        </div>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">哈利波特主题亲子魔术节目</div>
+      <h1>幼儿园毕业典礼完整执行台本</h1>
+      <p>双人版，约 5 分钟。</p>
+      <div class="hero-facts">
+        <span class="tag gold">妈妈 + 弟弟</span>
+        <span class="tag">6 幕</span>
+        <span class="tag green">含魔法呈现段</span>
       </div>
-      <div class="top-bar__actions">
-        <a class="ghost-button" href="#scene-overview">看六幕</a>
-        <a class="ghost-button" href="#props-section">看物品准备</a>
-        <button class="gold-button" id="expand-all-scenes" type="button">展开全部幕次</button>
+    </section>
+
+    <nav class="tabs">
+      <div class="tab-list">
+        <button class="tab-btn active" data-tab="background">节目背景</button>
+        <button class="tab-btn" data-tab="script">剧本执行</button>
+        <button class="tab-btn" data-tab="materials">材料准备</button>
       </div>
-    </header>
+    </nav>
 
-    <div class="layout">
-      <main class="main-column">
-        <section class="hero">
-          <div class="hero__eyebrow">动态呈现 · 分层阅读 · 便于 Review</div>
-          <h1>先看六幕结构，再逐层下钻到剧本和魔术细节</h1>
-          <p id="hero-description"></p>
-          <div class="hero__meta" id="hero-meta"></div>
-        </section>
-
-        <section class="panel" id="scene-overview">
-          <div class="section-head">
-            <div>
-              <h2 class="section-head__title">六幕总览</h2>
-              <p class="section-head__desc">
-                默认先展示六幕划分。每一幕先看这幕在做什么、为什么要这样设计，再决定是否继续展开剧本和魔术细节。
-              </p>
-            </div>
-            <div class="section-head__actions">
-              <button class="mini-button" id="open-scripts" type="button">展开全部剧本</button>
-              <button class="mini-button" id="open-magic" type="button">展开全部魔术</button>
-              <button class="mini-button" id="collapse-all" type="button">收起全部细节</button>
-            </div>
+    <section class="tab-panel" id="tab-script">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <h2>剧本执行</h2>
+            <p>按幕查看剧情和排练内容。每条都拆开成动作、表情、台词和提醒。</p>
           </div>
-          <div class="scene-grid" id="scene-jump-grid"></div>
-        </section>
-
-        <section class="scene-stack" id="scene-stack"></section>
-
-        <section class="panel props-panel" id="props-section">
-          <div class="section-head">
-            <div>
-              <h2 class="section-head__title">物品与准备</h2>
-              <p class="section-head__desc">
-                这里把采购优先级、按魔术拆分的采购重点、总道具表和彩排建议放在一起，方便直接进入准备和下单阶段。
-              </p>
-            </div>
+          <div class="actions">
+            <button class="ghost" id="expand-all">展开全部幕次</button>
+            <button class="ghost" id="collapse-all">收起全部幕次</button>
+            <button class="chip-btn active" data-kind="all">全部内容</button>
+            <button class="chip-btn" data-kind="dialogue">只看情景对白</button>
+            <button class="chip-btn" data-kind="magic">只看魔法呈现</button>
+            <button class="chip-btn active" data-speaker="all">全部人物</button>
+            <button class="chip-btn" data-speaker="妈妈">妈妈</button>
+            <button class="chip-btn" data-speaker="弟弟">弟弟</button>
+            <button class="chip-btn" data-speaker="全场">全场</button>
           </div>
-          <div class="procurement-summary" id="procurement-summary"></div>
-          <div class="magic-procurement-grid" id="magic-procurement-grid"></div>
-          <div class="props-layout">
-            <div class="props-table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>道具</th>
-                    <th>用途</th>
-                    <th>对应幕次</th>
-                    <th>获取方式</th>
-                    <th>采购等级</th>
-                  </tr>
-                </thead>
-                <tbody id="props-table-body"></tbody>
-              </table>
-            </div>
-            <div class="prep-stack" id="prep-stack"></div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="section-head">
-            <div>
-              <h2 class="section-head__title">后续可继续补充</h2>
-              <p class="section-head__desc">
-                当前页面已经适合做方案 review。如果进入正式执行版，下面这些模块值得继续补。
-              </p>
-            </div>
-          </div>
-          <div class="pill-list" id="future-pill-list"></div>
-        </section>
-
-        <div class="footer-note">
-          这是一份适合本地直接打开的动态策划文档。它不是为了替代正式台本，而是为了让不同角色能更快理解方案结构、细节和执行重点。
         </div>
-      </main>
+        <div class="jump-list" id="jump-list"></div>
+      </section>
 
-      <aside class="side-column">
-        <section class="floating-panel">
-          <h3 class="floating-panel__title">阅读方式</h3>
-          <p class="floating-panel__text">
-            先从六幕中选一幕，打开后先看“这一幕讲什么”，再决定要不要继续看剧本或魔术。这样更适合开会 review 和分角色准备。
-          </p>
-          <div class="mini-scene-list" id="mini-scene-list"></div>
-        </section>
+      <div class="stack" id="scene-list"></div>
+    </section>
 
-        <section class="floating-panel">
-          <h3 class="floating-panel__title">项目关键词</h3>
-          <div class="pill-list" id="keyword-list"></div>
-        </section>
-      </aside>
-    </div>
+    <section class="tab-panel active" id="tab-background">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <h2>节目背景</h2>
+            <p>这一部分保留剧情背景、角色定位、站位和排练提醒，方便先了解节目，再切到剧本执行。</p>
+          </div>
+        </div>
+        <div id="background-list"></div>
+      </section>
+    </section>
+
+    <section class="tab-panel" id="tab-materials">
+      <section class="panel">
+        <div class="head">
+          <div>
+            <h2>材料准备总清单</h2>
+            <p>每个物品单独一张卡，支持按名称、类别和对应幕次筛选。适合边采购边核对，也适合移动端现场检查。</p>
+          </div>
+        </div>
+        <div class="material-summary" id="material-summary"></div>
+        <div class="toolbar">
+          <input class="field" id="search-input" placeholder="搜索物料名称、用途或准备要点">
+          <select class="field" id="scene-filter"></select>
+          <select class="field" id="category-filter"></select>
+        </div>
+        <div class="material-grid" id="material-grid"></div>
+      </section>
+    </section>
+
   </div>
 
   <script>
-    const planData = {
-      title: "幼儿园毕业典礼哈利波特主题亲子魔术节目策划案",
-      description: "这是一个用于方案 review、活动筹备和彩排准备的单页动态文档。阅读路径默认从六幕切入，每一幕先看目的和故事概述，再按需展开剧本与魔术说明，最后集中看采购优先级、按魔术拆分的采购重点、总道具表和彩排注意事项。",
-      meta: [
-        {
-          label: "演出形式",
-          value: "亲子剧情魔术",
-          sub: "不是单个魔术拼接，而是有主线、有角色关系、有情绪收束的舞台节目。"
-        },
-        {
-          label: "建议时长",
-          value: "4–6 分钟",
-          sub: "开场快，中段稳，分院有仪式感，结尾回到毕业主题。"
-        },
-        {
-          label: "核心角色",
-          value: "2 位",
-          sub: "弟弟是新生小巫师，妈妈是教授兼串场主持。"
-        },
-        {
-          label: "默认阅读方式",
-          value: "六幕 → 魔术 → 采购",
-          sub: "更适合 review 方案的人逐层理解，再直接切到执行和采购。"
-        }
-      ],
-      keywords: ["毕业典礼", "哈利波特主题", "亲子合作", "剧情型节目", "舞台魔术", "采购优先级", "彩排准备"],
-      procurementSummary: [
-        {
-          label: "必须先采购",
-          value: "5 项",
-          sub: "空盒、变色书、分院信封、变花道具、变物袋是整场魔术主线，先买这批才能开始稳定彩排。"
-        },
-        {
-          label: "建议备份",
-          value: "4 组",
-          sub: "录取信、分院结果内页、备用花朵和结尾礼物建议都留备用，避免临场损坏或漏拿。"
-        },
-        {
-          label: "可自备 / 已有",
-          value: "6 项",
-          sub: "服装内搭、魔杖、桌布、收纳箱等尽量不额外花钱，把预算优先留给魔术道具。"
-        },
-        {
-          label: "采购顺序",
-          value: "先主线后氛围",
-          sub: "先保证能演，再补巫师造型和氛围件，最后补耗材、备份和礼物。"
-        }
+    const data = {
+      background: [
+        { title: "节目背景", summary: "哈利波特主题亲子剧情魔术，核心是把“入学考验 → 学会魔法 → 分院 → 毕业祝福”讲完整。", bullets: ["妈妈扮演霍格沃茨教授兼串场主持，弟弟扮演接受考验的新生小巫师。", "节目不是把几个魔术拼在一起，而是用魔术推动剧情。", "最后要自然落回毕业典礼主题，而不是停在“我会魔法了”。"] },
+        { title: "角色定位", summary: "排练时先把职责分开，妈妈不断话，弟弟不断动作。", bullets: ["妈妈：开场立住角色、发问、递道具、收道具、带互动和收尾点题。", "弟弟：完成所有关键变化，从接受考验一路成长到学会魔法。", "全场 / 观众：只在分院那一幕参与口令互动，不承担复杂配合。"] },
+        { title: "舞台站位", summary: "站位和道具摆放决定这场戏会不会顺。", bullets: ["舞台中心留给弟弟，作为主要呈现点。", "妈妈默认站在弟弟侧后方半步，既能递话，也能接道具。", "桌子放在舞台一侧，所有道具按幕次从左到右摆放。", "如果现场不能放桌子，就改成分幕收纳篮，但顺序仍然按幕次走。"] },
+        { title: "开场前最后 30 秒", summary: "上场前只盯关键项，避免临场信息过多。", bullets: ["妈妈确认：音乐、伸缩魔杖、空盒、纸袋、书、分院帽、信封、开花道具、礼物袋都在正确位置。", "弟弟只检查 3 件事：袍子顺不顺、自己的魔杖在不在、第一句台词记不记得。", "如果孩子紧张，妈妈只重复一句：你只要看着我，听我的话，做你练过的动作就可以。"] },
+        { title: "彩排时只盯这几件事", summary: "这是最容易出错、也最值得反复排的节点。", bullets: ["第一幕最重要的是妈妈开场空手施法拿魔杖一定要稳。", "第二幕空盒结束后，妈妈必须立刻收走空盒和物品。", "第二幕纸袋开花后，纸袋和花盒也要马上由妈妈接走。", "第三幕一定加上“魔杖点书”的互动动作。", "第四幕必须真的把分院帽拿出来、戴上、再从帽里拿结果。", "第五幕默认沿用第二幕的同一根魔杖，不再额外换杖。", "第六幕由妈妈先点题毕业，再由弟弟送礼物。"] }
       ],
       scenes: [
-        {
-          id: "scene-1",
-          actLabel: "第一幕",
-          title: "新生来到霍格沃茨",
-          shortSummary: "交代世界观和角色关系，让观众立刻进入“入学考验”的设定。",
-          background: "弟弟以新生小巫师身份上场，妈妈扮演教授发问，先把霍格沃茨的新生考验设定立起来。",
-          purpose: [
-            "建立人物关系",
-            "交代世界观",
-            "让观众明白这不是单独变魔术，而是一场入学考验"
-          ],
-          storySummary: "这一幕不靠魔术取胜，而是先把观众带进霍格沃茨的故事入口。它承担的是开场的世界观说明功能。",
-          script: [
-            { speaker: "动作", text: "音乐起，弟弟手持魔杖上场，妈妈随后以教授身份进入。", type: "action" },
-            { speaker: "妈妈", text: "欢迎来到霍格沃茨。今天站在这里的，是一位即将接受考验的新生小巫师。" },
-            { speaker: "妈妈", text: "想进入魔法学校，可不是一件容易的事。新生，请告诉我，你准备好了吗？" },
-            { speaker: "弟弟", text: "我准备好了！" },
-            { speaker: "妈妈", text: "很好。从现在开始，大家都会一起见证你能不能顺利进入霍格沃茨。" }
-          ],
-          magicRefs: []
-        },
-        {
-          id: "scene-2",
-          actLabel: "第二幕",
-          title: "第一关：证明你是一名真正的小巫师",
-          shortSummary: "从普通小朋友切换成新生小巫师，完成第一次明确的视觉惊喜。",
-          background: "弟弟先用空盒变出录取信、眼镜、围巾等入学标志物，再从身上自然拿出魔杖。",
-          purpose: [
-            "完成主角身份建立",
-            "从普通小朋友切换到新生小巫师",
-            "给观众第一次明确的视觉惊喜"
-          ],
-          storySummary: "这一幕的核心不是炫技，而是让观众认可：他不是来玩魔术的孩子，而是已经收到邀请的新生小巫师。",
-          script: [
-            { speaker: "妈妈", text: "第一关，请证明你不是普通的小朋友，而是真正收到邀请的新生。" },
-            { speaker: "弟弟", text: "我当然不是普通的小朋友，我已经准备好了！" },
-            { speaker: "动作", text: "弟弟拿起空盒，先给观众展示盒内为空。", type: "action" },
-            { speaker: "妈妈", text: "大家请看清楚，现在这个盒子里还什么都没有。" },
-            { speaker: "动作", text: "弟弟表演空盒变物。", type: "action" },
-            { speaker: "弟弟", text: "这是我的录取信，这是我的眼镜，还有我的学院围巾！" },
-            { speaker: "妈妈", text: "很好，那你的魔杖呢？" },
-            { speaker: "弟弟", text: "我的魔杖一直都在我身上。" },
-            { speaker: "动作", text: "弟弟从身上取出魔杖。", type: "action" }
-          ],
-          magicRefs: ["magic-box", "magic-wand"]
-        },
-        {
-          id: "scene-3",
-          actLabel: "第三幕",
-          title: "第二关：展示你的学习能力",
-          shortSummary: "从“有资格入学”推进到“有能力学习”，让魔术和绘本感结合起来。",
-          background: "弟弟拿出自己的魔法教材，通过变色书魔术，让教材从空白到出现线稿，再到变成彩色内容。",
-          purpose: [
-            "把故事从“能入学”推进到“能学习”",
-            "让魔术和低龄观众熟悉的绘本感结合",
-            "增加第二次稳定的变化效果"
-          ],
-          storySummary: "这一幕更像一节被看见的“魔法入门课”，用适合幼儿园氛围的绘本式变化，让能力成长更加自然。",
-          script: [
-            { speaker: "妈妈", text: "光有录取信还不够，想成为真正的小巫师，还要会学习魔法。" },
-            { speaker: "妈妈", text: "把你的教材打开，让我们看看，你有没有认真准备第一堂课。" },
-            { speaker: "弟弟", text: "刚开始它还什么都没有，但只要我认真学习，它就会出现魔法内容。" },
-            { speaker: "动作", text: "弟弟表演变色书。", type: "action" },
-            { speaker: "弟弟", text: "你看，图案出现了。再认真一点，它就全部学会了！" },
-            { speaker: "妈妈", text: "很好，你已经证明了自己不只是能入学，还能真正学会魔法。" }
-          ],
-          magicRefs: ["magic-color-book"]
-        },
-        {
-          id: "scene-4",
-          actLabel: "第四幕",
-          title: "分院仪式",
-          shortSummary: "整场仪式感最强的一幕，让观众参与“帮助分院成功”，但不让结果失控。",
-          background: "观众一起帮助分院成功，随后弟弟打开提前收到的校长信封，确认自己加入格兰芬多。",
-          purpose: [
-            "做出全场最强的仪式感",
-            "让台下观众有参与感",
-            "保持结果可控，避免剧情失控"
-          ],
-          storySummary: "这一幕是全场气氛的抬升点。它把哈利波特主题真正立起来，同时也让现场有一轮安全、可控的集体互动。",
-          script: [
-            { speaker: "妈妈", text: "很好，你已经通过了前面的考验。现在，真正的分院仪式要开始了。" },
-            { speaker: "妈妈", text: "请大家跟我一起数，3、2、1！" },
-            { speaker: "全场", text: "3、2、1！" },
-            { speaker: "妈妈", text: "请大家一起说，分院开始！" },
-            { speaker: "全场", text: "分院开始！" },
-            { speaker: "弟弟", text: "其实，校长早就把答案写在给我的信里了。" },
-            { speaker: "动作", text: "弟弟打开信封。", type: "action" },
-            { speaker: "弟弟", text: "我会加入格兰芬多！" }
-          ],
-          magicRefs: ["magic-envelope"]
-        },
-        {
-          id: "scene-5",
-          actLabel: "第五幕",
-          title: "第一堂魔法课：让美好的东西开花",
-          shortSummary: "体现弟弟现场真正学会了一道新魔法，形成成长弧线。",
-          background: "弟弟在教授指导下完成空棒变花或魔棒变花，形成“我真的学会了”的成长证明。",
-          purpose: [
-            "体现主角真正学会了一道新魔法",
-            "形成剧情上的成长弧线",
-            "把“展示已有物品”升级成“现场学会本领”"
-          ],
-          storySummary: "这不是简单的一个出花魔术，而是整场故事里最关键的成长证明：他开始像一个真正的小巫师了。",
-          script: [
-            { speaker: "妈妈", text: "恭喜你成为霍格沃茨的新生。接下来，我要教你第一堂真正的魔法课。" },
-            { speaker: "妈妈", text: "这道魔法，叫做让美好的东西开花。" },
-            { speaker: "弟弟", text: "我来试试！" },
-            { speaker: "妈妈", text: "记住，动作要稳，魔杖要举好，咒语要说清楚。" },
-            { speaker: "动作", text: "弟弟表演空棒变花。", type: "action" },
-            { speaker: "妈妈", text: "很好，你已经学会了真正的魔法。" }
-          ],
-          magicRefs: ["magic-flower"]
-        },
-        {
-          id: "scene-6",
-          actLabel: "第六幕",
-          title: "毕业与分享",
-          shortSummary: "把哈利波特故事重新扣回毕业典礼，用礼物和祝福完成情绪收束。",
-          background: "弟弟用空袋变出送给现场小朋友的小纪念品，由妈妈协助收束，并说出毕业主题的结尾话术。",
-          purpose: [
-            "把故事重新扣回毕业典礼",
-            "完成情绪收束",
-            "用分享礼物增强现场互动和记忆点"
-          ],
-          storySummary: "这一幕完成了主题落点。它不是停在“我会魔法了”，而是回到“我要毕业了，要带着爱和回忆去新的学校”。",
-          script: [
-            { speaker: "妈妈", text: "今天，你已经通过了霍格沃茨的新生考验。" },
-            { speaker: "弟弟", text: "其实，我们也像小巫师一样，要从幼儿园毕业，去新的学校学习新的本领。" },
-            { speaker: "动作", text: "弟弟表演空袋变纪念品。", type: "action" },
-            { speaker: "妈妈", text: "这些小礼物，也送给大家。" },
-            { speaker: "弟弟", text: "以后不管我们去哪里上学，都希望我们记得老师的爱、朋友的陪伴，还有在幼儿园学会的勇敢和快乐。祝大家毕业快乐！" }
-          ],
-          magicRefs: ["magic-bag"]
-        }
+        { id: "s1", act: "第一幕", title: "教授登场，迎接新生 + 妈妈空手施法拿出魔杖", duration: "约 40 秒", objective: "先立住“教授”和“新生考验”的世界观，同时让妈妈先用一个干净的施法动作把角色身份做出来。", summary: "开场先讲设定，再马上给出第一个魔法动作，让观众知道这是一场有剧情的入学考验。", beats: [
+          { kind: "dialogue", speaker: "妈妈", action: "音乐起后稳稳上场，步子不要急，先看弟弟，再看观众。", expression: "庄重、带一点仪式感。", lines: ["（慷慨激昂）欢迎来到霍格沃茨。", "（沉稳）我是今天负责新生考验的教授。"], prep: "伸缩魔杖提前藏好。第一句台词后立刻接施法。" },
+          { kind: "magic", speaker: "妈妈", action: "右手抬起，做一个教授施法前的聚气动作，再自然打开伸缩魔杖。", expression: "镇定、自信。", lines: ["（郑重）真正的教授，当然要先拿出属于自己的魔杖。"], prep: "这根是妈妈自己的教授魔杖，不和弟弟后面的魔杖混用。" },
+          { kind: "dialogue", speaker: "弟弟", action: "站在舞台中央，双手站好，不提前亮出自己的魔杖。", expression: "认真、带一点期待。", lines: ["（清楚）我是今天来参加入学考验的新生小巫师。"], prep: "弟弟第二幕才拿出自己的魔杖，这一幕不提前露。" },
+          { kind: "dialogue", speaker: "妈妈", action: "抬手轻轻指向弟弟，像正式介绍一位新生。", expression: "庄重、带审视感。", lines: ["（庄重）今天站在这里的，是一位即将接受考验的新生小巫师。", "（缓缓推进）想进入魔法学校，并不是一件容易的事。", "（点名）新生，请告诉我，你准备好了吗？"], prep: "问完留半拍，等弟弟清楚回应。" },
+          { kind: "dialogue", speaker: "弟弟", action: "站直、抬头、大声回答。", expression: "兴奋、自信。", lines: ["（响亮）我准备好了！"], prep: "第一幕后不额外停顿，直接转第二幕。" }
+        ]},
+        { id: "s2", act: "第二幕", title: "证明你是巫师 + 空盒呈现物品 + 空纸袋开出花", duration: "约 80 秒", objective: "先证明弟弟已经是“真正的新生巫师”，再让他展示属于自己的魔法天分。", summary: "这一幕既要完成身份建立，也要给观众第一次连续的视觉惊喜。", beats: [
+          { kind: "dialogue", speaker: "妈妈", action: "让出舞台中心，从桌上把空盒递给弟弟。", expression: "像正式宣布第一项考试。", lines: ["（正式）第一关，请证明你不是普通的小朋友，而是真正收到邀请的新生。"], prep: "空盒由妈妈递到弟弟手里，桌面上其他道具先不碰。" },
+          { kind: "dialogue", speaker: "弟弟", action: "接过空盒，站稳。", expression: "自信、痛快。", lines: ["（自信）我当然已经准备好了！"], prep: "接话后立刻展示空盒。" },
+          { kind: "magic", speaker: "弟弟", action: "拿起空盒，先给前排和中间观众看里面是空的，再挥杖完成呈现。", expression: "认真、像真的在接受考试。", lines: ["（认真展示）大家看，现在这里面还什么都没有。", "（开心）这是我的录取信。", "（开心）这是我的眼镜。", "（开心）这是我的学院围巾。"], prep: "每拿一件都停一下。呈现结束后，妈妈立刻把空盒和物品接过去。" },
+          { kind: "dialogue", speaker: "妈妈", action: "顺手接过空盒和物品，侧身放回桌上，再重新看向弟弟。", expression: "认可，但故意继续追问。", lines: ["（满意）很好。看起来你确实已经收到了霍格沃茨的邀请。", "（继续考验）不过，我还想看看，你是不是已经有真正的小巫师天分了。"], prep: "这个动作必须干净，避免弟弟手里一直拿着前一个魔法的物品。" },
+          { kind: "magic", speaker: "弟弟", action: "从披风内侧自然拿出自己的魔杖，高举一下给观众看。", expression: "得意、带一点“我当然有”的感觉。", lines: ["（得意）我的魔杖一直都在我身上。"], prep: "这根魔杖后面继续沿用，不再换成另一根。" },
+          { kind: "dialogue", speaker: "妈妈", action: "从桌上拿起牛皮纸袋递给弟弟，再退半步把舞台让出来。", expression: "期待、像老师要看学生现场发挥。", lines: ["（期待）那就再施一个真正的魔法给大家看看。", "（鼓励）让大家看看，你到底能不能把美好的东西真正请出来。"], prep: "纸袋由妈妈递给弟弟，明确道具怎么上场。" },
+          { kind: "magic", speaker: "弟弟", action: "接过牛皮纸袋，先展示袋子是空的，再挥动魔杖，最后从纸袋里依次拿出 3 个花盒。", expression: "先认真，再在拿出花盒时明显惊喜。", lines: ["（认真展示）这个纸袋子里，现在也是空的。", "（施法）小小纸袋，开出花来。", "（惊喜）一朵。", "（惊喜）两朵。", "（惊喜）三朵。"], prep: "3 个花盒按顺序拿。结束后，纸袋和花盒都交给妈妈收走。" }
+        ]},
+        { id: "s3", act: "第三幕", title: "展示学习能力 + 魔杖点书 + 魔法书显现内容", duration: "约 50 秒", objective: "把故事从“有天分”推进到“会学习”，让成长更完整。", summary: "这一幕更像一节被看见的“魔法入门课”，用绘本式变化让能力成长更自然。", beats: [
+          { kind: "dialogue", speaker: "妈妈", action: "从桌上把魔法书递给弟弟，像老师在抽查课本。", expression: "认真，但带鼓励。", lines: ["（认真）不过，光有天分还不够。真正的小巫师，还要会学习魔法。", "（抽查）把你的教材打开，让我们看看，你有没有认真准备第一堂课。"], prep: "书由妈妈递给弟弟，避免道具来历不明。" },
+          { kind: "magic", speaker: "弟弟", action: "举起书先展示空白页，再用自己的魔杖轻轻点一下书。", expression: "认真、像真的在唤醒一本魔法书。", lines: ["（认真）刚开始的时候，它还什么都没有。", "（展示）你看，现在还是空白的。", "（轻轻施法）那我就用魔杖，轻轻叫醒它。"], prep: "加上“魔杖点书”动作，让魔杖和魔法书有互动。" },
+          { kind: "dialogue", speaker: "妈妈", action: "微微点头，像老师继续追问。", expression: "鼓励、期待。", lines: ["（启发）空白的书，可学不会魔法。那怎么办呢？"], prep: "这句后弟弟立刻翻下一页。" },
+          { kind: "magic", speaker: "弟弟", action: "慢慢翻到线稿页，再翻到彩色页，每次翻页后都停一下给观众看。", expression: "看到变化时要明显惊喜。", lines: ["（惊喜）有变化了。", "（惊喜）魔法图案已经慢慢出现了。", "（更兴奋）再认真一点，它就全部学会了！"], prep: "翻页慢一点。结束后妈妈顺手把书接过去放回桌面。" }
+        ]},
+        { id: "s4", act: "第四幕", title: "分院开始 + 戴上分院帽 + 帽中拿出分院结果", duration: "约 45 秒", objective: "让气氛抬高，让全场参与，同时把分院结果做得清楚、可控。", summary: "这一幕是全场气氛的抬升点，要有仪式感，也要有可控互动。", beats: [
+          { kind: "dialogue", speaker: "妈妈", action: "从桌上拿起分院帽，走到弟弟身边。", expression: "庄重、带一点神秘感。", lines: ["（庄重）很好。你已经通过了前面的考验。", "（郑重）接下来，就是每一位霍格沃茨新生最重要的时刻。", "（宣布）分院仪式，现在开始。"], prep: "分院帽这一幕必须真正上场，不再只靠口播。" },
+          { kind: "magic", speaker: "妈妈", action: "把分院帽轻轻戴到弟弟头上，再扶正。", expression: "认真，像在进行正式仪式。", lines: ["（解释）每一个学院都有自己的特点。", "（引导）等会儿如果你觉得，这位新生应该去最勇敢的那个学院，就跟我一起大声喊出来。"], prep: "就算小朋友不熟悉哈利波特，也能通过“最勇敢的学院”理解互动。" },
+          { kind: "dialogue", speaker: "妈妈", action: "转向观众抬手带节奏。", expression: "带动、热烈。", lines: ["（带动）请大家一起喊出你们的答案。", "（大声）如果你觉得他应该去最勇敢的那个学院，就跟我一起喊：格兰芬多！"], prep: "互动口令统一收束到格兰芬多，避免现场喊乱。" },
+          { kind: "dialogue", speaker: "全场", action: "一起回应。", expression: "热烈。", lines: ["（齐声）格兰芬多！"], prep: "互动只做一轮，不拖长。" },
+          { kind: "magic", speaker: "弟弟", action: "双手扶住帽子，从帽中拿出提前藏好的信封或折叠学院信息纸，慢慢展开。", expression: "认真、带悬念。", lines: ["（神秘）分院帽已经把答案告诉我了。", "（慢慢揭晓）我来看看，上面写的是......"], prep: "信封或折叠学院纸提前藏在帽里。学院信息纸和徽章属于这一幕必备物料。" },
+          { kind: "dialogue", speaker: "弟弟", action: "举起结果给观众看。", expression: "惊喜、兴奋。", lines: ["（兴奋）格兰芬多！"], prep: "结果展示后，妈妈立刻把帽子接过去放桌边。" }
+        ]},
+        { id: "s5", act: "第五幕", title: "第一堂魔法课 + 同一根魔杖开出花", duration: "约 45 秒", objective: "把成长推到最高点，让观众看到“他真的学会了新的魔法”。", summary: "这一幕不是单纯出花，而是整场故事里最关键的成长证明。", beats: [
+          { kind: "dialogue", speaker: "妈妈", action: "把分院帽接走放桌边，再重新转回弟弟。", expression: "从庄重切到温和教学。", lines: ["（温和）恭喜你完成分院。", "（铺垫）不过，真正的魔法学校生活，现在才刚刚开始。", "（教学口吻）接下来，我要教你第一堂真正的魔法课。"], prep: "这一幕默认直接沿用弟弟第二幕拿出的同一根魔杖。" },
+          { kind: "dialogue", speaker: "妈妈", action: "像老师正式介绍课程。", expression: "温和、期待。", lines: ["（清楚）这道魔法，叫做让美好的东西开花。"], prep: "把“同一根魔杖继续施法”的逻辑说顺即可。" },
+          { kind: "dialogue", speaker: "弟弟", action: "握紧自己手里的魔杖，准备施法。", expression: "期待、自信。", lines: ["（积极）我来试试！"], prep: "动作准备要利落。" },
+          { kind: "dialogue", speaker: "妈妈", action: "像老师一样给出简短口令。", expression: "鼓励。", lines: ["（提醒）动作要稳。", "（提醒）魔杖举好。", "（发令）现在，开始施法。"], prep: "妈妈的话要短，不把高潮说散。" },
+          { kind: "magic", speaker: "弟弟", action: "认真挥杖，用同一根魔杖完成开花。花出来后先看花，再看观众。", expression: "明显惊喜。", lines: ["（惊喜）我成功了！"], prep: "花出来后停半拍。结束后花留在弟弟手里，直接带入结尾氛围也可以。" }
+        ]},
+        { id: "s6", act: "第六幕", title: "妈妈点题毕业 + 弟弟空袋送礼物", duration: "约 45 秒", objective: "从霍格沃茨故事自然落回毕业典礼，用礼物和祝福完成收束。", summary: "结尾既要回到毕业主题，也要把“分享”这件事落成一个看得见的动作。", beats: [
+          { kind: "dialogue", speaker: "妈妈", action: "往前半步，像老师也像家长，先把主题点出来。", expression: "温柔、带祝福。", lines: ["（温柔）经过一学年的学习，小魔法师们也都要毕业了。", "（点题）大家都要带着今天学会的勇敢和快乐，去新的学校，学习新的本领。"], prep: "结尾点题由妈妈来说，不再把长段发言压给弟弟。" },
+          { kind: "dialogue", speaker: "妈妈", action: "从桌上把礼物袋递给弟弟，再退半步把舞台让出来。", expression: "期待、像在把最后一项任务交给小魔法师。", lines: ["（郑重交接）现在，就请我们的小魔法师，把礼物送给大家吧。"], prep: "礼物袋由妈妈递给弟弟，明确道具怎么上场。" },
+          { kind: "magic", speaker: "弟弟", action: "接过礼物袋，先展示空袋，再施法变出第一批礼物。", expression: "认真施法，礼物出来时自然开心。", lines: ["（认真展示）这个礼物袋里，现在也是空的。", "（施法）我要把礼物送给大家。", "（开心）真的变出来了！"], prep: "展示空袋、再变出第一批礼物。动作要清楚，不要一下略过去。" },
+          { kind: "dialogue", speaker: "弟弟", action: "拿着第一批礼物往前一步，做出准备送出去的动作。", expression: "开心、真诚。", lines: ["（开心）这些礼物送给大家。", "（真诚）祝大家毕业快乐！"], prep: "如果现场方便，可以象征性往前送出第一份；不方便就停在舞台前沿展示。" }
+        ]}
       ],
-      magicDetails: {
-        "magic-box": {
-          name: "空盒变物",
-          effect: "空盒中变出录取信、圆眼镜、围巾等入学标志物。",
-          implementation: "使用空盒变物道具，通过隐藏仓、翻板、开合或抽拉完成切换。",
-          roles: [
-            "妈妈：出题、控节奏",
-            "弟弟：挥杖、开盒、展示物品"
-          ],
-          tips: [
-            "物品尽量轻、小、好拿",
-            "不建议变整件衣服",
-            "变化后要停顿展示"
-          ],
-          procurement: {
-            level: "必须先采购",
-            items: ["空盒变物道具", "圆眼镜", "学院围巾 / 领带", "录取信"],
-            source: "空盒建议直接采购成熟儿童魔术道具；录取信建议自制并至少准备 2 份。",
-            backup: "录取信和围巾都建议留一份备用，避免彩排折损或临场漏拿。"
-          }
-        },
-        "magic-wand": {
-          name: "从身上拿出魔杖",
-          effect: "弟弟从衣服、袖口、披风或背后自然拿出魔杖。",
-          implementation: "提前把短魔杖藏在披风内侧、袖口内侧或背后固定位置，取出时配合遮挡。",
-          roles: [
-            "妈妈：提问“你的魔杖呢”",
-            "弟弟：顺势取出并高举展示"
-          ],
-          tips: [
-            "魔杖长度要适合孩子",
-            "预藏位置要提前练熟",
-            "重点是自然，不是快"
-          ],
-          procurement: {
-            level: "已有即可",
-            items: ["儿童魔杖", "固定辅料"],
-            source: "魔杖当前可沿用已有款；再补一套魔术贴、透明胶点或别针用于固定预藏位置。",
-            backup: "彩排前确认披风或衣服上固定点是否稳，避免上台时魔杖滑落。"
-          }
-        },
-        "magic-color-book": {
-          name: "变色书 / 魔术涂色书",
-          effect: "教材从空白页变成线稿页，再变成彩色完整内容。",
-          implementation: "使用儿童变色书道具，通过固定翻页顺序展示三种状态。",
-          roles: [
-            "妈妈：串联“学习魔法”的剧情",
-            "弟弟：翻书并展示结果"
-          ],
-          tips: [
-            "只记固定翻页顺序",
-            "每次翻页前先停一下",
-            "书不要太大，避免拿不稳"
-          ],
-          procurement: {
-            level: "必须先采购",
-            items: ["变色书 / 魔术涂色书"],
-            source: "建议直接采购儿童尺寸版本，重点筛选页数少、翻页顺序稳定、孩子能单手拿稳的款式。",
-            backup: "到手后先做 2-3 次完整翻书测试，确认孩子翻页不会卡住。"
-          }
-        },
-        "magic-envelope": {
-          name: "预测信封 / 预言信封",
-          effect: "弟弟打开校长信，发现里面早已写好会加入格兰芬多。",
-          implementation: "使用预测信封道具，或直接提前装入固定结果的信件。",
-          roles: [
-            "妈妈：宣布分院开始",
-            "弟弟：打开信封并宣读结果"
-          ],
-          tips: [
-            "重点是仪式感，不是难度",
-            "结果要固定",
-            "开信动作要慢，方便拍照"
-          ],
-          procurement: {
-            level: "必须采购或自制稳定版",
-            items: ["预测信封 / 校长信封", "信纸内页"],
-            source: "如果买现成预测信封，重点看开口顺手和隐藏结构是否稳定；如果自制，就用固定结果的信纸并做两份备份。",
-            backup: "信纸内页建议打印 2 份，信封也最好备用一个，避免开口损坏。"
-          }
-        },
-        "magic-flower": {
-          name: "空棒变花 / 魔棒变花",
-          effect: "弟弟挥动空棒或魔杖后，变出一枝花或一束花。",
-          implementation: "使用儿童款变花道具，让折叠花朵通过抽拉、弹出或展开的方式出现。",
-          roles: [
-            "妈妈：扮演教授，负责“教学”",
-            "弟弟：完成真正的变化"
-          ],
-          tips: [
-            "孩子动作越简单越好",
-            "花出来后要停顿展示"
-          ],
-          procurement: {
-            level: "必须先采购",
-            items: ["空棒变花 / 魔棒变花道具", "备用花朵 / 备用道具"],
-            source: "优先采购儿童易操作款，确认花朵展开阻力小；建议同时买 1 套备用花朵。",
-            backup: "这一幕最怕花打不开，正式演出前必须做至少一次全流程测试。"
-          }
-        },
-        "magic-bag": {
-          name: "空袋变纪念品",
-          effect: "弟弟从看起来是空的魔法袋里变出送给现场小朋友的小纪念品。",
-          implementation: "使用变物袋或乾坤袋，通过隐藏夹层切换出纪念品。",
-          roles: [
-            "妈妈：收束情绪，引入毕业主题",
-            "弟弟：施法并拿出第一批礼物"
-          ],
-          tips: [
-            "纪念品尽量轻薄好分发",
-            "第一批礼物要视觉明显",
-            "不方便分发时可只做展示"
-          ],
-          procurement: {
-            level: "必须先采购",
-            items: ["变物袋 / 乾坤袋", "小纪念品"],
-            source: "变物袋建议直接买稳定款；纪念品按现场人数准备，优先轻薄、便宜、统一包装的小物件。",
-            backup: "如果现场不方便真分发，就准备一版只展示不派送的替代流程。"
-          }
-        }
-      },
-      props: [
-        { name: "儿童巫师袍 / 披风", usage: "建立主角造型，增强哈利波特主题感", scene: "全程", source: "建议采购", priority: "造型件" },
-        { name: "白衬衫 + 深色裤子 / 鞋子", usage: "作为巫师袍内搭，保证整体造型完整", scene: "全程", source: "可自备", priority: "基础服装" },
-        { name: "圆眼镜", usage: "第一关空盒变出的入学标志物之一", scene: "第二幕", source: "建议采购", priority: "剧情造型件" },
-        { name: "学院围巾 / 领带", usage: "第一关空盒变出的入学标志物之一", scene: "第二幕", source: "建议采购", priority: "剧情造型件" },
-        { name: "霍格沃茨风录取信", usage: "第一关变出物，也可作为剧情道具", scene: "第二幕", source: "建议自制 2 份", priority: "需备份" },
-        { name: "空盒变物道具", usage: "用于变出录取信、眼镜、围巾等", scene: "第二幕", source: "必须采购", priority: "核心魔术" },
-        { name: "儿童魔杖", usage: "主角核心道具，后续多个魔术都要用到", scene: "第二幕起", source: "已有", priority: "已有主道具" },
-        { name: "变色书 / 魔术涂色书", usage: "展示学习能力的教材魔术", scene: "第三幕", source: "必须采购", priority: "核心魔术" },
-        { name: "预测信封 / 校长信封", usage: "分院仪式使用", scene: "第四幕", source: "必须采购或自制稳定版", priority: "核心魔术" },
-        { name: "信纸内页（分院结果）", usage: "写明固定分院结果，避免现场遗忘或写错", scene: "第四幕", source: "建议打印 2 份备份", priority: "需备份" },
-        { name: "分院帽", usage: "增强分院场景氛围，可选", scene: "第四幕", source: "可选采购", priority: "氛围件" },
-        { name: "空棒变花 / 魔棒变花道具", usage: "第一堂魔法课使用", scene: "第五幕", source: "必须采购", priority: "核心魔术" },
-        { name: "备用花朵 / 备用变花道具", usage: "防止花朵损坏、弹出失败或排练损耗", scene: "第五幕", source: "建议备 1 套", priority: "需备份" },
-        { name: "变物袋 / 乾坤袋", usage: "结尾变出纪念品", scene: "第六幕", source: "必须采购", priority: "核心魔术" },
-        { name: "小纪念品", usage: "贴纸、书签、徽章、小卡片等，用于结尾分享", scene: "第六幕", source: "按现场人数采购", priority: "耗材" },
-        { name: "小桌子 + 深色桌布", usage: "摆放道具，便于舞台操作", scene: "全程", source: "可借用 / 可自备", priority: "现场支持" },
-        { name: "分幕收纳箱 / 收纳篮", usage: "按幕次归置道具，减少上台时找不到道具的风险", scene: "全程", source: "建议自备", priority: "现场支持" },
-        { name: "魔术贴 / 双面胶 / 别针 / 透明胶点", usage: "固定魔杖、信封、围巾或服装细节，属于容易临时缺的辅助物料", scene: "全程", source: "建议提前采购整套", priority: "辅助耗材" },
-        { name: "背景音乐文件 + 播放设备 / U 盘", usage: "配合开场、转场和结尾收束", scene: "全程", source: "提前准备并彩排测试", priority: "现场支持" }
-      ],
-      preparation: [
-        {
-          title: "采购优先级建议",
-          items: [
-            "第一步先锁定 5 个核心魔术道具：空盒、变色书、分院信封、变花、变物袋",
-            "第二步补齐第二幕和第四幕的剧情物：录取信、圆眼镜、围巾、分院结果信纸",
-            "第三步再补造型和氛围件：巫师袍、分院帽、桌布、音乐",
-            "第四步最后采购耗材和备份：纪念品、胶点、备用花朵、额外信纸"
-          ]
-        },
-        {
-          title: "彩排顺序建议",
-          items: [
-            "第一轮先只走流程，不追求表演感",
-            "第二轮开始补台词和停顿",
-            "第三轮重点练道具衔接和转场",
-            "最后一轮再练完整情绪和观众互动"
-          ]
-        },
-        {
-          title: "分工上的练习重点",
-          items: [
-            "妈妈重点练控场、转场和接台词",
-            "弟弟重点练动作点，不一定要先背长台词",
-            "妈妈和弟弟要额外练“递道具、接道具、站位遮挡”这些原本可以由第三人补位的动作"
-          ]
-        },
-        {
-          title: "现场执行提醒",
-          items: [
-            "所有道具都要提前按幕次摆放",
-            "孩子只记关键词和动作点，不要背太复杂的长句",
-            "每次魔术变化后都要留展示停顿",
-            "分院互动时间不要拖太久，避免现场散",
-            "如果现场分发礼物不方便，可以改成象征性展示",
-            "第四幕和第六幕建议都准备一份备用信纸 / 备用礼物，防止临场损坏"
-          ]
-        },
-        {
-          title: "待确认项",
-          items: [
-            "最终演出时长是控制在 4 分钟内，还是可以做到 5–6 分钟",
-            "现场舞台大小、上台路线、是否有小桌可用",
-            "是否方便在结尾真的分发纪念品",
-            "格兰芬多是否最终锁定，还是想保留别的学院方案",
-            "每个魔术道具是现成采购，还是部分手工改造"
-          ]
-        }
-      ],
-      futureExtensions: [
-        "舞台站位图",
-        "每一幕的时间分配",
-        "采购清单和搜索关键词",
-        "彩排计划表",
-        "最终版结尾台词候选"
+      materials: [
+        { c:"服装", n:"弟弟白衬衫", s:"全程", p:"作为弟弟基础内搭，建议选不透、吸汗、活动方便的款式。", t:"support" },
+        { c:"服装", n:"弟弟深色裤子", s:"全程", p:"方便上台走动、转身、蹲下拿道具，不建议太长或太紧。", t:"support" },
+        { c:"服装", n:"弟弟深色鞋子", s:"全程", p:"鞋底尽量防滑、走路声音小，演出当天提前穿着适应。", t:"support" },
+        { c:"服装", n:"弟弟巫师袍", s:"全程", p:"主角外层造型，也承担遮挡内侧魔杖位置的作用。", t:"support" },
+        { c:"服装", n:"弟弟披风", s:"全程（可替代巫师袍）", p:"轻便版替代方案，重点确认系带不会松脱。", t:"support" },
+        { c:"服装", n:"圆眼镜", s:"第二幕起", p:"第二幕空盒里变出的入学标志物之一，不要太重。", t:"support" },
+        { c:"服装", n:"学院围巾", s:"第二幕起", p:"第二幕变出的身份物之一，颜色要显眼但别太长。", t:"support" },
+        { c:"服装", n:"学院领带", s:"第二幕起（可替代围巾）", p:"不想让围巾影响动作时，可改用领带。", t:"support" },
+        { c:"服装", n:"妈妈深色服装", s:"全程", p:"帮助妈妈建立教授身份，不要太花或太休闲。", t:"support" },
+        { c:"服装", n:"妈妈披肩", s:"全程", p:"增强教授感，也有助于开场变魔杖时做遮挡。", t:"support" },
+        { c:"服装", n:"妈妈学院风围巾", s:"全程（可替代披肩）", p:"披肩替代方案，注意不要挡住伸缩魔杖的出手路线。", t:"support" },
+        { c:"第一幕", n:"妈妈伸缩魔杖", s:"第一幕", p:"用于开场空手施法，正式上台前要再做一次完整展开测试。", t:"core" },
+        { c:"第二幕", n:"空盒变物道具", s:"第二幕", p:"用于依次变出录取信、圆眼镜、围巾或领带。", t:"core" },
+        { c:"第二幕", n:"霍格沃茨录取信正式版", s:"第二幕", p:"由空盒变出，字样要清晰，方便观众一眼看懂。", t:"support" },
+        { c:"第二幕", n:"霍格沃茨录取信备用版", s:"第二幕 / 候场区", p:"建议至少多备 1-2 份，防止折损或漏装。", t:"backup" },
+        { c:"第二幕", n:"弟弟自己的魔杖", s:"第二幕起", p:"第二幕自然取出，第五幕继续沿用同一根做开花。", t:"core" },
+        { c:"第二幕", n:"牛皮纸袋", s:"第二幕", p:"用于空纸袋开出花，展示为空时不能穿帮。", t:"core" },
+        { c:"第二幕", n:"花盒 1", s:"第二幕", p:"第一个拿出的花盒，必须放在最顺手的位置。", t:"core" },
+        { c:"第二幕", n:"花盒 2", s:"第二幕", p:"第二个连续展示物，体积和朝向要与第一只区分开。", t:"core" },
+        { c:"第二幕", n:"花盒 3", s:"第二幕", p:"最后一个出现的花盒，放在最里面但要能直接抓到。", t:"core" },
+        { c:"第三幕", n:"变色书", s:"第三幕", p:"用于表现学习魔法的过程，翻页顺序一定要稳定。", t:"core" },
+        { c:"第三幕", n:"魔法书封面或外套", s:"第三幕（可选）", p:"让书更像霍格沃茨教材，但不能影响翻页。", t:"support" },
+        { c:"第四幕", n:"分院帽", s:"第四幕", p:"真正上台戴到弟弟头上，增强分院仪式感。", t:"core" },
+        { c:"第四幕", n:"分院结果信封", s:"第四幕", p:"提前藏在分院帽里，抽出时不能太紧也不能露边。", t:"core" },
+        { c:"第四幕", n:"学院结果纸", s:"第四幕", p:"最终展示格兰芬多结果，建议打印清晰并提前折好。", t:"support" },
+        { c:"第四幕", n:"学院徽章纸", s:"第四幕（可选）", p:"让分院结果更有奖章感，但要和结果纸分开放。", t:"support" },
+        { c:"第五幕", n:"魔杖开花机关", s:"第五幕", p:"建议做成同一根魔杖开花版本，减少换道具失误。", t:"core" },
+        { c:"第五幕", n:"开花花朵", s:"第五幕", p:"作为视觉高潮，颜色要亮，展开后要足够明显。", t:"core" },
+        { c:"第六幕", n:"礼物袋", s:"第六幕", p:"先展示为空，再变出第一批礼物，袋口角度要提前排。", t:"core" },
+        { c:"第六幕", n:"第一批展示礼物", s:"第六幕", p:"放在最容易掏出的上层位置，包装尽量统一。", t:"support" },
+        { c:"第六幕", n:"其余发放礼物", s:"第六幕 / 候场区", p:"其余礼物可放候场区，演出后再统一分发。", t:"support" },
+        { c:"现场", n:"小桌子", s:"全程", p:"按幕次摆放所有道具，妈妈也方便收物、递物。", t:"support" },
+        { c:"现场", n:"深色桌布", s:"全程", p:"遮挡桌面和部分道具底部结构，避免视觉穿帮。", t:"support" },
+        { c:"现场", n:"待上场收纳篮", s:"全程", p:"放还没出场的道具，最好按幕次从左到右摆放。", t:"support" },
+        { c:"现场", n:"已用完回收箱", s:"全程", p:"专门放已经用过的录取信、纸袋、花盒、帽子等。", t:"support" },
+        { c:"现场", n:"舞台定位地贴", s:"全程", p:"给弟弟站位、妈妈站位和桌子位置做轻量标记。", t:"support" },
+        { c:"音频", n:"背景音乐文件", s:"全程", p:"至少准备开场、分院、结尾 3 段音乐，并完整试放。", t:"support" },
+        { c:"音频", n:"播放主设备", s:"全程", p:"提前锁定勿扰模式，防止来电或消息弹出。", t:"support" },
+        { c:"音频", n:"备用手机", s:"全程 / 候场区", p:"主设备出问题时可立即接管播放。", t:"backup" },
+        { c:"音频", n:"音乐备份 U 盘", s:"全程 / 候场区", p:"如果现场老师用电脑或音响播放，这是最稳妥的第二备份。", t:"backup" },
+        { c:"音频", n:"充电宝或充电线", s:"候场区", p:"保证播放设备和彩排联络设备不断电。", t:"support" },
+        { c:"辅助物料", n:"魔术贴", s:"全程", p:"固定魔杖位置、披风内侧暗袋或轻量道具。", t:"support" },
+        { c:"辅助物料", n:"别针", s:"全程", p:"临时固定围巾、披肩和服装松动位置。", t:"support" },
+        { c:"辅助物料", n:"双面胶", s:"全程", p:"固定轻薄纸张、桌布边缘或一次性小装饰。", t:"support" },
+        { c:"辅助物料", n:"透明胶点", s:"全程", p:"固定小型轻质道具，比普通胶带更隐蔽。", t:"support" },
+        { c:"辅助物料", n:"备用录取信打印件", s:"第二幕 / 候场区", p:"和正式版分开放置，方便现场快速替换。", t:"backup" },
+        { c:"辅助物料", n:"备用学院结果纸", s:"第四幕 / 候场区", p:"纸类容易折皱，这项一定单独备份。", t:"backup" },
+        { c:"辅助物料", n:"节目流程单", s:"候场区", p:"给妈妈和现场协助老师快速看顺序与音乐点。", t:"support" },
+        { c:"候场", n:"饮用水", s:"候场区", p:"孩子上场前如果紧张、口干，可以小口补水。", t:"support" },
+        { c:"候场", n:"纸巾", s:"候场区", p:"用于擦手、擦汗、整理妆发或清理道具表面。", t:"support" }
       ]
     };
 
-    const heroDescription = document.getElementById("hero-description");
-    const heroMeta = document.getElementById("hero-meta");
-    const keywordList = document.getElementById("keyword-list");
-    const sceneJumpGrid = document.getElementById("scene-jump-grid");
-    const sceneStack = document.getElementById("scene-stack");
-    const miniSceneList = document.getElementById("mini-scene-list");
-    const procurementSummary = document.getElementById("procurement-summary");
-    const magicProcurementGrid = document.getElementById("magic-procurement-grid");
-    const propsTableBody = document.getElementById("props-table-body");
-    const prepStack = document.getElementById("prep-stack");
-    const futurePillList = document.getElementById("future-pill-list");
+    const state = { tab: "background", kind: "all", speaker: "all", search: "", scene: "all", category: "all" };
 
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+    const jumpList = document.getElementById("jump-list");
+    const sceneList = document.getElementById("scene-list");
+    const backgroundList = document.getElementById("background-list");
+    const materialSummary = document.getElementById("material-summary");
+    const materialGrid = document.getElementById("material-grid");
+    const sceneFilter = document.getElementById("scene-filter");
+    const categoryFilter = document.getElementById("category-filter");
+    const searchInput = document.getElementById("search-input");
+
+    function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
+    function toneClass(kind){return kind==="magic"?"magic":"dialogue"}
+    function speakerClass(v){if(v==="妈妈") return "mom"; if(v==="弟弟") return "kid"; return "crowd";}
+    function materialClass(v){if(v==="core") return "core"; if(v==="backup") return "kid"; return "crowd";}
+    function materialTag(v){if(v==="core") return "核心魔术"; if(v==="backup") return "备份"; return "执行支持";}
+
+    function getVisibleBeats(scene){
+      return scene.beats.filter(beat=>{
+        if(state.kind!=="all" && beat.kind!==state.kind) return false;
+        if(state.speaker!=="all" && beat.speaker!==state.speaker) return false;
+        return true;
+      });
     }
 
-    function renderHero() {
-      heroDescription.textContent = planData.description;
-      heroMeta.innerHTML = planData.meta.map((item) => `
-        <article class="meta-card">
-          <div class="meta-card__label">${escapeHtml(item.label)}</div>
-          <div class="meta-card__value">${escapeHtml(item.value)}</div>
-          <div class="meta-card__sub">${escapeHtml(item.sub)}</div>
-        </article>
-      `).join("");
-
-      keywordList.innerHTML = planData.keywords.map((keyword) => `
-        <span class="pill">${escapeHtml(keyword)}</span>
-      `).join("");
+    function renderSceneJump(){
+      jumpList.innerHTML = data.scenes.map((scene,idx)=>`<button class="jump ${idx===0?"active":""}" data-jump="${scene.id}"><small>${scene.act}</small><strong>${esc(scene.title)}</strong><span>${esc(scene.summary)}</span></button>`).join("");
     }
 
-    function renderSceneJump(scene) {
-      return `
-        <button class="scene-jump" type="button" data-scene-jump="${escapeHtml(scene.id)}">
-          <div class="scene-jump__index">${escapeHtml(scene.actLabel)}</div>
-          <div class="scene-jump__title">${escapeHtml(scene.title)}</div>
-          <div class="scene-jump__summary">${escapeHtml(scene.shortSummary)}</div>
-        </button>
-      `;
-    }
-
-    function renderScript(script) {
-      return `
-        <div class="script-item ${script.type === "action" ? "is-action" : ""}">
-          <div class="script-item__speaker">${escapeHtml(script.speaker)}</div>
-          <div class="script-item__text">${escapeHtml(script.text)}</div>
-        </div>
-      `;
-    }
-
-    function renderMagicCard(sceneId, magicKey) {
-      const magic = planData.magicDetails[magicKey];
-      if (!magic) return "";
-
-      return `
-        <article class="magic-card" data-magic-scene="${escapeHtml(sceneId)}">
-          <h4>${escapeHtml(magic.name)}</h4>
-          <div class="magic-card__meta">关联魔术细节</div>
-          <dl>
-            <div>
-              <dt>效果</dt>
-              <dd>${escapeHtml(magic.effect)}</dd>
-            </div>
-            <div>
-              <dt>实现思路</dt>
-              <dd>${escapeHtml(magic.implementation)}</dd>
-            </div>
-            <div>
-              <dt>分工</dt>
-              <dd>
-                <ul>${magic.roles.map((role) => `<li>${escapeHtml(role)}</li>`).join("")}</ul>
-              </dd>
-            </div>
-            <div>
-              <dt>执行提醒</dt>
-              <dd>
-                <ul>${magic.tips.map((tip) => `<li>${escapeHtml(tip)}</li>`).join("")}</ul>
-              </dd>
-            </div>
-            ${magic.procurement ? `
+    function renderScenes(){
+      sceneList.innerHTML = data.scenes.map((scene,idx)=>{
+        const beats = getVisibleBeats(scene);
+        const magicCount = scene.beats.filter(b=>b.kind==="magic").length;
+        const items = beats.length ? beats.map((beat,i)=>`
+          <article class="beat ${toneClass(beat.kind)}">
+            <div class="speaker-panel ${speakerClass(beat.speaker)}">
               <div>
-                <dt>采购重点</dt>
-                <dd>
-                  <strong>${escapeHtml(magic.procurement.level)}</strong><br>
-                  需要准备：${escapeHtml(magic.procurement.items.join("、"))}<br>
-                  获取方式：${escapeHtml(magic.procurement.source)}<br>
-                  备份提醒：${escapeHtml(magic.procurement.backup)}
-                </dd>
+                <div class="speaker-role">${esc(beat.speaker)}</div>
+                <div class="speaker-index">第 ${i+1} 条</div>
               </div>
-            ` : ""}
-          </dl>
-        </article>
-      `;
-    }
-
-    function renderSceneCard(scene) {
-      const hasMagic = scene.magicRefs.length > 0;
-
-      return `
-        <details class="scene-card" id="${escapeHtml(scene.id)}" data-scene-card>
-          <summary>
-            <div class="scene-summary__main">
-              <div class="scene-summary__eyebrow">${escapeHtml(scene.actLabel)}</div>
-              <div class="scene-summary__title">${escapeHtml(scene.title)}</div>
-              <div class="scene-summary__sub">${escapeHtml(scene.shortSummary)}</div>
+              <span class="speaker-type ${toneClass(beat.kind)}">${beat.kind==="magic"?"魔法呈现":"情景对话"}</span>
             </div>
-            <div class="scene-summary__side">
-              <span class="tag">${scene.script.length} 段剧本</span>
-              <span class="tag ${hasMagic ? "tag--gold" : ""}">${hasMagic ? `${scene.magicRefs.length} 个魔术细节` : "无魔术细节"}</span>
-            </div>
-          </summary>
-          <div class="scene-body">
-            <div class="scene-overview">
-              <article class="info-card">
-                <h3 class="info-card__title">这一幕在做什么</h3>
-                <p>${escapeHtml(scene.background)}</p>
-              </article>
-              <article class="info-card">
-                <h3 class="info-card__title">这一幕的目的</h3>
-                <ul>${scene.purpose.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-              </article>
-            </div>
-            <div class="info-card" style="margin-bottom: 16px;">
-              <h3 class="info-card__title">故事概述</h3>
-              <p>${escapeHtml(scene.storySummary)}</p>
-            </div>
-            <div class="nested-stack">
-              <details class="nested-card" data-script-card>
-                <summary>
-                  <div class="nested-card__label">
-                    <span class="nested-card__dot"></span>
-                    <span>剧本</span>
-                  </div>
-                  <span class="nested-card__count">${scene.script.length} 条内容</span>
-                </summary>
-                <div class="nested-card__body">
-                  <div class="script-list">
-                    ${scene.script.map(renderScript).join("")}
+            <div class="beat-content">
+              <div class="beat-top">
+                <div class="badges">
+                  <span class="b ${speakerClass(beat.speaker)}">${esc(beat.speaker)}</span>
+                  <span class="b ${toneClass(beat.kind)}">${beat.kind==="magic"?"魔术段":"剧情段"}</span>
+                  ${beat.kind==="magic"?'<span class="b core">魔术相关</span>':""}
+                </div>
+              </div>
+              <div class="beat-grid">
+                <div>
+                  <div class="quote"><strong>动作 / 表情</strong><div>${esc(beat.action)} <span style="color:var(--muted)">｜</span> ${esc(beat.expression)}</div></div>
+                  <div class="dialogue-box">
+                    <strong>台词</strong>
+                    <ul class="lines">${beat.lines.map(line=>`<li>${esc(line)}</li>`).join("")}</ul>
                   </div>
                 </div>
-              </details>
-              ${hasMagic ? `
-                <details class="nested-card" data-magic-card>
-                  <summary>
-                    <div class="nested-card__label">
-                      <span class="nested-card__dot"></span>
-                      <span>魔术细节</span>
-                    </div>
-                    <span class="nested-card__count">${scene.magicRefs.length} 个关联魔术</span>
-                  </summary>
-                  <div class="nested-card__body">
-                    <div class="magic-grid">
-                      ${scene.magicRefs.map((magicKey) => renderMagicCard(scene.id, magicKey)).join("")}
-                    </div>
-                  </div>
-                </details>
-              ` : ""}
+                <aside class="prep"><strong>提醒</strong><div>${esc(beat.prep)}</div></aside>
+              </div>
             </div>
+          </article>
+        `).join("") : `<div class="empty">当前筛选条件下，这一幕没有匹配内容。</div>`;
+        return `
+          <details class="scene-card" id="${scene.id}" ${idx===0?'open':""}>
+            <summary>
+              <div class="scene-main">
+                <small>${esc(scene.act)}</small>
+                <h3>${esc(scene.title)}</h3>
+                <p>${esc(scene.summary)}</p>
+              </div>
+              <div class="scene-tags">
+                <span class="tag">${esc(scene.duration)}</span>
+                <span class="tag gold">${scene.beats.length} 条执行</span>
+                <span class="tag green">${magicCount} 条魔法</span>
+              </div>
+            </summary>
+            <div class="scene-body">
+              <div class="scene-meta">
+                <article class="info">
+                  <h4>这一幕的任务</h4>
+                  <p>${esc(scene.objective)}</p>
+                </article>
+              </div>
+              <div class="beat-list">${items}</div>
+            </div>
+          </details>
+        `;
+      }).join("");
+    }
+
+    function renderBackground(){
+      backgroundList.innerHTML = data.background.map((section,idx)=>`
+        <details class="accordion" ${idx===0?"open":""}>
+          <summary>
+            <div>
+              <h3>${esc(section.title)}</h3>
+              <p>${esc(section.summary)}</p>
+            </div>
+            <span class="tag">展开查看</span>
+          </summary>
+          <div class="body">
+            <ul>${section.bullets.map(item=>`<li>${esc(item)}</li>`).join("")}</ul>
           </div>
         </details>
-      `;
-    }
-
-    function renderSceneSections() {
-      sceneJumpGrid.innerHTML = planData.scenes.map(renderSceneJump).join("");
-      sceneStack.innerHTML = planData.scenes.map(renderSceneCard).join("");
-
-      miniSceneList.innerHTML = planData.scenes.map((scene) => `
-        <div class="mini-scene">
-          <button type="button" data-scene-jump="${escapeHtml(scene.id)}">
-            ${escapeHtml(scene.actLabel)} · ${escapeHtml(scene.title)}
-          </button>
-          <span class="mini-scene__hint">${scene.magicRefs.length ? `${scene.magicRefs.length} 个魔术` : "剧情开场"}</span>
-        </div>
       `).join("");
     }
 
-    function renderProps() {
-      procurementSummary.innerHTML = planData.procurementSummary.map((item) => `
-        <article class="procurement-stat">
-          <div class="procurement-stat__label">${escapeHtml(item.label)}</div>
-          <div class="procurement-stat__value">${escapeHtml(item.value)}</div>
-          <div class="procurement-stat__sub">${escapeHtml(item.sub)}</div>
+    function unique(list){return ["all",...new Set(list)]}
+
+    function initMaterialFilters(){
+      unique(data.materials.map(i=>i.s)).forEach(v=>{
+        const label = v==="all"?"全部幕次":v;
+        sceneFilter.insertAdjacentHTML("beforeend",`<option value="${esc(v)}">${esc(label)}</option>`);
+      });
+      unique(data.materials.map(i=>i.c)).forEach(v=>{
+        const label = v==="all"?"全部类别":v;
+        categoryFilter.insertAdjacentHTML("beforeend",`<option value="${esc(v)}">${esc(label)}</option>`);
+      });
+    }
+
+    function getFilteredMaterials(){
+      return data.materials.filter(item=>{
+        const q = state.search.trim().toLowerCase();
+        const hay = `${item.n} ${item.p} ${item.c} ${item.s}`.toLowerCase();
+        if(q && !hay.includes(q)) return false;
+        if(state.scene!=="all" && item.s!==state.scene) return false;
+        if(state.category!=="all" && item.c!==state.category) return false;
+        return true;
+      });
+    }
+
+    function renderMaterials(){
+      const list = getFilteredMaterials();
+      const coreCount = data.materials.filter(i=>i.t==="core").length;
+      const backupCount = data.materials.filter(i=>i.t==="backup").length;
+      materialSummary.innerHTML = [
+        {label:"总物料",value:`${data.materials.length} 项`,sub:"当前飞书版本里每个物品都拆成单独一行。"},
+        {label:"核心魔术",value:`${coreCount} 项`,sub:"优先采购或先稳定彩排的关键道具。"},
+        {label:"备份项",value:`${backupCount} 项`,sub:"纸类、音频和易损项都做了单独备份。"},
+        {label:"当前筛选后",value:`${list.length} 项`,sub:"支持按名称、幕次、类别快速查找。"}
+      ].map(i=>`<article class="stat"><small>${i.label}</small><strong>${i.value}</strong><span>${i.sub}</span></article>`).join("");
+      materialGrid.innerHTML = list.length ? list.map(item=>`
+        <article class="material-card">
+          <div class="material-top">
+            <h3>${esc(item.n)}</h3>
+            <span class="b ${materialClass(item.t)}">${materialTag(item.t)}</span>
+          </div>
+          <div class="meta">
+            <span class="tag">${esc(item.c)}</span>
+            <span class="tag gold">${esc(item.s)}</span>
+          </div>
+          <p>${esc(item.p)}</p>
         </article>
-      `).join("");
-
-      magicProcurementGrid.innerHTML = planData.scenes
-        .filter((scene) => scene.magicRefs.length > 0)
-        .map((scene) => scene.magicRefs.map((magicKey) => {
-          const magic = planData.magicDetails[magicKey];
-          if (!magic || !magic.procurement) return "";
-          return `
-            <article class="magic-procurement-card">
-              <div class="magic-procurement-card__top">
-                <div>
-                  <h3>${escapeHtml(magic.name)}</h3>
-                  <div class="magic-procurement-card__scene">${escapeHtml(scene.actLabel)} · ${escapeHtml(scene.title)}</div>
-                </div>
-                <span class="table-badge ${getBadgeClass(magic.procurement.level)}">${escapeHtml(magic.procurement.level)}</span>
-              </div>
-              <dl>
-                <div>
-                  <dt>要买什么</dt>
-                  <dd>
-                    <ul>${magic.procurement.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-                  </dd>
-                </div>
-                <div>
-                  <dt>怎么准备</dt>
-                  <dd>${escapeHtml(magic.procurement.source)}</dd>
-                </div>
-                <div>
-                  <dt>风险与备份</dt>
-                  <dd>${escapeHtml(magic.procurement.backup)}</dd>
-                </div>
-              </dl>
-            </article>
-          `;
-        }).join("")).join("");
-
-      propsTableBody.innerHTML = planData.props.map((item) => `
-        <tr>
-          <td>${escapeHtml(item.name)}</td>
-          <td>${escapeHtml(item.usage)}</td>
-          <td>${escapeHtml(item.scene)}</td>
-          <td><div class="table-note">${escapeHtml(item.source)}</div></td>
-          <td><span class="table-badge ${getBadgeClass(item.source)}">${escapeHtml(item.priority)}</span></td>
-        </tr>
-      `).join("");
-
-      prepStack.innerHTML = planData.preparation.map((block) => `
-        <article class="check-card">
-          <h4>${escapeHtml(block.title)}</h4>
-          <ul>
-            ${block.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-          </ul>
-        </article>
-      `).join("");
-
-      futurePillList.innerHTML = planData.futureExtensions.map((item) => `
-        <span class="pill">${escapeHtml(item)}</span>
-      `).join("");
+      `).join("") : `<div class="empty">没有匹配到物料。可以清空搜索词，或把幕次 / 类别筛选切回“全部”。</div>`;
     }
 
-    function getBadgeClass(label) {
-      if (label.includes("必须")) return "table-badge--must";
-      if (label.includes("建议备") || label.includes("备份") || label.includes("打印 2 份")) return "table-badge--backup";
-      if (label.includes("已有") || label.includes("可自备") || label.includes("可借用")) return "table-badge--own";
-      if (label.includes("可选")) return "table-badge--optional";
-      if (label.includes("采购")) return "table-badge--buy";
-      return "table-badge--optional";
-    }
-
-    function setActiveJump(sceneId) {
-      document.querySelectorAll("[data-scene-jump]").forEach((button) => {
-        button.classList.toggle("active", button.getAttribute("data-scene-jump") === sceneId);
-      });
-    }
-
-    function openScene(sceneId) {
-      const scene = document.getElementById(sceneId);
-      if (!scene) return;
-      scene.open = true;
-      setActiveJump(sceneId);
-      scene.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function toggleAllScenes(isOpen) {
-      document.querySelectorAll("[data-scene-card]").forEach((item) => {
-        item.open = isOpen;
-      });
-    }
-
-    function toggleAllNested(selector, isOpen) {
-      document.querySelectorAll(selector).forEach((item) => {
-        item.open = isOpen;
-      });
-    }
-
-    function bindEvents() {
-      document.querySelectorAll("[data-scene-jump]").forEach((button) => {
-        button.addEventListener("click", () => {
-          openScene(button.getAttribute("data-scene-jump"));
-        });
-      });
-
-      document.getElementById("expand-all-scenes").addEventListener("click", () => {
-        toggleAllScenes(true);
-      });
-
-      document.getElementById("collapse-all").addEventListener("click", () => {
-        toggleAllNested("[data-script-card], [data-magic-card]", false);
-        toggleAllScenes(false);
-      });
-
-      document.getElementById("open-scripts").addEventListener("click", () => {
-        toggleAllScenes(true);
-        toggleAllNested("[data-script-card]", true);
-      });
-
-      document.getElementById("open-magic").addEventListener("click", () => {
-        toggleAllScenes(true);
-        toggleAllNested("[data-magic-card]", true);
-      });
-
-      document.querySelectorAll("[data-scene-card]").forEach((card) => {
-        card.addEventListener("toggle", () => {
-          if (card.open) {
-            setActiveJump(card.id);
-          }
+    function bindTabs(){
+      document.querySelectorAll(".tab-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          const tab = btn.dataset.tab;
+          state.tab = tab;
+          document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active", b===btn));
+          document.querySelectorAll(".tab-panel").forEach(panel=>panel.classList.toggle("active", panel.id===`tab-${tab}`));
         });
       });
     }
 
-    renderHero();
-    renderSceneSections();
-    renderProps();
-    bindEvents();
+    function bindFilters(){
+      document.querySelectorAll("[data-kind]").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          state.kind = btn.dataset.kind;
+          document.querySelectorAll("[data-kind]").forEach(b=>b.classList.toggle("active", b===btn));
+          renderScenes();
+        });
+      });
+      document.querySelectorAll("[data-speaker]").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          state.speaker = btn.dataset.speaker;
+          document.querySelectorAll("[data-speaker]").forEach(b=>b.classList.toggle("active", b===btn));
+          renderScenes();
+        });
+      });
+      document.getElementById("expand-all").addEventListener("click",()=>{document.querySelectorAll(".scene-card").forEach(card=>{card.open=true})});
+      document.getElementById("collapse-all").addEventListener("click",()=>{document.querySelectorAll(".scene-card").forEach(card=>{card.open=false})});
+      jumpList.addEventListener("click",e=>{
+        const btn = e.target.closest("[data-jump]");
+        if(!btn) return;
+        document.querySelectorAll("[data-jump]").forEach(node=>node.classList.toggle("active", node===btn));
+        const target = document.getElementById(btn.dataset.jump);
+        if(target){
+          target.open = true;
+          target.scrollIntoView({behavior:"smooth", block:"start"});
+        }
+      });
+      searchInput.addEventListener("input",e=>{state.search=e.target.value;renderMaterials()});
+      sceneFilter.addEventListener("change",e=>{state.scene=e.target.value;renderMaterials()});
+      categoryFilter.addEventListener("change",e=>{state.category=e.target.value;renderMaterials()});
+    }
+
+    renderSceneJump();
+    renderScenes();
+    renderBackground();
+    initMaterialFilters();
+    renderMaterials();
+    bindTabs();
+    bindFilters();
   </script>
 </body>
 </html>
