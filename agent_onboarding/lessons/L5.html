@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>L5 · Skill 化：把"做一次"沉淀为"团队资产" | PM 培训学习平台</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html[data-theme="dark"]{
+    --bg:#0b0d12; --bg-soft:#11141b; --bg-card:#161a23; --bg-card-hover:#1c2230;
+    --border:#252b39; --border-strong:#323a4d;
+    --text:#e6e8ee; --text-soft:#a4abbb; --text-mute:#6b7186;
+    --accent:#7c5cff; --accent-2:#22d3ee; --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399; --danger:#f87171; --warn:#fbbf24;
+    --A:#22d3ee; --code-bg:#0d1018; --code-border:#1f2533;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px; --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8; --bg-soft:#eceff3; --bg-card:#ffffff; --bg-card-hover:#fafbfc;
+    --border:#e4e7eb; --border-strong:#cbd0d8;
+    --text:#1f2329; --text-soft:#4e5969; --text-mute:#8a93a6;
+    --accent:#1664ff; --accent-2:#0e62e3; --accent-soft:#e6f0ff;
+    --success:#00a870; --danger:#f53f3f; --warn:#ff7d00;
+    --A:#1664ff; --code-bg:#f7f8fa; --code-border:#e4e7eb;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px; --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:var(--font-mono);font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+  strong{color:var(--text);font-weight:600}
+  ul,ol{padding-left:1.6em}
+  li{margin:.3em 0}
+
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mute)}
+  .breadcrumb a{color:var(--text-soft)}
+  .breadcrumb .current{color:var(--text);font-weight:500}
+  .breadcrumb .sep{color:var(--text-mute)}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+  .theme-switch,.track-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  .theme-switch button,.track-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1;white-space:nowrap}
+  .theme-switch button.active,.track-switch button.active{color:#fff}
+  .theme-switch .ind,.track-switch .ind{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s}
+  .nav-btn{font-size:12px;color:var(--text-soft);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  .layout{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:flex-start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static !important}}
+  .article{padding:32px 0 96px;min-width:0}
+  .sidebar{position:sticky;top:64px;padding:24px 0;max-height:calc(100vh - 64px);overflow:auto}
+
+  .lesson-header{margin-bottom:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  .lesson-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-mute);margin-bottom:12px;align-items:center}
+  .lesson-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-weight:600}
+  .lesson-meta .sep{width:1px;height:12px;background:var(--border)}
+  h1.lesson-title{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.3;margin-bottom:10px}
+  .lesson-tagline{color:var(--text-soft);font-size:15px;font-style:italic;border-left:3px solid var(--accent);padding-left:12px;margin-top:8px}
+  h2.section-h{font-size:20px;font-weight:600;letter-spacing:-.3px;margin:48px 0 14px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h2.section-h .num{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--accent)}
+  h3.step-h{font-size:17px;font-weight:600;margin:28px 0 10px;color:var(--text);display:flex;align-items:center;gap:10px}
+  h3.step-h .badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+  .step-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+  .label-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--text)}
+  .label-row .icon{font-size:14px}
+  .label-row.tone-warn{color:var(--warn)}
+
+  .prompt-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);overflow:hidden;margin:8px 0 4px;position:relative}
+  .prompt-tabs{display:flex;align-items:center;gap:0;background:var(--bg-soft);border-bottom:1px solid var(--code-border);padding:0 6px}
+  .prompt-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text-mute);border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .prompt-tab:hover{color:var(--text-soft)}
+  .prompt-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .prompt-spacer{flex:1}
+  .prompt-copy{font-size:11px;color:var(--text-mute);padding:4px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s;display:inline-flex;align-items:center;gap:4px;margin-right:8px}
+  .prompt-copy:hover{color:var(--accent);border-color:var(--accent)}
+  .prompt-copy.copied{color:var(--success);border-color:var(--success);background:var(--bg-card)}
+  .prompt-body{font-family:var(--font-mono);font-size:13px;line-height:1.65;padding:14px 16px;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+  .note-tip{background:var(--accent-soft);border:1px solid var(--accent);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-soft);margin:10px 0}
+  .note-tip strong{color:var(--accent)}
+  .note-warn{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;margin:10px 0}
+  .note-shock{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:14px;margin:14px 0}
+  .note-shock h4{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:700}
+
+  .track-info{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;font-size:13px;color:var(--text-soft)}
+  .track-info table{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}
+  .track-info td{padding:4px 10px 4px 0;border-top:1px dashed var(--border)}
+  .track-info tr:first-child td{border-top:none;font-weight:600;color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .track-info code{font-size:.85em}
+
+  .check-list{list-style:none;padding-left:0;margin:8px 0}
+  .check-list li{padding-left:28px;position:relative;margin:6px 0;font-size:14px;cursor:pointer}
+  .check-list li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;background:var(--bg-card);transition:.15s}
+  .check-list li.done::before{background:var(--success);border-color:var(--success);content:"✓";color:#fff;font-size:11px;text-align:center;line-height:11px;font-weight:700}
+  .check-list li:hover::before{border-color:var(--accent)}
+  .check-list li.done{color:var(--text-soft)}
+
+  .deliv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card)}
+  .deliv-card h4{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .deliv-card pre{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--text-soft);background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:10px 12px;white-space:pre;overflow:auto}
+
+  .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card)}
+  .sb-card h4{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .sb-progress{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mute);font-weight:400;text-transform:none;letter-spacing:0}
+  .sb-progress-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .sb-progress-bar div{height:100%;background:var(--success);transition:width .4s}
+  .toc-list{list-style:none;padding:0;margin:0}
+  .toc-list a{display:block;padding:6px 10px;font-size:13px;color:var(--text-soft);border-radius:var(--radius-sm);transition:.15s;text-decoration:none}
+  .toc-list a:hover{background:var(--bg-soft);color:var(--text)}
+  .toc-list a.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+  .complete-btn{width:100%;padding:12px;background:var(--success);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+  .complete-btn:hover{filter:brightness(1.05)}
+  .complete-btn.done{background:var(--bg-card);color:var(--success);border:1.5px solid var(--success)}
+
+  .mini-nav{display:flex;gap:8px;margin-top:32px}
+  .mini-nav a{flex:1;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-soft);transition:.15s;text-decoration:none}
+  .mini-nav a:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-nav .label{font-size:11px;color:var(--text-mute);margin-bottom:4px;display:block}
+  .mini-nav .title{color:var(--text);font-weight:500}
+  .mini-nav .next{text-align:right}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .quiz{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:var(--shadow-card)}
+  .quiz h4{font-size:14px;margin-bottom:12px;font-weight:600}
+  .quiz-q{margin:12px 0;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .quiz-q .q{font-size:13px;margin-bottom:8px;font-weight:500}
+  .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .quiz-opt{padding:5px 14px;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.15s;cursor:pointer}
+  .quiz-opt:hover{border-color:var(--accent)}
+  .quiz-opt.right{background:var(--success);color:#fff;border-color:var(--success)}
+  .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .quiz-explain{margin-top:8px;font-size:12px;color:var(--text-soft);display:none}
+  .quiz-explain.show{display:block}
+  .quiz-explain .right-tag{color:var(--success);font-weight:600}
+
+  .lesson-footer{margin-top:48px;padding:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);text-align:center;font-size:13px;color:var(--text-soft)}
+
+  /* === Skill 化决策器 === */
+  .dec-demo{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0;margin:24px 0;box-shadow:var(--shadow-card);overflow:hidden}
+  .dec-browser-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg-soft);border-bottom:1px solid var(--border)}
+  .dec-dot{width:10px;height:10px;border-radius:50%}
+  .dec-dot.r{background:#ff5f57}.dec-dot.y{background:#febc2e}.dec-dot.g{background:#28c840}
+  .dec-url{flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-mute);text-align:center}
+  .dec-body{padding:22px}
+  .dec-title{font-size:15px;font-weight:600;margin-bottom:4px}
+  .dec-sub{font-size:13px;color:var(--text-soft);margin-bottom:18px}
+
+  .dec-steps{display:flex;flex-direction:column;gap:14px}
+  .dec-step{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;transition:.2s;opacity:.55}
+  .dec-step.active{opacity:1;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .dec-step.done{opacity:.85;background:var(--bg-card)}
+  .dec-step .step-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;font-weight:600}
+  .dec-step .step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;flex-shrink:0}
+  .dec-step.done .step-num{background:var(--success)}
+  .dec-step .step-pick{margin-left:auto;font-size:11px;color:var(--success);font-weight:600}
+  .dec-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .dec-opt{padding:6px 14px;border:1px solid var(--border-strong);background:var(--bg-card);border-radius:999px;font-size:12.5px;font-weight:500;color:var(--text-soft);transition:.15s;cursor:pointer}
+  .dec-opt:hover{border-color:var(--accent);color:var(--accent)}
+  .dec-opt.picked{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .dec-step:not(.active):not(.done) .dec-opt{cursor:not-allowed;opacity:.7}
+
+  .dec-result{margin-top:18px;padding:16px 18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-soft);display:none}
+  .dec-result.show{display:block}
+  .dec-result.ok{background:linear-gradient(135deg,rgba(0,168,112,.12),transparent);border-color:var(--success)}
+  .dec-result.wait{background:linear-gradient(135deg,rgba(255,125,0,.12),transparent);border-color:var(--warn)}
+  .dec-result.tune{background:linear-gradient(135deg,var(--accent-soft),transparent);border-color:var(--accent)}
+  .dec-result.no{background:linear-gradient(135deg,rgba(245,63,63,.1),transparent);border-color:var(--danger)}
+  .dec-result-title{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .dec-result-body{font-size:13px;color:var(--text-soft);line-height:1.7}
+  .dec-result-actions{margin-top:12px;display:flex;gap:8px}
+
+  .skill-table{margin-top:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px}
+  .skill-table h5{font-size:12px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+  .skill-row{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:var(--radius-sm);font-size:13px;border:1px dashed transparent}
+  .skill-row.active{background:var(--bg-card);border-color:var(--accent)}
+  .skill-row .skill-emoji{font-size:18px}
+  .skill-row .skill-name{font-family:var(--font-mono);font-weight:600;color:var(--text);min-width:140px}
+  .skill-row .skill-trigger{font-size:12px;color:var(--text-soft);font-family:var(--font-mono);flex:1;background:var(--code-bg);border:1px solid var(--code-border);border-radius:3px;padding:3px 8px}
+  .skill-row .skill-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent);color:#fff}
+
+  /* tiny table */
+  .pm-tbl{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+  .pm-tbl th,.pm-tbl td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+  .pm-tbl th{background:var(--bg-soft);color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+  details.fold{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;margin:8px 0;font-size:13px;color:var(--text-soft)}
+  details.fold summary{cursor:pointer;font-weight:500;color:var(--text);outline:none}
+  details.fold[open]{padding-bottom:12px}
+  details.fold p,details.fold ul{margin-top:8px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">PM 培训学习平台</a>
+      <span class="sep">/</span>
+      <a href="../index.html#map">课程地图</a>
+      <span class="sep">/</span>
+      <span class="current">L5 · Skill 化</span>
+    </div>
+    <div class="topbar-right">
+      <div class="track-switch" id="trackSwitch" title="切换练手场景">
+        <div class="ind"></div>
+        <button data-track="backlog">📋 需求池</button>
+        <button data-track="meeting">📝 会议纪要</button>
+        <button data-track="news">📰 行业周报</button>
+      </div>
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button data-theme-btn="stealth">📊 摸鱼</button>
+        <button data-theme-btn="dark">🌙 暗色</button>
+      </div>
+      <a class="nav-btn" href="../index.html">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <article class="article">
+
+    <header class="lesson-header">
+      <div class="lesson-meta">
+        <span class="lesson-badge">L5 · 模块 B 提效进阶</span>
+        <span>⏱ 60 min</span>
+        <span class="sep"></span>
+        <span>难度 ⭐⭐⭐</span>
+        <span class="sep"></span>
+        <span>当前练手场景：<strong id="currentTrackName" style="color:var(--accent)">需求池整理</strong></span>
+      </div>
+      <h1 class="lesson-title">Skill 化：把"做一次"沉淀为"团队资产"</h1>
+      <p class="lesson-tagline">把 L1–L4.5 一路积累的重复流程封装成一段可复用的 Skill——下次只要一句话触发，全流程自动跑。</p>
+    </header>
+
+    <!-- ===== 1. 你将学会 ===== -->
+    <section id="s1">
+      <h2 class="section-h"><span class="num">1</span>你将学会</h2>
+      <p>勾选完成情况会自动同步到首页学习进度。</p>
+      <ul class="check-list" id="learnGoals">
+        <li data-goal="g1">我能用 <strong>Skill 三要素</strong>（触发 / 流程 / 产物）写出一个 Agent 能稳定复现的 Skill</li>
+        <li data-goal="g2">我能在新会话里仅用一句触发词，跑完整套场景的全流程</li>
+        <li data-goal="g3">我能识别哪些任务<strong>值得</strong> Skill 化、哪些不值得</li>
+      </ul>
+    </section>
+
+    <!-- ===== 2. 背景小知识 ===== -->
+    <section id="s2">
+      <h2 class="section-h"><span class="num">2</span>背景小知识</h2>
+      <p>到 L4.5，你做过的每个流程其实都"长成了一份 SOP"——L1 的 HOWTO、L2 的 README、L4.5 的 VISION_PROMPTS……</p>
+      <p><strong>Skill 就是把它们升级一档</strong>：从"我自己看的笔记"升级为"Agent 能直接执行的工作流"。</p>
+      <div class="prompt-box">
+        <pre class="prompt-body" style="display:block">[触发]   什么时候启动这个 Skill（关键词、文件、时间）
+[流程]   分几步、每步干什么、产物路径
+[产物]   完成后本地/系统里应该多出什么、形态如何</pre>
+      </div>
+      <div class="note-shock">
+        <h4>💡 一句口诀</h4>
+        <strong>Skill = 给 Agent 的 SOP，让它"自己看说明书做事"。</strong>
+      </div>
+      <div class="note-warn">
+        <strong>⚠️ Skill 化的判断红线</strong>：<strong>做过 ≥ 3 次、流程稳定、产物形态明确</strong>——满足这三条再 Skill 化。一次性事情不要 Skill 化，否则维护成本反而高。
+      </div>
+    </section>
+
+    <!-- ===== Interactive: Skill 化决策器 ===== -->
+    <div class="dec-demo">
+      <div class="dec-browser-bar">
+        <span class="dec-dot r"></span><span class="dec-dot y"></span><span class="dec-dot g"></span>
+        <div class="dec-url">🧭 skill-decider · 这件事到底该不该 Skill 化？</div>
+      </div>
+      <div class="dec-body">
+        <div class="dec-title">🛠 互动模块：Skill 化决策器</div>
+        <p class="dec-sub">按 md 的红线（≥3 次 / 流程稳定 / 产物明确）依次回答三个问题，决策器会给你一张结论卡片。任何一档不达标都会被拦下来——这就是"过度 Skill 化"的防火墙。</p>
+
+        <div class="dec-steps">
+          <div class="dec-step active" data-step="0">
+            <div class="step-head">
+              <span class="step-num">1</span>
+              <span>这件事你做过几次了？</span>
+              <span class="step-pick" data-pick-label="0"></span>
+            </div>
+            <div class="dec-opts" data-opts="0">
+              <button class="dec-opt" data-val="few">1–2 次</button>
+              <button class="dec-opt" data-val="some">3–5 次</button>
+              <button class="dec-opt" data-val="many">&gt;5 次</button>
+            </div>
+          </div>
+          <div class="dec-step" data-step="1">
+            <div class="step-head">
+              <span class="step-num">2</span>
+              <span>每次流程都几乎一样吗？</span>
+              <span class="step-pick" data-pick-label="1"></span>
+            </div>
+            <div class="dec-opts" data-opts="1">
+              <button class="dec-opt" data-val="same">一样</button>
+              <button class="dec-opt" data-val="half">半一样</button>
+              <button class="dec-opt" data-val="diff">每次都不同</button>
+            </div>
+          </div>
+          <div class="dec-step" data-step="2">
+            <div class="step-head">
+              <span class="step-num">3</span>
+              <span>产物形态明确吗（具体路径 + 文件名）？</span>
+              <span class="step-pick" data-pick-label="2"></span>
+            </div>
+            <div class="dec-opts" data-opts="2">
+              <button class="dec-opt" data-val="yes">是</button>
+              <button class="dec-opt" data-val="no">否</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dec-result" id="decResult">
+          <div class="dec-result-title" id="decResultTitle"></div>
+          <div class="dec-result-body" id="decResultBody"></div>
+          <div class="dec-result-actions">
+            <button class="nav-btn" id="decReset">↻ 重新回答</button>
+          </div>
+        </div>
+
+        <div class="skill-table">
+          <h5>📚 已注册 Skill 速查表（按当前场景高亮）</h5>
+          <div class="skill-row" data-skill-track="news">
+            <span class="skill-emoji">📰</span>
+            <span class="skill-name">news-weekly</span>
+            <span class="skill-trigger">"跑一下 news-weekly，关键词=AI Agent" / "出本周新闻周报"</span>
+            <span class="skill-badge" style="display:none">当前</span>
+          </div>
+          <div class="skill-row" data-skill-track="backlog">
+            <span class="skill-emoji">📋</span>
+            <span class="skill-name">backlog-weekly</span>
+            <span class="skill-trigger">"跑一下 backlog-weekly" / "出本周需求池摘要"</span>
+            <span class="skill-badge" style="display:none">当前</span>
+          </div>
+          <div class="skill-row" data-skill-track="meeting">
+            <span class="skill-emoji">📝</span>
+            <span class="skill-name">meeting-followup</span>
+            <span class="skill-trigger">"跑一下 meeting-followup" / "汇总本周会议待办"</span>
+            <span class="skill-badge" style="display:none">当前</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 3. 准备工作 ===== -->
+    <section id="s3">
+      <h2 class="section-h"><span class="num">3</span>准备工作</h2>
+      <ul class="check-list" id="prepList">
+        <li data-prep="p1">已完成 <a href="L1.html">L1</a>（有 <code>news.json</code> + schema）、<a href="L2.html">L2</a>（dashboard）、<a href="L3.html">L3</a>（4 要素）、<a href="L4.html">L4</a>（wiki）</li>
+        <li data-prep="p2">工作目录：<code id="prepWorkDir">pm-agent-lab/skills/news-weekly/</code></li>
+      </ul>
+
+      <div class="note-tip">💬 <strong>心理建设</strong>：第一版 Skill 写<strong>够用就行</strong>，能跑通是核心，优雅是 V2 的事。</div>
+
+      <div class="track-info">
+        <strong>🎯 三选一练手主线</strong>
+        <p style="margin-top:6px">本讲示例默认演示"行业 / 竞品周报"场景，封装成 Skill <code>news-weekly</code>。如果你的日常工作里几乎不做行业调研，可以从下面三个 PM 通用场景里挑一个最贴近你工作的；每讲只需选 1 个跑透即可。</p>
+        <table>
+          <tr><td>场景</td><td>Skill 名</td><td>主线产物路径</td></tr>
+          <tr><td>📋 需求池整理</td><td><code>backlog-weekly</code></td><td><code>pm-agent-lab/skills/backlog-weekly/</code></td></tr>
+          <tr><td>📝 会议纪要跟进</td><td><code>meeting-followup</code></td><td><code>pm-agent-lab/skills/meeting-followup/</code></td></tr>
+          <tr><td>📰 行业 / 竞品周报</td><td><code>news-weekly</code></td><td><code>pm-agent-lab/skills/news-weekly/</code></td></tr>
+          <tr><td>三场景共享</td><td colspan="2"><code>pm-agent-lab/skills/_BACKLOG.md</code>（Skill 候选清单）</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== 4. 实战任务 ===== -->
+    <section id="s4">
+      <h2 class="section-h"><span class="num">4</span>实战任务</h2>
+      <p>我们把当前场景主线封装成对应 Skill，目标：</p>
+      <div class="note-shock">
+        <h4>🎯 单句触发目标</h4>
+        在新会话里说一句"跑一下 <span id="targetSkillName">news-weekly</span>"，Agent 自动完成：调研/扫描 → 落盘 → 自检 → dashboard 更新 → 给你汇报。
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">1</span>先盘点你已有的"原料"</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 把 L1–L4.5 你产出的相关文件<strong>全部找出来</strong>，作为 Skill 的素材。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step1">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">扫描 pm-agent-lab/backlog-lab/ 下所有文件，告诉我：
+1) 每个文件的角色（schema / 来源汇总 / 模板 / HOWTO / 摘要 / 其它）
+2) 哪些是"每周都会变的"（新增需求线索、本周摘要），哪些是"长期不变的"（优先级口径、字段定义）
+3) 如果我要把这套流程封装成一个 Skill `backlog-weekly`，你建议哪些文件作为"模板"复用、哪些作为"产物"每周新生
+
+不要动文件，只做盘点报告。</pre>
+          <pre class="prompt-body" data-track-text="meeting">扫描 pm-agent-lab/meeting-lab/ 下所有文件，告诉我：
+1) 每个文件的角色（schema / 纪要原文 / 模板 / HOWTO / 跟进清单 / 其它）
+2) 哪些是"每周都会变的"（本周纪要、待办清单），哪些是"长期不变的"（决策/待办/风险三栏模板、字段定义）
+3) 如果我要把这套流程封装成一个 Skill `meeting-followup`，你建议哪些文件作为"模板"复用、哪些作为"产物"每周新生
+
+不要动文件，只做盘点报告。</pre>
+          <pre class="prompt-body" data-track-text="news">扫描 pm-agent-lab/news-lab/ 下所有文件，告诉我：
+1) 每个文件的角色（schema / 数据 / 模板 / HOWTO / dashboard / 其它）
+2) 哪些是"每周都会变的"，哪些是"长期不变的"
+3) 如果我要把这套流程封装成一个 Skill，你建议哪些文件作为"模板"复用、哪些作为"产物"每周新生
+
+不要动文件，只做盘点报告。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>一份分类清单：
+            <ul>
+              <li>长期不变：<code>schema/news.schema.md</code>、<code>dashboard.html</code> 模板</li>
+              <li>每周新生：<code>data/2026-W25/news.json</code>、<code>HOWTO.md</code></li>
+            </ul>
+          </li>
+          <li>你立刻能看清"Skill 应该装什么、应该指向什么"</li>
+        </ul>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">2</span>写 Skill 的"主文件" SKILL.md</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 按 Skill 三要素结构写 <code>SKILL.md</code>。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step2">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我写 pm-agent-lab/skills/backlog-weekly/SKILL.md，按三段结构：
+
+[触发]
+- 关键词：backlog-weekly / 需求池周报 / 跑一下需求池
+- 输入参数：
+  - sources（可选，默认扫描 pm-agent-lab/backlog-lab/inbox/，包括 IM/邮件/访谈）
+  - days（可选，默认 7，回看时间窗口）
+  - week_id（可选，默认本周 ISO 周编号，如 2026-W25）
+
+[流程]
+按下面步骤顺序执行，每步完成后简短汇报：
+1. 读 pm-agent-lab/llm-wiki/me.md、product.md、backlog-priorities.md 取背景与口径
+2. 读 pm-agent-lab/backlog-lab/schema/backlog.schema.md 作为字段契约
+3. 扫描 sources 下过去 days 天的新增需求线索 8–15 条
+4. 严格按 schema 写入 pm-agent-lab/backlog-lab/data/&lt;week_id&gt;/backlog.json
+5. 同步生成 backlog.md（按优先级分组的 markdown 视图）
+6. 跑一遍数据自检（去重 / 提需人缺失 / 优先级口径冲突 / 描述模糊）
+7. 复用模板更新 backlog-dashboard.html（不要新写 HTML）
+8. 给我一份本周汇报：新增 N 条 / 合并 X 条 / 高优 TOP 3 / 我建议你立即决策的 3 条
+
+[产物]
+- pm-agent-lab/backlog-lab/data/&lt;week_id&gt;/backlog.json
+- pm-agent-lab/backlog-lab/data/&lt;week_id&gt;/backlog.md
+- pm-agent-lab/backlog-lab/data/&lt;week_id&gt;/backlog-dashboard.html
+- 对话里的本周汇报
+
+[约束]
+- 不编造提需人；提需人不明的条目标记 "unknown" 并单列汇报
+- 扫描前先打印你打算读的来源目录清单，让我来确认是否合理
+- 数据自检发现优先级冲突时不要自己拍板，先汇报让我决定
+
+写完后告诉我我下次怎么触发它。</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我写 pm-agent-lab/skills/meeting-followup/SKILL.md，按三段结构：
+
+[触发]
+- 关键词：meeting-followup / 会议跟进 / 跑一下会议待办
+- 输入参数：
+  - meeting_dir（可选，默认 pm-agent-lab/meeting-lab/notes/，扫描所有会议纪要）
+  - days（可选，默认 7，回看时间窗口）
+  - week_id（可选，默认本周 ISO 周编号，如 2026-W25）
+
+[流程]
+按下面步骤顺序执行，每步完成后简短汇报：
+1. 读 pm-agent-lab/llm-wiki/me.md、product.md、meeting-decisions.md 取背景与历史决策
+2. 读 pm-agent-lab/meeting-lab/schema/followup.schema.md 作为字段契约
+3. 扫描 meeting_dir 下过去 days 天的会议纪要，提取 8–15 条决策/待办/风险
+4. 严格按 schema 写入 pm-agent-lab/meeting-lab/data/&lt;week_id&gt;/followup.json
+5. 同步生成 followup.md（按"决策 / 待办 / 风险"三栏的 markdown 视图）
+6. 跑一遍数据自检（归属人缺失 / 截止日缺失 / 与上周已闭环项重复）
+7. 复用模板更新 followup-dashboard.html（不要新写 HTML）
+8. 给我一份本周汇报：新增 N 条 / 闭环 X 条 / 逾期 Y 条 / 我建议你今天就跟进的 3 条
+
+[产物]
+- pm-agent-lab/meeting-lab/data/&lt;week_id&gt;/followup.json
+- pm-agent-lab/meeting-lab/data/&lt;week_id&gt;/followup.md
+- pm-agent-lab/meeting-lab/data/&lt;week_id&gt;/followup-dashboard.html
+- 对话里的本周汇报
+
+[约束]
+- 不编造归属人；纪要里没写就标 "待指派" 并在汇报里单列
+- 扫描前先打印你打算读的纪要文件清单，让我来确认是否合理
+- 数据自检发现"和已闭环项冲突"时不要自己合并，先汇报让我决定
+
+写完后告诉我我下次怎么触发它。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我写 pm-agent-lab/skills/news-weekly/SKILL.md，按三段结构：
+
+[触发]
+- 关键词：news-weekly / 新闻周报 / 跑一下周报
+- 输入参数：
+  - keywords（必填，行业关键词，如"AI Agent"）
+  - days（可选，默认 7，调研时间窗口）
+  - week_id（可选，默认本周 ISO 周编号，如 2026-W25）
+
+[流程]
+按下面步骤顺序执行，每步完成后简短汇报：
+1. 读 pm-agent-lab/llm-wiki/me.md 和 product.md 取背景
+2. 读 pm-agent-lab/news-lab/schema/news.schema.md 作为字段契约
+3. 联网调研 keywords 在过去 days 天内的新闻 8–12 条
+4. 严格按 schema 写入 pm-agent-lab/news-lab/data/&lt;week_id&gt;/news.json
+5. 同步生成 news.md（同内容 markdown 表格视图）
+6. 跑一遍数据自检（标签统一性 / 重复 / 时间范围 / 必填字段缺失）
+7. 复用模板更新 dashboard.html（不要新写 HTML，沿用现有模板）
+8. 给我一份本周汇报：抓 N 条 / 丢弃 X 条 / 与上周差异 TOP 3 / 我建议你看的 3 条
+
+[产物]
+- pm-agent-lab/news-lab/data/&lt;week_id&gt;/news.json
+- pm-agent-lab/news-lab/data/&lt;week_id&gt;/news.md
+- pm-agent-lab/news-lab/data/&lt;week_id&gt;/dashboard.html
+- 对话里的本周汇报
+
+[约束]
+- 不编造链接；找不到链接的条目直接丢弃，并在汇报里说丢了几条
+- 调研前先打印你打算搜的关键词清单，让我来确认是否合理
+- 数据自检发现问题不要自己改，先汇报让我决定
+
+写完后告诉我我下次怎么触发它。</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>一份结构清晰的 <code>SKILL.md</code></li>
+          <li>Agent 末尾会告诉你触发方式："以后说'跑一下 <span class="track-skill-inline">news-weekly</span>，关键词=X'即可"</li>
+        </ul>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">3</span>给 Skill 配一个"使用说明" README</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让团队其他人也能看懂这个 Skill。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step3">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我写 pm-agent-lab/skills/backlog-weekly/README.md：
+1) 这个 Skill 是干嘛的（2 句话）
+2) 触发方式（带 1 个最简示例 + 1 个完整参数示例：含 sources 与 days）
+3) 产物长什么样（贴一张产物目录树）
+4) 失败时怎么办（最常见 3 种偏差及自检 prompt——例如来源漏扫、提需人识别错、优先级口径不一致）
+5) 何时不该用这个 Skill（避免被滥用：如单条紧急需求评估、跨季度优先级重排等场景）
+
+不要写"未来可能扩展"——只写当前能用的。</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我写 pm-agent-lab/skills/meeting-followup/README.md：
+1) 这个 Skill 是干嘛的（2 句话）
+2) 触发方式（带 1 个最简示例 + 1 个完整参数示例：含 meeting_dir 与 days）
+3) 产物长什么样（贴一张产物目录树）
+4) 失败时怎么办（最常见 3 种偏差及自检 prompt——例如归属人识别错、截止日漏抓、决策/待办分类混乱）
+5) 何时不该用这个 Skill（避免被滥用：如单次会议的实时纪要、季度复盘等场景）
+
+不要写"未来可能扩展"——只写当前能用的。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我写 pm-agent-lab/skills/news-weekly/README.md：
+1) 这个 Skill 是干嘛的（2 句话）
+2) 触发方式（带 1 个最简示例 + 1 个完整参数示例）
+3) 产物长什么样（贴一张产物目录树）
+4) 失败时怎么办（最常见 3 种偏差及自检 prompt）
+5) 何时不该用这个 Skill（避免被滥用：如一次性调研、跨季度对比等场景）
+
+不要写"未来可能扩展"——只写当前能用的。</pre>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">4</span>在新会话里"只用一句话"验证 Skill 可复现</h3>
+        <div class="note-shock">
+          <h4>🔑 这一步是 Skill 化是否成功的硬指标</h4>
+          <strong>新会话能不能一句话跑通</strong>——打开一个全新会话（没有任何 L1–L4.5 上下文），输入下面这一句。
+        </div>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step4">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">请先读 pm-agent-lab/skills/backlog-weekly/SKILL.md 并按其执行：
+跑一下 backlog-weekly</pre>
+          <pre class="prompt-body" data-track-text="meeting">请先读 pm-agent-lab/skills/meeting-followup/SKILL.md 并按其执行：
+跑一下 meeting-followup</pre>
+          <pre class="prompt-body" data-track-text="news">请先读 pm-agent-lab/skills/news-weekly/SKILL.md 并按其执行：
+跑一下 news-weekly，keywords=AI Agent</pre>
+        </div>
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>Agent 主动读 <code>SKILL.md</code> → 读 wiki → 读 schema → 打印关键词/来源清单等你确认 → 调研/扫描 → 落盘 → 自检 → 更新 dashboard → 汇报</li>
+          <li><strong>整个过程你只输入了上面那一段话</strong></li>
+        </ul>
+
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果失败怎么办</div>
+        <ul>
+          <li><strong>偏差 A：Agent 没读 SKILL.md，直接开始动手</strong> → 你的 SKILL.md 在写法上不够"指令式"。修正：在 SKILL.md 开头加一句"任何人（包括你自己将来的会话）调用本 Skill 时，第一件事是逐字读完本文件再开始动手"。</li>
+          <li><strong>偏差 B：Agent 跑到一半跑偏</strong> → 看 <code>SKILL.md</code> 流程描述里哪一步留了歧义，把它改写得更精确。</li>
+        </ul>
+
+        <div class="note-tip"><strong>💡 这就是 Skill 化的本质</strong>：反复用、反复改 <code>SKILL.md</code>，直到任何会话都能稳定复现。</div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">5</span>把 Skill 接入 wiki，让 Agent 自动知道它的存在</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">在 wiki 里登记这个 Skill，Agent 下次自然能联想到。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step5">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">在 pm-agent-lab/llm-wiki/README.md 末尾追加一段"已注册 Skill"清单，第一条就是：
+
+- backlog-weekly：每周需求池盘点 + 摘要。位置：pm-agent-lab/skills/backlog-weekly/SKILL.md。触发：当我说"跑一下 backlog-weekly"或"出本周需求池摘要"时调用。
+
+并在使用契约里加一条：当我提到的任务命中"已注册 Skill"清单的任一描述时，主动建议我用对应 Skill，而不是从零开始。</pre>
+          <pre class="prompt-body" data-track-text="meeting">在 pm-agent-lab/llm-wiki/README.md 末尾追加一段"已注册 Skill"清单，第一条就是：
+
+- meeting-followup：每周会议纪要扫描 + 决策/待办/风险整理。位置：pm-agent-lab/skills/meeting-followup/SKILL.md。触发：当我说"跑一下 meeting-followup"或"汇总本周会议待办"时调用。
+
+并在使用契约里加一条：当我提到的任务命中"已注册 Skill"清单的任一描述时，主动建议我用对应 Skill，而不是从零开始。</pre>
+          <pre class="prompt-body" data-track-text="news">在 pm-agent-lab/llm-wiki/README.md 末尾追加一段"已注册 Skill"清单，第一条就是：
+
+- news-weekly：每周行业新闻调研 + dashboard 更新。位置：pm-agent-lab/skills/news-weekly/SKILL.md。触发：当我说"跑一下 news-weekly"或"出本周新闻周报"时调用。
+
+并在使用契约里加一条：当我提到的任务命中"已注册 Skill"清单的任一描述时，主动建议我用对应 Skill，而不是从零开始。</pre>
+        </div>
+        <div class="note-tip">这一步把 wiki 和 Skill 串起来。从此 Agent 会<strong>主动提醒你</strong>："你这件事其实有 Skill 可以用。"</div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">6</span>起一个"Skill 候选清单" _BACKLOG.md</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">盘点你工作里<strong>还有哪些可以 Skill 化</strong>。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step6">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我建 pm-agent-lab/skills/_BACKLOG.md，按下面表头列我应该考虑 Skill 化的候选任务（已经有 backlog-weekly 在跑，列其它候选）：
+
+| 候选 Skill | 高频度（每周？月？季？） | 流程是否稳定 | 产物是否明确 | 优先级 |
+
+先空着让我自己填。给我一个填表示例，再附 5 条围绕"需求池治理"主题的常见候选作为参考（如：单条需求评估、季度优先级重排、需求闭环回检、跨产品线需求合并、需求溯源校对等）。</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我建 pm-agent-lab/skills/_BACKLOG.md，按下面表头列我应该考虑 Skill 化的候选任务（已经有 meeting-followup 在跑，列其它候选）：
+
+| 候选 Skill | 高频度（每周？月？季？） | 流程是否稳定 | 产物是否明确 | 优先级 |
+
+先空着让我自己填。给我一个填表示例，再附 5 条围绕"会议跟进"主题的常见候选作为参考（如：会前材料预读、会中实时纪要、跨部门同步邮件起草、季度复盘会议总览、决策逾期告警等）。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我建 pm-agent-lab/skills/_BACKLOG.md，按下面表头列我应该考虑 Skill 化的候选任务：
+
+| 候选 Skill | 高频度（每周？月？季？） | 流程是否稳定 | 产物是否明确 | 优先级 |
+
+先空着让我自己填。给我一个填表示例，再附 5 条 PM 常见候选作为参考。</pre>
+        </div>
+        <div class="note-tip">Skill 化的关键不是会写一个，而是有意识地<strong>排队</strong>——下次再做类似事情，先翻 BACKLOG，决定要不要立刻封装。</div>
+      </div>
+    </section>
+
+    <!-- ===== 5. 自检清单 ===== -->
+    <section id="s5">
+      <h2 class="section-h"><span class="num">5</span>自检清单</h2>
+      <ul class="check-list" id="selfCheck">
+        <li data-check="c1">我有 <code id="checkSkillPath">pm-agent-lab/skills/news-weekly/SKILL.md</code> + <code>README.md</code></li>
+        <li data-check="c2">我在新会话里只用一句话就跑通了一次完整流程</li>
+        <li data-check="c3">我的 wiki README 已注册了这个 Skill</li>
+        <li data-check="c4">我有一份 <code>_BACKLOG.md</code>，候选 Skill 至少 ≥ 3 条</li>
+        <li data-check="c5">我能用 30 秒讲清楚"什么任务该 Skill 化、什么不该"</li>
+      </ul>
+
+      <div class="quiz">
+        <h4>🧠 快速自测</h4>
+        <div class="quiz-q">
+          <div class="q">Q1. 什么时候才应该开始考虑把一件事 Skill 化？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. 第一次做完就立刻 Skill 化，趁热打铁</button>
+            <button class="quiz-opt">B. 只要这件事重要就该 Skill 化</button>
+            <button class="quiz-opt">C. 做过 ≥3 次 + 流程稳定 + 产物明确</button>
+            <button class="quiz-opt">D. 同事开口要你共享一下时</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：Skill 化的红线是"做过 ≥3 次 + 流程稳定 + 产物明确"——一次性任务封装出来反而是负担。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q2. Skill 三要素是？</div>
+          <div class="quiz-opts" data-correct="1">
+            <button class="quiz-opt">A. 角色 / 上下文 / 约束</button>
+            <button class="quiz-opt">B. 触发 / 流程 / 产物</button>
+            <button class="quiz-opt">C. 输入 / 输出 / 异常</button>
+            <button class="quiz-opt">D. 名字 / 描述 / 示例</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 B</span>：Skill 三要素是 <strong>[触发]</strong>（什么时候启动）/ <strong>[流程]</strong>（分几步、每步干什么）/ <strong>[产物]</strong>（最终落盘形态）。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q3. Skill 化的"一档止步线"对应哪一档？</div>
+          <div class="quiz-opts" data-correct="0">
+            <button class="quiz-opt">A. 个人 Skill：你一个人用、你电脑里跑</button>
+            <button class="quiz-opt">B. 团队 Skill：同事也能用、有 README</button>
+            <button class="quiz-opt">C. 平台级 Skill：接入公司平台、有 owner / 版本 / 监控</button>
+            <button class="quiz-opt">D. 行业级 Skill：开源出去、社区有人贡献</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 A</span>：本讲对应"一档 = 个人 Skill"，目标是你自己电脑里能稳定跑就够了。<strong>一档够用别上二档；二档够用别上三档。</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. 思考题 ===== -->
+    <section id="s6">
+      <h2 class="section-h"><span class="num">6</span>思考题 & 下一讲引子</h2>
+      <p><strong>思考题</strong></p>
+      <ul>
+        <li>你的 <code>SKILL.md</code> 写到第几版才稳定？哪一句改完最关键？这个经验值得写进 BACKLOG 顶部。</li>
+        <li>如果同事 A 和你用一份 <code>SKILL.md</code>，是否能跑出<strong>一致</strong>的产物？不一致的话差在哪？</li>
+      </ul>
+      <p style="margin-top:12px"><strong>下一讲引子</strong></p>
+      <p>本讲所有产物都还在你本地。下一讲我们打开<strong>飞书工具链</strong>，让 Agent 把 Skill 的产物直接发到云文档 / 多维表格 / 群聊——开始把 Agent 接入企业系统。</p>
+    </section>
+
+    <!-- ===== 7. 交付物 ===== -->
+    <section id="s7">
+      <h2 class="section-h"><span class="num">7</span>本讲交付物</h2>
+      <p>按你选定的场景，下面三选一即可（<code>_BACKLOG.md</code> 三场景共享，每个场景产出 1 个 Skill 目录）：</p>
+      <div class="deliv-card">
+        <h4>📁 目录结构</h4>
+        <pre id="deliverTree">pm-agent-lab/
+└── skills/
+    ├── _BACKLOG.md                # 三场景共享：Skill 候选清单
+    └── news-weekly/               # 📰 当前场景：news
+        ├── SKILL.md
+        └── README.md</pre>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--text-soft)">选定的那个场景，对应一个 Skill 目录就够；其它场景目录是其它学员的演示。等你跑透一档之后，再回来补另一个场景的 Skill 是非常自然的事。</p>
+    </section>
+
+    <!-- ===== 8. 副线 ===== -->
+    <section id="s8">
+      <h2 class="section-h"><span class="num">8</span>副线练习（可选）</h2>
+      <p>本讲主线已可在三个场景切换，副线建议挑战更进阶的玩法。把你副线做过的某个流程也封装成 Skill：</p>
+      <ul>
+        <li><code>competitor-watch</code>：竞品动态监控（基于 L1 副线）</li>
+        <li><code>feedback-cluster</code>：用户反馈聚类（多渠道抓 → 聚类 → 出洞察）</li>
+        <li><code>design-diff</code>：设计稿对比（基于 L4.5 Step 2）</li>
+        <li><code>vision-doc-audit</code>：每月对一组截图做巡检报告</li>
+      </ul>
+      <p style="font-size:13px;color:var(--text-soft);margin-top:8px">每个新 Skill 都按 "SKILL.md + README.md + 注册到 wiki" 三件套来做。</p>
+    </section>
+
+    <!-- ===== 9. 小结 ===== -->
+    <section id="s9">
+      <h2 class="section-h"><span class="num">9</span>给 PM 的小结：Skill 化的"三档止步线"</h2>
+      <table class="pm-tbl">
+        <thead><tr><th>档位</th><th>长什么样</th><th>何时停</th></tr></thead>
+        <tbody>
+          <tr><td><strong>个人 Skill</strong></td><td>你一个人用、你电脑里跑</td><td>本讲 = 一档</td></tr>
+          <tr><td><strong>团队 Skill</strong></td><td>同事也能用、有 README</td><td>L11</td></tr>
+          <tr><td><strong>平台级 Skill</strong></td><td>接入公司平台、有 owner / 版本 / 监控</td><td>通常交研发</td></tr>
+        </tbody>
+      </table>
+      <div class="note-shock" style="margin-top:14px">
+        <h4>🎯 一句话带走</h4>
+        <strong>一档够用别上二档；二档够用别上三档。</strong> Skill 化的最大坑是过度工程。
+      </div>
+    </section>
+
+    <!-- 上一讲 / 下一讲 -->
+    <nav class="mini-nav">
+      <a href="L4.5.html"><span class="label">← 上一讲</span><span class="title">L4.5 · 视觉理解</span></a>
+      <a href="L6.html" class="next"><span class="label">下一讲 →</span><span class="title">L6 · 接入飞书工具链</span></a>
+    </nav>
+
+    <div class="lesson-footer">学完这一讲，你已经能把流程沉淀成 Agent 能复用的 Skill。L6 我们把 Skill 的产物直接送进企业系统。</div>
+
+  </article>
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sb-card">
+      <h4>本讲进度
+        <span class="sb-progress">
+          <span class="sb-progress-bar"><div id="sbBar" style="width:0%"></div></span>
+          <span id="sbText">0%</span>
+        </span>
+      </h4>
+      <ul class="toc-list">
+        <li><a href="#s1">1. 你将学会</a></li>
+        <li><a href="#s2">2. 背景小知识</a></li>
+        <li><a href="#s3">3. 准备工作</a></li>
+        <li><a href="#s4">4. 实战任务</a></li>
+        <li><a href="#s5">5. 自检清单</a></li>
+        <li><a href="#s6">6. 思考题</a></li>
+        <li><a href="#s7">7. 交付物</a></li>
+        <li><a href="#s8">8. 副线练习</a></li>
+        <li><a href="#s9">9. 三档止步线</a></li>
+      </ul>
+    </div>
+
+    <div class="sb-card">
+      <h4>当前练手场景</h4>
+      <p style="font-size:13px;color:var(--text-soft)" id="sbTrackInfo">📰 行业 / 竞品周报</p>
+      <p style="font-size:11px;color:var(--text-mute);margin-top:4px">顶栏可一键切换三场景，所有 prompt + 速查表联动。</p>
+    </div>
+
+    <div class="sb-card">
+      <h4>键盘快捷键</h4>
+      <p style="font-size:12px;color:var(--text-soft)">
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">1</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">2</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">3</kbd> 切换三场景<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">T</kbd> 切换主题
+      </p>
+    </div>
+
+    <button class="complete-btn" id="completeBtn">
+      <span id="completeText">✓ 标记本讲已学完</span>
+    </button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+const LESSON_ID = "L5";
+const TOTAL_LESSONS = 14;
+const THEME_KEY = "agentOnboarding.theme";
+const TRACK_KEY = "agentOnboarding.track";
+const PROGRESS_KEY = "agentOnboarding.progress.v1";
+const STATE_KEY = `agentOnboarding.${LESSON_ID}.state`;
+const html = document.documentElement;
+
+const TRACK_INFO = {
+  backlog: {
+    name:"需求池整理", emoji:"📋", skill:"backlog-weekly",
+    workDir:"pm-agent-lab/skills/backlog-weekly/",
+    checkPath:"pm-agent-lab/skills/backlog-weekly/SKILL.md",
+    deliverTree:`pm-agent-lab/
+└── skills/
+    ├── _BACKLOG.md                # 三场景共享：Skill 候选清单
+    └── backlog-weekly/             # 📋 当前场景：backlog
+        ├── SKILL.md
+        └── README.md`
+  },
+  meeting: {
+    name:"会议纪要跟进", emoji:"📝", skill:"meeting-followup",
+    workDir:"pm-agent-lab/skills/meeting-followup/",
+    checkPath:"pm-agent-lab/skills/meeting-followup/SKILL.md",
+    deliverTree:`pm-agent-lab/
+└── skills/
+    ├── _BACKLOG.md                # 三场景共享：Skill 候选清单
+    └── meeting-followup/           # 📝 当前场景：meeting
+        ├── SKILL.md
+        └── README.md`
+  },
+  news: {
+    name:"行业 / 竞品周报", emoji:"📰", skill:"news-weekly",
+    workDir:"pm-agent-lab/skills/news-weekly/",
+    checkPath:"pm-agent-lab/skills/news-weekly/SKILL.md",
+    deliverTree:`pm-agent-lab/
+└── skills/
+    ├── _BACKLOG.md                # 三场景共享：Skill 候选清单
+    └── news-weekly/               # 📰 当前场景：news
+        ├── SKILL.md
+        └── README.md`
+  }
+};
+
+/* =============== Theme =============== */
+const themeSwitch = document.getElementById("themeSwitch");
+function applyTheme(theme){
+  if(theme!=="dark" && theme!=="stealth") theme="stealth";
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.themeBtn===theme));
+  moveIndicator(themeSwitch);
+  localStorage.setItem(THEME_KEY, theme);
+}
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =============== Track =============== */
+const trackSwitch = document.getElementById("trackSwitch");
+let currentTrack = "news";
+function applyTrack(track){
+  if(!TRACK_INFO[track]) track = "news";
+  currentTrack = track;
+  localStorage.setItem(TRACK_KEY, track);
+  trackSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
+  moveIndicator(trackSwitch);
+  document.querySelectorAll(".prompt-box").forEach(box=>{
+    const tabs = box.querySelectorAll(".prompt-tab");
+    const bodies = box.querySelectorAll(".prompt-body[data-track-text]");
+    if(!tabs.length) return;
+    tabs.forEach(t=>t.classList.toggle("active", t.dataset.trackTab===track));
+    bodies.forEach(b=>{ b.style.display = b.dataset.trackText===track ? "block" : "none"; });
+  });
+  const info = TRACK_INFO[track];
+  document.getElementById("currentTrackName").textContent = info.name;
+  document.getElementById("sbTrackInfo").textContent = `${info.emoji} ${info.name}`;
+  document.getElementById("deliverTree").textContent = info.deliverTree;
+  document.getElementById("prepWorkDir").textContent = info.workDir;
+  document.getElementById("checkSkillPath").textContent = info.checkPath;
+  document.getElementById("targetSkillName").textContent = info.skill;
+  document.querySelectorAll(".track-skill-inline").forEach(el=>el.textContent = info.skill);
+  // highlight skill row
+  document.querySelectorAll(".skill-row").forEach(row=>{
+    const on = row.dataset.skillTrack === track;
+    row.classList.toggle("active", on);
+    const badge = row.querySelector(".skill-badge");
+    if(badge) badge.style.display = on ? "inline-block" : "none";
+  });
+}
+trackSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTrack(btn.dataset.track));
+});
+
+/* =============== Indicator =============== */
+function moveIndicator(switchEl){
+  const ind = switchEl.querySelector(".ind");
+  const active = switchEl.querySelector("button.active");
+  if(!ind || !active) return;
+  ind.style.width = active.offsetWidth + "px";
+  ind.style.transform = `translateX(${active.offsetLeft - 2}px)`;
+}
+window.addEventListener("resize",()=>{moveIndicator(themeSwitch);moveIndicator(trackSwitch)});
+
+/* =============== Tabs in prompt boxes =============== */
+document.querySelectorAll(".prompt-tab[data-track-tab]").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    const target = tab.dataset.trackTab;
+    if(target==="all") return;
+    applyTrack(target);
+  });
+});
+
+/* =============== Copy =============== */
+document.querySelectorAll(".prompt-copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box = btn.closest(".prompt-box");
+    const visible = [...box.querySelectorAll(".prompt-body")].find(b=>b.style.display!=="none") || box.querySelector(".prompt-body");
+    const text = visible.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = "✓ 已复制";
+      btn.classList.add("copied");
+      showToast("已复制 prompt 到剪贴板");
+      setTimeout(()=>{btn.textContent="📋 复制";btn.classList.remove("copied")}, 1500);
+    });
+  });
+});
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* =============== Skill 化决策器 =============== */
+const decAnswers = [null, null, null];
+const decResultEl = document.getElementById("decResult");
+const decResultTitle = document.getElementById("decResultTitle");
+const decResultBody = document.getElementById("decResultBody");
+
+const PICK_LABEL = {
+  few:"1–2 次", some:"3–5 次", many:">5 次",
+  same:"流程一样", half:"半一样", diff:"每次都不同",
+  yes:"产物明确", no:"产物不明确"
+};
+
+function decideResult(){
+  const [q1,q2,q3] = decAnswers;
+  // 流程每次都不同 → 不适合
+  if(q2 === "diff"){
+    return {
+      cls:"no", icon:"❌", title:"不适合 Skill 化，做成一个高质量 prompt 模板就够",
+      body:`流程每次都不同 = Agent 没办法"按 SOP 跑"。这种情况把 4 要素 prompt（见 <a href="L3.html">L3</a>）打磨好，每次复制粘贴反而更稳。强行 Skill 化只会变成"半成品 SKILL.md + 大段 override"。`
+    };
+  }
+  // 次数不够
+  if(q1 === "few"){
+    return {
+      cls:"wait", icon:"⏸", title:"先别 Skill 化，再做几次看看",
+      body:`只做过 1–2 次，连"流程长什么样"都没收敛。<strong>把它记到 <code>pm-agent-lab/skills/_BACKLOG.md</code></strong>，等到第 3 次再回来评估——这是本讲 Step 6 的标准做法。`
+    };
+  }
+  // q1 === "some" 或 "many"
+  // 流程一样 + 产物明确 → 全绿灯
+  if(q2 === "same" && q3 === "yes"){
+    return {
+      cls:"ok", icon:"✅", title:"立刻 Skill 化，按本讲流程走",
+      body:`三条红线全过：<strong>≥3 次 + 流程稳定 + 产物明确</strong>。直接进 Step 1（盘点原料）→ Step 2（写 SKILL.md）→ Step 4（新会话一句话验证）。预计 60 min 内能跑通一版。`
+    };
+  }
+  // 流程一样 + 产物不明确
+  if(q2 === "same" && q3 === "no"){
+    return {
+      cls:"tune", icon:"📐", title:"先定义产物：补 schema 和 HOWTO，再 Skill 化",
+      body:`流程稳定但产物形态没收敛——这种 Skill 写出来 Agent 每次落盘文件名/字段都飘。<strong>建议回 <a href="L1.html">L1</a></strong>，先把 schema 和 HOWTO 补齐，再回来按本讲跑 Step 2。`
+    };
+  }
+  // 流程半一样
+  if(q2 === "half"){
+    return {
+      cls:"tune", icon:"⚙️", title:"先稳定流程：把差异点拆成 Skill 参数，再做",
+      body:`流程"半一样"——意味着有 1–2 个变量每次不同。<strong>把它们抽成 SKILL.md 的"输入参数"</strong>（比如 keywords / days / week_id），剩下的流程仍然走固定 SOP。这样 Skill 一份就够用，不用为每种变体写一个。`
+    };
+  }
+  // fallback
+  return {
+    cls:"wait", icon:"⏸", title:"信息不足，再补一两次实践数据",
+    body:`目前判定不足以下结论。建议再做 1–2 次，把流程/产物的稳定性观察清楚，再回到决策器。`
+  };
+}
+
+function renderDec(){
+  // step 状态
+  document.querySelectorAll(".dec-step").forEach((stepEl,idx)=>{
+    stepEl.classList.remove("active","done");
+    const lbl = stepEl.querySelector("[data-pick-label]");
+    if(decAnswers[idx]){
+      stepEl.classList.add("done");
+      lbl.textContent = "✓ " + PICK_LABEL[decAnswers[idx]];
+    } else {
+      lbl.textContent = "";
+    }
+    stepEl.querySelectorAll(".dec-opt").forEach(opt=>{
+      opt.classList.toggle("picked", decAnswers[idx] === opt.dataset.val);
+    });
+  });
+  // active = 第一个未填的
+  const activeIdx = decAnswers.findIndex(a=>!a);
+  if(activeIdx !== -1){
+    const el = document.querySelector(`.dec-step[data-step="${activeIdx}"]`);
+    if(el) el.classList.add("active");
+  }
+  // 出结论：q1 必填 + q2 必填；q3 仅在 q2 不是 diff 时才必填
+  const ready = decAnswers[0] && decAnswers[1] && (decAnswers[1]==="diff" || decAnswers[2]);
+  if(ready){
+    const r = decideResult();
+    decResultEl.className = "dec-result show " + r.cls;
+    decResultTitle.textContent = `${r.icon} ${r.title}`;
+    decResultBody.innerHTML = r.body;
+  } else {
+    decResultEl.className = "dec-result";
+    decResultTitle.textContent = "";
+    decResultBody.innerHTML = "";
+  }
+}
+
+document.querySelectorAll(".dec-opts").forEach(opts=>{
+  const idx = parseInt(opts.dataset.opts, 10);
+  opts.querySelectorAll(".dec-opt").forEach(opt=>{
+    opt.addEventListener("click",()=>{
+      const parentStep = opt.closest(".dec-step");
+      // 只允许当前 active 或已完成的步骤被点击
+      if(!parentStep.classList.contains("active") && !parentStep.classList.contains("done")) return;
+      decAnswers[idx] = opt.dataset.val;
+      // 如果回答 q2 = diff，q3 自动跳过
+      if(idx === 1 && opt.dataset.val === "diff"){
+        decAnswers[2] = null;
+      }
+      // 改了前面的答案，清空后续
+      for(let i=idx+1;i<3;i++){
+        // 保留 q2=diff 的特殊跳过
+        if(idx===1 && opt.dataset.val==="diff") break;
+        // 改 q1 时不动 q2/q3（让用户继续）；改 q2 时清 q3
+        if(idx===1) decAnswers[2] = null;
+      }
+      renderDec();
+    });
+  });
+});
+document.getElementById("decReset").addEventListener("click",()=>{
+  decAnswers[0] = decAnswers[1] = decAnswers[2] = null;
+  renderDec();
+});
+renderDec();
+
+/* Initialize track */
+applyTrack(localStorage.getItem(TRACK_KEY) || "news");
+
+/* =============== Check lists =============== */
+const STATE = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(STATE)); updateProgress(); }
+function bindCheckList(ulId, key){
+  const ul = document.getElementById(ulId);
+  if(!ul) return;
+  STATE[key] = STATE[key] || {};
+  ul.querySelectorAll("li").forEach(li=>{
+    const id = li.dataset.goal || li.dataset.prep || li.dataset.check;
+    if(STATE[key][id]) li.classList.add("done");
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      STATE[key][id] = li.classList.contains("done");
+      saveState();
+    });
+  });
+}
+bindCheckList("learnGoals","goals");
+bindCheckList("prepList","preps");
+bindCheckList("selfCheck","checks");
+
+/* =============== Progress =============== */
+function updateProgress(){
+  const sources = [
+    {key:"goals",  count:3},
+    {key:"preps",  count:2},
+    {key:"checks", count:5},
+    {key:"quiz",   count:3}
+  ];
+  let done = 0, total = 0;
+  sources.forEach(s=>{
+    total += s.count;
+    if(STATE[s.key]) done += Object.values(STATE[s.key]).filter(Boolean).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("sbBar").style.width = pct + "%";
+  document.getElementById("sbText").textContent = pct + "%";
+}
+updateProgress();
+
+/* =============== Quiz =============== */
+document.querySelectorAll(".quiz-q").forEach((q,idx)=>{
+  const opts = q.querySelector(".quiz-opts");
+  const correct = parseInt(opts.dataset.correct, 10);
+  const explain = q.querySelector(".quiz-explain");
+  STATE.quiz = STATE.quiz || {};
+  if(STATE.quiz[`q${idx}`]){
+    opts.children[correct].classList.add("right");
+    explain.classList.add("show");
+  }
+  opts.querySelectorAll(".quiz-opt").forEach((opt,i)=>{
+    opt.addEventListener("click",()=>{
+      if(opts.querySelector(".right")) return;
+      if(i===correct){
+        opt.classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }else{
+        opt.classList.add("wrong");
+        opts.children[correct].classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }
+      explain.classList.add("show");
+    });
+  });
+});
+
+/* =============== Mark complete =============== */
+const completeBtn = document.getElementById("completeBtn");
+const completeText = document.getElementById("completeText");
+function refreshCompleteUI(){
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  const isDone = doneSet.has(LESSON_ID);
+  completeBtn.classList.toggle("done", isDone);
+  completeText.textContent = isDone ? "✓ 已学完（点击取消）" : "✓ 标记本讲已学完";
+}
+completeBtn.addEventListener("click",()=>{
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  if(doneSet.has(LESSON_ID)) doneSet.delete(LESSON_ID);
+  else { doneSet.add(LESSON_ID); showToast(`L5 已标记为完成 · ${doneSet.size}/${TOTAL_LESSONS}`); }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...doneSet]));
+  refreshCompleteUI();
+});
+refreshCompleteUI();
+
+/* =============== TOC active highlight =============== */
+const tocLinks = document.querySelectorAll(".toc-list a");
+const sections = [...document.querySelectorAll(".article section[id]")];
+function onScroll(){
+  let cur = sections[0];
+  const top = window.scrollY + 120;
+  for(const s of sections){ if(s.offsetTop <= top) cur = s; }
+  tocLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#" + cur.id));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* =============== Keyboard shortcuts =============== */
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea,select")) return;
+  if(e.key==="1") applyTrack("backlog");
+  else if(e.key==="2") applyTrack("meeting");
+  else if(e.key==="3") applyTrack("news");
+  else if(e.key==="t" || e.key==="T") applyTheme(html.getAttribute("data-theme")==="dark"?"stealth":"dark");
+});
+
+/* =============== Cross-tab sync =============== */
+window.addEventListener("storage", e=>{
+  if(e.key===THEME_KEY) applyTheme(e.newValue);
+  else if(e.key===TRACK_KEY) applyTrack(e.newValue);
+  else if(e.key===PROGRESS_KEY) refreshCompleteUI();
+});
+</script>
+</body>
+</html>
