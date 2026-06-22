@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PM 培训学习平台 · Agent 实战手册</title>
+<style>
+  /* ============ Reset & Base ============ */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  /* ============ Theme: Dark (高级暗色) ============ */
+  html[data-theme="dark"]{
+    --bg:#0b0d12;
+    --bg-soft:#11141b;
+    --bg-card:#161a23;
+    --bg-card-hover:#1c2230;
+    --border:#252b39;
+    --border-strong:#323a4d;
+    --text:#e6e8ee;
+    --text-soft:#a4abbb;
+    --text-mute:#6b7186;
+    --accent:#7c5cff;
+    --accent-2:#22d3ee;
+    --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399;
+    --danger:#f87171;
+    --A:#22d3ee; --B:#7c5cff; --C:#facc15; --D:#34d399;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --hero-glow-1:rgba(124,92,255,.18);
+    --hero-glow-2:rgba(34,211,238,.12);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px;
+    --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+  }
+
+  /* ============ Theme: Stealth (摸鱼模式 · 仿企业平台) ============ */
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8;
+    --bg-soft:#eceff3;
+    --bg-card:#ffffff;
+    --bg-card-hover:#fafbfc;
+    --border:#e4e7eb;
+    --border-strong:#cbd0d8;
+    --text:#1f2329;
+    --text-soft:#4e5969;
+    --text-mute:#8a93a6;
+    --accent:#1664ff;          /* 企业蓝 */
+    --accent-2:#0e62e3;
+    --accent-soft:#e6f0ff;
+    --success:#00a870;
+    --danger:#f53f3f;
+    --A:#1664ff; --B:#7d4cff; --C:#f59e0b; --D:#00a870;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --hero-glow-1:transparent;
+    --hero-glow-2:transparent;
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px;
+    --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+  }
+
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:"SF Mono","Menlo","Consolas",monospace;font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+
+  /* ============ Layout ============ */
+  .wrap{max-width:1200px;margin:0 auto;padding:32px 28px 96px}
+  section{margin-top:48px}
+  html[data-theme="dark"] section{margin-top:96px}
+  h2.section-title{font-size:22px;font-weight:600;letter-spacing:-.3px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  html[data-theme="dark"] h2.section-title{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px;gap:12px}
+  h2.section-title::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px}
+  html[data-theme="dark"] h2.section-title::before{width:6px;height:24px;background:linear-gradient(180deg,var(--accent),var(--accent-2));border-radius:3px}
+  .section-sub{color:var(--text-soft);margin-bottom:20px;max-width:780px;font-size:14px}
+  html[data-theme="dark"] .section-sub{margin-bottom:32px}
+
+  /* ============ Top Bar ============ */
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1200px;margin:0 auto;padding:10px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  html[data-theme="dark"] .topbar-inner{padding:14px 28px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;letter-spacing:.2px}
+  html[data-theme="dark"] .brand{font-weight:700}
+  .brand .dot{width:10px;height:10px;border-radius:50%}
+  html[data-theme="dark"] .brand .dot{background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 12px var(--accent)}
+  html[data-theme="stealth"] .brand .dot{background:var(--accent)}
+  .brand .crumb{color:var(--text-mute);font-weight:400}
+  .brand .crumb::before{content:"/";margin:0 8px;color:var(--text-mute)}
+
+  .topbar-right{display:flex;align-items:center;gap:12px}
+  .progress-pill{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);font-size:12px;color:var(--text-soft)}
+  html[data-theme="dark"] .progress-pill{padding:6px 12px;border-radius:999px;font-size:13px}
+  .progress-ring{width:18px;height:18px}
+  html[data-theme="dark"] .progress-ring{width:22px;height:22px}
+  .progress-ring circle{fill:none;stroke-width:3}
+  .progress-ring .bg{stroke:var(--border)}
+  .progress-ring .fg{stroke:var(--success);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dasharray .6s ease}
+  .reset-btn{font-size:11px;color:var(--text-mute);border:1px solid var(--border);padding:3px 7px;border-radius:var(--radius-sm);background:var(--bg-card)}
+  .reset-btn:hover{color:var(--danger);border-color:var(--danger)}
+
+  /* Theme switch */
+  .theme-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  html[data-theme="dark"] .theme-switch{border-radius:999px;padding:3px}
+  .theme-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1}
+  html[data-theme="dark"] .theme-switch button{padding:6px 12px;border-radius:999px}
+  .theme-switch button.active{color:#fff}
+  html[data-theme="stealth"] .theme-switch button.active{color:#fff}
+  .theme-switch .ind{position:absolute;top:2px;bottom:2px;left:2px;width:calc(50% - 2px);background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1)}
+  html[data-theme="dark"] .theme-switch .ind{top:3px;bottom:3px;left:3px;width:calc(50% - 3px);background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:999px}
+  .theme-switch.right .ind{transform:translateX(100%)}
+
+  /* ============ Hero ============ */
+  .hero{padding:24px 0 8px;position:relative;overflow:hidden}
+  html[data-theme="dark"] .hero{padding:80px 0 32px}
+  .hero::before{content:"";position:absolute;inset:-100px -100px auto auto;width:600px;height:600px;background:radial-gradient(closest-side,var(--hero-glow-1),transparent 70%);pointer-events:none}
+  .hero::after{content:"";position:absolute;inset:auto auto -200px -100px;width:600px;height:600px;background:radial-gradient(closest-side,var(--hero-glow-2),transparent 70%);pointer-events:none}
+
+  /* Stealth mode hero — like internal platform header card */
+  html[data-theme="stealth"] .hero{padding:0;margin-top:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  html[data-theme="stealth"] .hero-inner{padding:24px 28px}
+  html[data-theme="dark"] .hero-inner{padding:0}
+
+  .hero-meta{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--text-mute);align-items:center}
+  html[data-theme="dark"] .hero-meta{display:none}
+  .hero-meta .meta-item{display:inline-flex;align-items:center;gap:6px}
+  .hero-meta .sep{width:1px;height:12px;background:var(--border)}
+  .hero-meta .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft);border-radius:4px;font-size:11px;font-weight:500}
+
+  .hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);padding:6px 12px;border-radius:999px;font-size:13px;color:var(--text-soft)}
+  html[data-theme="stealth"] .hero-tag{display:none}
+  .hero-tag .pulse{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+
+  h1.hero-title{font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.3;margin:12px 0 8px;color:var(--text)}
+  html[data-theme="dark"] h1.hero-title{font-size:clamp(34px,5vw,56px);font-weight:800;letter-spacing:-1.2px;line-height:1.1;margin:18px 0 16px;background:linear-gradient(120deg,#fff 30%,#a4abbb 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .hero-sub{color:var(--text-soft);font-size:13px;max-width:780px;margin-bottom:16px;line-height:1.7}
+  html[data-theme="dark"] .hero-sub{font-size:18px;max-width:720px;margin-bottom:28px}
+
+  .hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  html[data-theme="dark"] .hero-actions{gap:12px;margin-top:20px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);font-weight:500;font-size:13px;transition:.15s;border:1px solid transparent}
+  html[data-theme="dark"] .btn{padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px;transition:.2s;gap:8px}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-2)}
+  html[data-theme="dark"] .btn-primary{background:linear-gradient(135deg,var(--accent),#5b8cff);box-shadow:0 8px 24px -8px var(--accent)}
+  html[data-theme="dark"] .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px -10px var(--accent)}
+  .btn-ghost{background:var(--bg-card);border-color:var(--border);color:var(--text)}
+  .btn-ghost:hover{background:var(--bg-card-hover);border-color:var(--accent);color:var(--accent)}
+
+  /* Stealth mode: KPI strip after hero */
+  .kpi-strip{display:none}
+  html[data-theme="stealth"] .kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--border);background:var(--bg-soft);border-radius:0 0 var(--radius) var(--radius)}
+  .kpi{padding:14px 20px;border-right:1px solid var(--border)}
+  .kpi:last-child{border-right:none}
+  .kpi .k-label{font-size:11px;color:var(--text-mute);margin-bottom:4px;letter-spacing:.5px}
+  .kpi .k-value{font-size:18px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+  .kpi .k-delta{font-size:11px;color:var(--success);margin-left:6px}
+  @media (max-width:780px){html[data-theme="stealth"] .kpi-strip{grid-template-columns:1fr 1fr}.kpi:nth-child(2){border-right:none}.kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--border)}}
+
+  /* ============ PM Toggle ============ */
+  .pm-toggle{margin-top:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-card)}
+  html[data-theme="dark"] .pm-toggle{margin-top:64px;padding:28px;box-shadow:var(--shadow)}
+  .pm-toggle-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+  html[data-theme="dark"] .pm-toggle-head{margin-bottom:20px;padding-bottom:0;border-bottom:none}
+  .pm-toggle h3{font-size:15px;font-weight:600}
+  html[data-theme="dark"] .pm-toggle h3{font-size:20px;font-weight:700}
+  .pm-toggle p.sub{color:var(--text-soft);font-size:12px;margin-top:4px}
+  html[data-theme="dark"] .pm-toggle p.sub{font-size:14px}
+
+  .toggle-switch{display:inline-flex;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;position:relative}
+  html[data-theme="dark"] .toggle-switch{border-radius:999px;padding:4px}
+  .toggle-switch button{padding:6px 14px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;position:relative;z-index:1}
+  html[data-theme="dark"] .toggle-switch button{padding:8px 18px;border-radius:999px;font-size:13px;font-weight:600}
+  .toggle-switch button.active{color:#fff}
+  .toggle-switch .indicator{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);background:var(--accent);border-radius:4px;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+  html[data-theme="dark"] .toggle-switch .indicator{top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:999px}
+  .toggle-switch.right .indicator{transform:translateX(100%)}
+
+  .pm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  html[data-theme="dark"] .pm-grid{gap:14px}
+  .pm-cell{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;transition:.4s}
+  html[data-theme="dark"] .pm-cell{border-radius:10px;padding:16px}
+  .pm-cell .label{font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-mute);margin-bottom:4px}
+  html[data-theme="dark"] .pm-cell .label{font-size:11px;letter-spacing:1px;margin-bottom:6px}
+  .pm-cell .value{font-size:13px;color:var(--text);font-weight:500;line-height:1.5}
+  html[data-theme="dark"] .pm-cell .value{font-size:14px}
+  .pm-cell.changed{border-color:var(--accent);background:var(--accent-soft)}
+  html[data-theme="dark"] .pm-cell.changed{box-shadow:0 0 0 1px var(--accent),0 0 24px -4px var(--accent);background:var(--bg-soft)}
+  @media (max-width:780px){.pm-grid{grid-template-columns:1fr 1fr}}
+
+  /* ============ Track Picker ============ */
+  .track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  html[data-theme="dark"] .track-grid{gap:16px}
+  @media (max-width:780px){.track-grid{grid-template-columns:1fr}}
+  .track-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:left;cursor:pointer;transition:.2s;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:8px;overflow:hidden}
+  html[data-theme="dark"] .track-card{padding:24px}
+  .track-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-soft),transparent 70%);opacity:0;transition:.25s;pointer-events:none}
+  .track-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+  html[data-theme="dark"] .track-card:hover{transform:translateY(-3px)}
+  .track-card:hover::before{opacity:.6}
+  .track-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow-card)}
+  html[data-theme="dark"] .track-card.active{box-shadow:0 0 0 1px var(--accent),0 0 28px -4px var(--accent)}
+  .track-card.active::before{opacity:1}
+  .track-card.active::after{content:"✓ 当前选中";position:absolute;top:12px;right:12px;font-size:11px;font-weight:600;color:#fff;background:var(--accent);padding:3px 8px;border-radius:var(--radius-sm)}
+  .track-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:var(--radius-sm);align-self:flex-start;border:1px solid var(--accent)}
+  html[data-theme="dark"] .track-tag{border:none;border-radius:999px}
+  .track-icon{font-size:22px;margin-top:4px}
+  html[data-theme="dark"] .track-icon{font-size:28px}
+  .track-card h4{font-size:15px;font-weight:600;color:var(--text);margin-top:4px}
+  html[data-theme="dark"] .track-card h4{font-size:16px;font-weight:700}
+  .track-card p{font-size:12px;color:var(--text-soft);line-height:1.6}
+  html[data-theme="dark"] .track-card p{font-size:13px}
+  .track-meta{margin-top:auto;padding-top:10px;border-top:1px dashed var(--border);font-size:11px;color:var(--text-mute)}
+  .track-meta code{font-size:.9em}
+
+  /* ============ Outcomes ============ */
+  .outcomes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  html[data-theme="dark"] .outcomes-grid{gap:16px}
+  @media (max-width:980px){.outcomes-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.outcomes-grid{grid-template-columns:1fr}}
+  .outcome-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;transition:.2s;box-shadow:var(--shadow-card)}
+  html[data-theme="dark"] .outcome-card{padding:24px}
+  .outcome-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-soft),transparent 60%);opacity:0;transition:.25s;pointer-events:none}
+  .outcome-card:hover{border-color:var(--accent)}
+  html[data-theme="dark"] .outcome-card:hover{transform:translateY(-4px)}
+  .outcome-card:hover::before{opacity:1}
+  .outcome-card .icon{font-size:18px;margin-bottom:8px}
+  html[data-theme="dark"] .outcome-card .icon{font-size:24px;margin-bottom:12px}
+  .outcome-card h4{font-size:14px;font-weight:600;margin-bottom:6px}
+  html[data-theme="dark"] .outcome-card h4{font-size:15px;font-weight:700;margin-bottom:8px}
+  .outcome-card p{font-size:12px;color:var(--text-soft);line-height:1.6}
+  html[data-theme="dark"] .outcome-card p{font-size:13px}
+
+  /* ============ Path chips ============ */
+  .map-controls{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  html[data-theme="dark"] .map-controls{gap:8px;margin-bottom:24px}
+  .path-chip{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);font-size:12px;font-weight:500;color:var(--text-soft);transition:.15s;display:inline-flex;align-items:center;gap:6px}
+  html[data-theme="dark"] .path-chip{padding:8px 14px;border-radius:999px;font-size:13px}
+  .path-chip:hover{color:var(--text);border-color:var(--accent)}
+  .path-chip.active{color:#fff;background:var(--accent);border-color:var(--accent);font-weight:500}
+  html[data-theme="dark"] .path-chip.active{color:#0b0d12;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;font-weight:700}
+  .path-chip .meta{font-size:10px;opacity:.7}
+  html[data-theme="dark"] .path-chip .meta{font-size:11px}
+
+  /* ============ Swimlanes ============ */
+  .swimlanes{display:grid;grid-template-columns:96px 1fr;gap:10px}
+  html[data-theme="dark"] .swimlanes{grid-template-columns:120px 1fr;gap:16px}
+  @media (max-width:780px){.swimlanes{grid-template-columns:1fr}}
+  .lane{display:contents}
+  .lane-label{display:flex;flex-direction:column;justify-content:center;padding:10px 12px;border-radius:var(--radius-sm);font-weight:600;font-size:12px;color:#fff;background:var(--lane-color)}
+  html[data-theme="dark"] .lane-label{padding:14px;border-radius:var(--radius);font-weight:700;font-size:13px;color:#0b0d12;background:linear-gradient(135deg,var(--lane-color),var(--lane-color-2))}
+  .lane-label .lane-no{font-size:10px;font-weight:500;letter-spacing:.5px;opacity:.85;margin-bottom:2px}
+  html[data-theme="dark"] .lane-label .lane-no{font-size:11px;font-weight:600;letter-spacing:1px;opacity:.7}
+  .lane-A{--lane-color:var(--A);--lane-color-2:#4fd9ff}
+  .lane-B{--lane-color:var(--B);--lane-color-2:#a78bfa}
+  .lane-C{--lane-color:var(--C);--lane-color-2:#fcd34d}
+  .lane-D{--lane-color:var(--D);--lane-color-2:#6ee7b7}
+  @media (max-width:780px){.lane-label{flex-direction:row;align-items:center;gap:8px;padding:8px 14px}.lane-label .lane-no{margin-bottom:0}}
+
+  .lane-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  html[data-theme="dark"] .lane-cards{gap:12px}
+  @media (max-width:980px){.lane-cards{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.lane-cards{grid-template-columns:1fr}}
+
+  .lesson-card{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:5px;min-height:108px;overflow:hidden;box-shadow:var(--shadow-card)}
+  html[data-theme="dark"] .lesson-card{border-radius:12px;padding:14px 14px 16px;min-height:118px;gap:6px;transition:.25s}
+  .lesson-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--lane-color);transition:width .15s}
+  .lesson-card:hover{border-color:var(--lane-color);background:var(--bg-card-hover)}
+  html[data-theme="dark"] .lesson-card:hover{transform:translateY(-3px)}
+  .lesson-card:hover::before{width:5px}
+  .lesson-card.dim{opacity:.4;filter:grayscale(.5)}
+  .lesson-card.in-path{border-color:var(--lane-color)}
+  html[data-theme="dark"] .lesson-card.in-path{box-shadow:0 0 0 1px var(--lane-color),0 0 20px -4px var(--lane-color)}
+  .lesson-card .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .lesson-card .num{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--lane-color);background:var(--pip-bg);padding:2px 6px;border-radius:3px;border:1px solid var(--border)}
+  html[data-theme="dark"] .lesson-card .num{font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:6px;border:none}
+  .lesson-card .check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:.2s}
+  html[data-theme="dark"] .lesson-card .check{width:18px;height:18px;font-size:11px}
+  .lesson-card.done .check{background:var(--success);border-color:var(--success);color:#fff}
+  html[data-theme="dark"] .lesson-card.done .check{color:#0b0d12}
+  .lesson-card .title{font-size:13px;font-weight:600;line-height:1.4;color:var(--text);min-height:34px}
+  html[data-theme="dark"] .lesson-card .title{font-size:14px;min-height:36px}
+  .lesson-card .desc{font-size:11px;color:var(--text-mute);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  html[data-theme="dark"] .lesson-card .desc{font-size:12px}
+  .lesson-card .footer{display:flex;align-items:center;gap:6px;margin-top:auto;font-size:10px;color:var(--text-mute)}
+  html[data-theme="dark"] .lesson-card .footer{gap:8px;font-size:11px}
+  .lesson-card .footer .pip{padding:1px 5px;border:1px solid var(--border);border-radius:3px}
+  html[data-theme="dark"] .lesson-card .footer .pip{padding:2px 6px;border-radius:4px}
+
+  /* ============ Endnote ============ */
+  .endnote{margin-top:32px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  html[data-theme="dark"] .endnote{margin-top:64px;padding:32px;background:linear-gradient(135deg,var(--accent-soft),rgba(34,211,238,.08));text-align:center}
+  .endnote h3{font-size:14px;font-weight:600;margin-bottom:6px}
+  html[data-theme="dark"] .endnote h3{font-size:18px;font-weight:700;margin-bottom:8px}
+  .endnote p{color:var(--text-soft);font-size:13px;line-height:1.7}
+  html[data-theme="dark"] .endnote p{font-size:14px;max-width:640px;margin:0 auto}
+
+  /* tiny easter-egg: stealth-only floating "fake notification" pip in the corner of cards-area, removed for noise control */
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot"></span>
+      <span id="brandName">PM 培训学习平台</span>
+      <span class="crumb" id="brandCrumb">2026 H1 · Agent 实战手册</span>
+    </div>
+    <div class="topbar-right">
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button class="active" data-theme-btn="stealth">📊 摸鱼模式</button>
+        <button data-theme-btn="dark">🌙 高级暗色</button>
+      </div>
+      <div class="progress-pill" title="你的学习进度（保存在本地浏览器）">
+        <svg class="progress-ring" viewBox="0 0 36 36">
+          <circle class="bg" cx="18" cy="18" r="15"></circle>
+          <circle class="fg" id="progressRing" cx="18" cy="18" r="15" stroke-dasharray="0 94.2"></circle>
+        </svg>
+        <span id="progressText">0 / 14 讲</span>
+        <button class="reset-btn" id="resetBtn" title="重置进度">重置</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" style="margin-top:0">
+    <div class="hero-inner">
+      <!-- Stealth-only meta strip -->
+      <div class="hero-meta">
+        <span class="badge">PROJECT-2026-AG-PM</span>
+        <span class="meta-item">📅 启动日期：2026-06-15</span>
+        <span class="sep"></span>
+        <span class="meta-item">👤 负责人：PM 能力建设组</span>
+        <span class="sep"></span>
+        <span class="meta-item">🏷️ 状态：进行中</span>
+        <span class="sep"></span>
+        <span class="meta-item">🔗 文档版本：v1.0</span>
+      </div>
+      <!-- Dark-only floating tag -->
+      <span class="hero-tag"><span class="pulse"></span>面向 PM · 自学闯关型 · 14 讲</span>
+
+      <h1 class="hero-title" id="heroTitle">PM 岗位能力建设：Agent 时代产品经理实战手册（H1 试点）</h1>
+      <p class="hero-sub" id="heroSub">本课程围绕"Agent 时代 PM 角色升级"展开，配套统一主线任务（行业新闻周报）。共 4 篇章 14 讲，建议每周完成 1 个篇章。完成所有任务后产出物已可纳入个人 OKR 进度归档。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#map">开始学习</a>
+        <a class="btn btn-ghost" href="#paths">查看学习路径</a>
+      </div>
+    </div>
+
+    <!-- Stealth-only KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi"><div class="k-label">课程总数</div><div class="k-value">14 <span class="k-delta">讲</span></div></div>
+      <div class="kpi"><div class="k-label">建议工时</div><div class="k-value">≈ 11 <span class="k-delta">h</span></div></div>
+      <div class="kpi"><div class="k-label">学员完成率</div><div class="k-value" id="kpiRate">0%</div></div>
+      <div class="kpi"><div class="k-label">下次评审</div><div class="k-value">2026-07-31</div></div>
+    </div>
+  </section>
+
+  <!-- ===== PM Redefined Toggle ===== -->
+  <div class="pm-toggle">
+    <div class="pm-toggle-head">
+      <div>
+        <h3 id="pmTitle">岗位职责对照表 · Agent 时代 PM 能力升级</h3>
+        <p class="sub" id="pmSub">点击切换查看：原岗位定义 vs 升级后岗位定义。变化字段会高亮提示。</p>
+      </div>
+      <div class="toggle-switch" id="pmSwitch">
+        <div class="indicator"></div>
+        <button class="active" data-mode="old">原定义</button>
+        <button data-mode="new">升级后</button>
+      </div>
+    </div>
+    <div class="pm-grid" id="pmGrid"></div>
+  </div>
+
+  <!-- ===== Track Picker ===== -->
+  <section>
+    <h2 class="section-title">选择你的练手场景（三选一）</h2>
+    <p class="section-sub">每讲都会同时给出三种场景的示例与 prompt，你只需在下方选定一个最贴近自己日常工作的练手主线，讲义会自动以你选择的场景为默认演示。<strong>三个场景共用同一份讲义，方法论 100% 通用</strong>，另外两个仅作迁移参考。</p>
+    <div class="track-grid" id="trackGrid">
+      <button class="track-card" data-track="backlog">
+        <div class="track-tag">推荐 · 覆盖率最高</div>
+        <div class="track-icon">📋</div>
+        <h4>需求池整理与优先级评估</h4>
+        <p>把散落在飞书 / 群聊 / 文档里的需求线索汇总、去重、打分、排期。几乎所有 PM 都有需求池。</p>
+        <div class="track-meta"><span>主线产物：<code>backlog/weekly-review.html</code></span></div>
+      </button>
+      <button class="track-card" data-track="meeting">
+        <div class="track-tag">跨团队协作刚需</div>
+        <div class="track-icon">📝</div>
+        <h4>会议纪要 → 待办分发 → 跟进</h4>
+        <p>从会议录音 / 文字稿，提取决策与待办，按 owner 自动分发，并在下次会议前提醒。</p>
+        <div class="track-meta"><span>主线产物：<code>meetings/follow-up.html</code></span></div>
+      </button>
+      <button class="track-card" data-track="news">
+        <div class="track-tag">战略 · 对外汇报型</div>
+        <div class="track-icon">📰</div>
+        <h4>行业 / 竞品动态周报</h4>
+        <p>调研 → 落盘 → HTML dashboard → 飞书发送，每周自动复用。适合战略 / 新业务 / 对外汇报型 PM。</p>
+        <div class="track-meta"><span>主线产物：<code>news/weekly-brief.html</code></span></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== Outcomes ===== -->
+  <section>
+    <h2 class="section-title">交付物清单（学完后将获得）</h2>
+    <p class="section-sub">完成全部任务后，本地目录中将沉淀以下 4 类资产，可直接纳入工作复用。<span id="outcomeTrackHint" style="color:var(--accent)">当前练手场景：需求池整理</span></p>
+    <div class="outcomes-grid">
+      <div class="outcome-card">
+        <div class="icon">🔁</div>
+        <h4>一条端到端工作流</h4>
+        <p id="outcomeMainline">基于<strong id="outcomeTrackName">需求池整理</strong>跑通：素材汇总 → 结构化落盘 → 可视化 dashboard → 飞书分发，每周一键复用。</p>
+      </div>
+      <div class="outcome-card">
+        <div class="icon">🗂️</div>
+        <h4>个人 Agent 工作环境</h4>
+        <p><code>llm-wiki/</code> 个人知识库 + 若干 Skill + <code>AGENTS.md</code> 使用规范。</p>
+      </div>
+      <div class="outcome-card">
+        <div class="icon">📑</div>
+        <h4>Agent 机会清单 v1</h4>
+        <p>识别 ≥10 项可被 Agent 接管的工作任务，按 ROI 排序的下一步行动表。</p>
+      </div>
+      <div class="outcome-card">
+        <div class="icon">🛠️</div>
+        <h4>方法论模板组</h4>
+        <p>Prompt 4 要素、上下文管理、Skill 三要素、人在环路、数据落点设计。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Paths ===== -->
+  <section id="paths">
+    <h2 class="section-title">学习路径配置</h2>
+    <p class="section-sub">根据个人时间预算与能力基线选择适合路径，下方课程列表将自动高亮所选路径覆盖范围。</p>
+    <div class="map-controls" id="pathChips">
+      <button class="path-chip active" data-path="all">全部 14 讲 <span class="meta">完整版</span></button>
+      <button class="path-chip" data-path="A">最小可行 <span class="meta">L0→L1→L2→L5</span></button>
+      <button class="path-chip" data-path="B">完整推荐 <span class="meta">A→B→C→D</span></button>
+      <button class="path-chip" data-path="C">企业接入 <span class="meta">L3→L4→L6→L7→L9→L11</span></button>
+      <button class="path-chip" data-path="D">体验装 <span class="meta">L0→L2→L2.5→L4.5</span></button>
+    </div>
+  </section>
+
+  <!-- ===== Map ===== -->
+  <section id="map" style="margin-top:18px">
+    <div class="swimlanes" id="swimlanes"></div>
+  </section>
+
+  <!-- ===== Endnote ===== -->
+  <section class="endnote">
+    <h3 id="endTitle">课程理念说明</h3>
+    <p id="endText">不要再问"Agent 能做什么"，去问"我每周重复在做什么 → 哪些可以让 Agent 替我做"。读完 L12 后，应能在 30 分钟内将工作中任何高频任务封装为可执行的 Agent Skill。</p>
+  </section>
+
+</main>
+
+<script>
+/* =================================================
+   Theme switch
+   ================================================= */
+const THEME_KEY = "agentOnboarding.theme";
+const html = document.documentElement;
+const themeSwitch = document.getElementById("themeSwitch");
+
+function applyTheme(theme){
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.themeBtn===theme);
+  });
+  themeSwitch.classList.toggle("right", theme==="dark");
+  localStorage.setItem(THEME_KEY, theme);
+
+  // Update copy that differs by theme
+  const t = (selector, stealthText, darkText)=>{
+    const el = document.querySelector(selector);
+    if(!el) return;
+    el.textContent = theme==="stealth" ? stealthText : darkText;
+  };
+  t("#brandName",  "PM 培训学习平台", "Agent Onboarding · for PM");
+  t("#brandCrumb", "2026 H1 · Agent 实战手册", "");
+  t("#heroTitle",  "PM 岗位能力建设：Agent 时代产品经理实战手册（H1 试点）", "不再交付 PRD，而是指挥 Agent 交付产品。");
+  t("#heroSub",    "本课程围绕\"Agent 时代 PM 角色升级\"展开。共 4 篇章 14 讲，建议每周完成 1 个篇章。每讲均提供需求池整理 / 会议纪要跟进 / 行业周报三种场景实例，三选一为练手主线，完成所有任务后产出物已可纳入个人 OKR 进度归档。",
+                   "一份可以一步一步跟着做完任务的实战手册。每讲提供三个 PM 通用场景任选其一练手——需求池整理、会议纪要跟进、行业周报。读完后你会拥有一条属于自己工作的端到端 Agent 工作流。");
+  t("#pmTitle",    "岗位职责对照表 · Agent 时代 PM 能力升级", "PM 这个岗位，已经被 Agent 重新定义了");
+  t("#pmSub",      "点击切换查看：原岗位定义 vs 升级后岗位定义。变化字段会高亮提示。", "点击切换体验「旧 PM」与「新 PM」四个维度的差异。变化的字段会高亮。");
+  t("#endTitle",   "课程理念说明", "不要再问 \"Agent 能做什么\"");
+}
+
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =================================================
+   Track picker (三选一练手场景)
+   ================================================= */
+const TRACK_KEY = "agentOnboarding.track";
+const TRACK_DATA = {
+  backlog: {name:"需求池整理",     mainline:"基于<strong>需求池整理</strong>跑通：素材汇总 → 结构化打分 → 优先级看板 → 飞书同步，每周一键复用。"},
+  meeting: {name:"会议纪要跟进",   mainline:"基于<strong>会议纪要跟进</strong>跑通：录音/纪要解析 → 决策与待办抽取 → 按 owner 分发 → 下次会议前提醒。"},
+  news:    {name:"行业 / 竞品周报",mainline:"基于<strong>行业 / 竞品周报</strong>跑通：调研 → 结构化落盘 → HTML dashboard → 飞书发送，每周一键复用。"}
+};
+const trackGrid = document.getElementById("trackGrid");
+const outcomeMainline = document.getElementById("outcomeMainline");
+const outcomeTrackHint = document.getElementById("outcomeTrackHint");
+
+function applyTrack(track){
+  if(!TRACK_DATA[track]) track = "backlog";
+  localStorage.setItem(TRACK_KEY, track);
+  trackGrid.querySelectorAll(".track-card").forEach(c=>{
+    c.classList.toggle("active", c.dataset.track===track);
+  });
+  const meta = TRACK_DATA[track];
+  if(outcomeMainline) outcomeMainline.innerHTML = meta.mainline;
+  if(outcomeTrackHint) outcomeTrackHint.textContent = `当前练手场景：${meta.name}`;
+}
+
+trackGrid.querySelectorAll(".track-card").forEach(card=>{
+  card.addEventListener("click",()=> applyTrack(card.dataset.track));
+});
+
+applyTrack(localStorage.getItem(TRACK_KEY) || "backlog");
+
+/* =================================================
+   Data
+   ================================================= */
+const PM_DATA = {
+  old: [
+    {label:"主要产出",  value:"PRD、需求评审纪要"},
+    {label:"工作方式",  value:"写文档 → 等研发实现"},
+    {label:"核心能力",  value:"表达需求"},
+    {label:"衡量标准",  value:"文档质量"}
+  ],
+  new: [
+    {label:"主要产出",  value:"PRD + 原型 + 数据洞察 + 可运行 demo + 工具型小产品"},
+    {label:"工作方式",  value:"写意图 → Agent 直出可验证产物 → 再交给研发深做"},
+    {label:"核心能力",  value:"拆解任务 + 指挥 Agent + 沉淀流程"},
+    {label:"衡量标准",  value:"想法到验证的速度（time-to-evidence）"}
+  ]
+};
+
+const LESSONS = [
+  {id:"L0",   lane:"A", title:"Chat vs Agent：差别到底在哪", desc:"用同一个问题对比，亲手感受工具调用与自主循环。", time:"30 min", level:"⭐"},
+  {id:"L1",   lane:"A", title:"让 Agent 第一次动手：操作本地文件", desc:"行业新闻调研 → 结构化落盘到 news/。", time:"40 min", level:"⭐"},
+  {id:"L2",   lane:"A", title:"Vibe Coding：不会写代码也能做工具", desc:"给本地数据生成可交互 HTML dashboard。", time:"50 min", level:"⭐⭐"},
+  {id:"L2.5", lane:"A", title:"让 Agent 操作浏览器", desc:"突破 API 边界，跑登录态、后台、公开网页的重复体力活。", time:"45 min", level:"⭐⭐"},
+  {id:"L3",   lane:"B", title:"Prompt 工程的最小够用版", desc:"角色 / 上下文 / 约束 / 产物 4 要素模板。", time:"35 min", level:"⭐"},
+  {id:"L4",   lane:"B", title:"上下文管理：搭建你的 LLM Wiki", desc:"让 Agent 记得住你和你的产品。", time:"50 min", level:"⭐⭐"},
+  {id:"L4.5", lane:"B", title:"多模态：截图 / 设计稿 / 报错图", desc:"把 PM 每天看到的图直接交给 Agent 解析。", time:"30 min", level:"⭐"},
+  {id:"L5",   lane:"B", title:"Skill 化：把做一次沉淀为团队资产", desc:"Skill 三要素：触发、流程、产物。", time:"60 min", level:"⭐⭐"},
+  {id:"L6",   lane:"C", title:"Agent + 企业 CLI（飞书 lark-cli）", desc:"CLI 是 Agent 的手脚延伸。", time:"45 min", level:"⭐⭐"},
+  {id:"L7",   lane:"C", title:"数据落点：文档 / 表格 / Wiki", desc:"什么进文档、什么进多维表格、什么进 wiki。", time:"40 min", level:"⭐⭐"},
+  {id:"L8",   lane:"C", title:"代码协作：MR 评审 / 单测 / 原型", desc:"PM 也能 review MR、跑通原型。", time:"50 min", level:"⭐⭐⭐"},
+  {id:"L9",   lane:"C", title:"端到端工作流：跑通闭环", desc:"周报全链路：调研 → HTML → 摘要 → 飞书发送。", time:"75 min", level:"⭐⭐⭐"},
+  {id:"L10",  lane:"D", title:"边界与安全：哪些事 Agent 不能独自做", desc:"数据红线 / 默认人工确认 / diff 预览。", time:"35 min", level:"⭐⭐"},
+  {id:"L11",  lane:"D", title:"团队化：Skill 共享、版本与 Review", desc:"写出第一个能给同事用的 Skill。", time:"50 min", level:"⭐⭐⭐"},
+  {id:"L12",  lane:"D", title:"自我进化：找出工作中的 10 个 Agent 机会", desc:'输出"我的 Agent 机会清单 v1"。', time:"60 min", level:"⭐⭐"}
+];
+
+const LANE_META = {
+  A:{no:"模块 A", name:"认知与上手"},
+  B:{no:"模块 B", name:"生产力构建"},
+  C:{no:"模块 C", name:"企业接入"},
+  D:{no:"模块 D", name:"安全与团队"}
+};
+
+const PATHS = {
+  all: LESSONS.map(l=>l.id),
+  A:   ["L0","L1","L2","L5"],
+  B:   LESSONS.map(l=>l.id),
+  C:   ["L3","L4","L6","L7","L9","L11"],
+  D:   ["L0","L2","L2.5","L4.5"]
+};
+
+/* =================================================
+   PM Toggle
+   ================================================= */
+const pmGrid = document.getElementById("pmGrid");
+const pmSwitch = document.getElementById("pmSwitch");
+let pmMode = "old";
+
+function renderPM(initial=false){
+  const data = PM_DATA[pmMode];
+  if(initial){
+    pmGrid.innerHTML = data.map(d=>`
+      <div class="pm-cell">
+        <div class="label">${d.label}</div>
+        <div class="value">${d.value}</div>
+      </div>`).join("");
+    return;
+  }
+  [...pmGrid.children].forEach((cell,i)=>{
+    cell.classList.add("changed");
+    cell.querySelector(".value").textContent = data[i].value;
+    setTimeout(()=>cell.classList.remove("changed"), 700);
+  });
+}
+renderPM(true);
+
+pmSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const mode = btn.dataset.mode;
+    if(mode===pmMode) return;
+    pmMode = mode;
+    pmSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b===btn));
+    pmSwitch.classList.toggle("right", mode==="new");
+    renderPM();
+  });
+});
+
+/* =================================================
+   Swimlanes / Lessons
+   ================================================= */
+const swimlanes = document.getElementById("swimlanes");
+const STORAGE_KEY = "agentOnboarding.progress.v1";
+let doneSet = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
+
+function lessonHref(id){ return `lessons/${id}.html`; }
+
+function renderMap(){
+  const lanes = ["A","B","C","D"];
+  swimlanes.innerHTML = lanes.map(lane=>{
+    const meta = LANE_META[lane];
+    const cards = LESSONS.filter(l=>l.lane===lane).map(l=>{
+      const done = doneSet.has(l.id);
+      return `
+        <a class="lesson-card ${done?'done':''}" href="${lessonHref(l.id)}" data-id="${l.id}">
+          <div class="top">
+            <span class="num">${l.id}</span>
+            <span class="check">✓</span>
+          </div>
+          <div class="title">${l.title}</div>
+          <div class="desc">${l.desc}</div>
+          <div class="footer">
+            <span class="pip">⏱ ${l.time}</span>
+            <span class="pip">${l.level}</span>
+          </div>
+        </a>`;
+    }).join("");
+    return `
+      <div class="lane">
+        <div class="lane-label lane-${lane}">
+          <span class="lane-no">${meta.no}</span>
+          <span>${meta.name}</span>
+        </div>
+        <div class="lane-cards lane-${lane}">${cards}</div>
+      </div>`;
+  }).join("");
+  // Inject lane CSS variable into each card
+  document.querySelectorAll(".lane-cards").forEach(group=>{
+    const lane = [...group.classList].find(c=>c.startsWith("lane-") && c.length===6).slice(-1);
+    group.querySelectorAll(".lesson-card").forEach(card=>{
+      card.style.setProperty("--lane-color", `var(--${lane})`);
+    });
+  });
+}
+
+renderMap();
+
+/* =================================================
+   Path Filter
+   ================================================= */
+const pathChips = document.getElementById("pathChips");
+let activePath = "all";
+
+pathChips.querySelectorAll(".path-chip").forEach(chip=>{
+  chip.addEventListener("click",()=>{
+    activePath = chip.dataset.path;
+    pathChips.querySelectorAll(".path-chip").forEach(c=>c.classList.toggle("active", c===chip));
+    applyPath();
+  });
+});
+
+function applyPath(){
+  const set = new Set(PATHS[activePath]);
+  document.querySelectorAll(".lesson-card").forEach(card=>{
+    const id = card.dataset.id;
+    if(activePath==="all"){
+      card.classList.remove("dim","in-path");
+    }else{
+      const inPath = set.has(id);
+      card.classList.toggle("dim", !inPath);
+      card.classList.toggle("in-path", inPath);
+    }
+  });
+}
+
+/* =================================================
+   Progress Ring + KPI
+   ================================================= */
+const ring = document.getElementById("progressRing");
+const progressText = document.getElementById("progressText");
+const kpiRate = document.getElementById("kpiRate");
+const C = 2*Math.PI*15;
+
+function renderProgress(){
+  const done = doneSet.size;
+  const total = LESSONS.length;
+  const ratio = done/total;
+  ring.setAttribute("stroke-dasharray", `${C*ratio} ${C*(1-ratio)}`);
+  progressText.textContent = `${done} / ${total} 讲`;
+  if(kpiRate) kpiRate.innerHTML = `${(ratio*100).toFixed(1)}% <span class="k-delta">${done > 0 ? '+' + done : ''}</span>`;
+}
+renderProgress();
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(!confirm("确认重置全部学习进度？")) return;
+  doneSet = new Set();
+  localStorage.removeItem(STORAGE_KEY);
+  renderMap(); applyPath(); renderProgress();
+});
+
+window.addEventListener("storage", e=>{
+  if(e.key===STORAGE_KEY){
+    doneSet = new Set(JSON.parse(e.newValue||"[]"));
+    renderMap(); applyPath(); renderProgress();
+  }
+});
+
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden){
+    doneSet = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]"));
+    renderMap(); applyPath(); renderProgress();
+  }
+});
+</script>
+</body>
+</html>

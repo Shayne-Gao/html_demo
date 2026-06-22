@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>L0 · Chat vs Agent | PM 培训学习平台</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  /* ============ Theme: Dark ============ */
+  html[data-theme="dark"]{
+    --bg:#0b0d12; --bg-soft:#11141b; --bg-card:#161a23; --bg-card-hover:#1c2230;
+    --border:#252b39; --border-strong:#323a4d;
+    --text:#e6e8ee; --text-soft:#a4abbb; --text-mute:#6b7186;
+    --accent:#7c5cff; --accent-2:#22d3ee; --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399; --danger:#f87171; --warn:#fbbf24;
+    --A:#22d3ee; --code-bg:#0d1018; --code-border:#1f2533;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px; --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+
+  /* ============ Theme: Stealth ============ */
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8; --bg-soft:#eceff3; --bg-card:#ffffff; --bg-card-hover:#fafbfc;
+    --border:#e4e7eb; --border-strong:#cbd0d8;
+    --text:#1f2329; --text-soft:#4e5969; --text-mute:#8a93a6;
+    --accent:#1664ff; --accent-2:#0e62e3; --accent-soft:#e6f0ff;
+    --success:#00a870; --danger:#f53f3f; --warn:#ff7d00;
+    --A:#1664ff; --code-bg:#f7f8fa; --code-border:#e4e7eb;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px; --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:var(--font-mono);font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+  strong{color:var(--text);font-weight:600}
+  ul,ol{padding-left:1.6em}
+  li{margin:.3em 0}
+
+  /* ============ Top Bar ============ */
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mute)}
+  .breadcrumb a{color:var(--text-soft)}
+  .breadcrumb .current{color:var(--text);font-weight:500}
+  .breadcrumb .sep{color:var(--text-mute)}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+
+  .theme-switch,.track-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  .theme-switch button,.track-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1;white-space:nowrap}
+  .theme-switch button.active,.track-switch button.active{color:#fff}
+  .theme-switch .ind,.track-switch .ind{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s}
+
+  .nav-btn{font-size:12px;color:var(--text-soft);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* ============ Layout ============ */
+  .layout{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:flex-start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static !important}}
+  .article{padding:32px 0 96px;min-width:0}
+  .sidebar{position:sticky;top:64px;padding:24px 0;max-height:calc(100vh - 64px);overflow:auto}
+
+  /* ============ Article ============ */
+  .lesson-header{margin-bottom:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  .lesson-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-mute);margin-bottom:12px;align-items:center}
+  .lesson-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-weight:600}
+  .lesson-meta .sep{width:1px;height:12px;background:var(--border)}
+  h1.lesson-title{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.3;margin-bottom:10px}
+  .lesson-tagline{color:var(--text-soft);font-size:15px;font-style:italic;border-left:3px solid var(--accent);padding-left:12px;margin-top:8px}
+
+  h2.section-h{font-size:20px;font-weight:600;letter-spacing:-.3px;margin:48px 0 14px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h2.section-h .num{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--accent)}
+
+  h3.step-h{font-size:17px;font-weight:600;margin:28px 0 10px;color:var(--text);display:flex;align-items:center;gap:10px}
+  h3.step-h .badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+
+  .step-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+  .label-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--text)}
+  .label-row .icon{font-size:14px}
+  .label-row.tone-warn{color:var(--warn)}
+  .label-row.tone-shock{color:var(--accent)}
+
+  /* Prompt Box with track tabs */
+  .prompt-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);overflow:hidden;margin:8px 0 4px;position:relative}
+  .prompt-tabs{display:flex;align-items:center;gap:0;background:var(--bg-soft);border-bottom:1px solid var(--code-border);padding:0 6px}
+  .prompt-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text-mute);border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .prompt-tab:hover{color:var(--text-soft)}
+  .prompt-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .prompt-spacer{flex:1}
+  .prompt-copy{font-size:11px;color:var(--text-mute);padding:4px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s;display:inline-flex;align-items:center;gap:4px;margin-right:8px}
+  .prompt-copy:hover{color:var(--accent);border-color:var(--accent)}
+  .prompt-copy.copied{color:var(--success);border-color:var(--success);background:var(--bg-card)}
+  .prompt-body{font-family:var(--font-mono);font-size:13px;line-height:1.65;padding:14px 16px;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+  /* Inline notes */
+  .note-tip{background:var(--accent-soft);border:1px solid var(--accent);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-soft);margin:10px 0}
+  .note-tip strong{color:var(--accent)}
+  .note-warn{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;margin:10px 0}
+  .note-shock{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:14px;margin:14px 0}
+  .note-shock h4{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:700}
+
+  /* Track picker info */
+  .track-info{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;font-size:13px;color:var(--text-soft)}
+  .track-info table{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}
+  .track-info td{padding:4px 10px 4px 0;border-top:1px dashed var(--border)}
+  .track-info tr:first-child td{border-top:none;font-weight:600;color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .track-info code{font-size:.85em}
+
+  /* Demo: Chat vs Agent animation */
+  .demo-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0;box-shadow:var(--shadow-card)}
+  .demo-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .demo-head h3{font-size:15px;font-weight:600}
+  .demo-run{padding:6px 14px;background:var(--accent);color:#fff;border-radius:var(--radius-sm);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .demo-run:hover{background:var(--accent-2)}
+  .demo-run:disabled{opacity:.6;cursor:not-allowed}
+  .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  @media (max-width:600px){.demo-grid{grid-template-columns:1fr}}
+  .demo-col{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;min-height:360px;display:flex;flex-direction:column}
+  .demo-col-h{padding:10px 14px;background:var(--bg-card);border-bottom:1px solid var(--border);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .demo-col.chat .demo-col-h{color:var(--text-mute)}
+  .demo-col.agent .demo-col-h{color:var(--accent)}
+  .demo-tag{font-size:10px;font-weight:500;padding:2px 6px;border-radius:3px;margin-left:auto}
+  .demo-col.chat .demo-tag{background:rgba(0,0,0,.06);color:var(--text-mute)}
+  html[data-theme="dark"] .demo-col.chat .demo-tag{background:rgba(255,255,255,.06)}
+  .demo-col.agent .demo-tag{background:var(--accent-soft);color:var(--accent)}
+  .demo-body{padding:12px 14px;font-size:12px;flex:1;overflow:auto;font-family:var(--font-mono)}
+  .demo-line{display:flex;gap:8px;align-items:flex-start;margin:6px 0;opacity:0;transform:translateY(6px);transition:.3s}
+  .demo-line.show{opacity:1;transform:none}
+  .demo-line .ico{font-size:14px;line-height:1.2}
+  .demo-line .txt{color:var(--text-soft);line-height:1.55;flex:1;word-break:break-word}
+  .demo-line.tool .txt{color:var(--accent)}
+  .demo-line.warn .txt{color:var(--warn)}
+  .demo-line.ok .txt{color:var(--success)}
+
+  /* Lists with check */
+  .check-list{list-style:none;padding-left:0;margin:8px 0}
+  .check-list li{padding-left:28px;position:relative;margin:6px 0;font-size:14px}
+  .check-list li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;background:var(--bg-card);transition:.15s}
+  .check-list li.done::before{background:var(--success);border-color:var(--success);content:"✓";color:#fff;font-size:11px;text-align:center;line-height:11px;font-weight:700}
+  .check-list li{cursor:pointer}
+  .check-list li:hover::before{border-color:var(--accent)}
+  .check-list li.done{color:var(--text-soft)}
+
+  /* Deliverable / sidebar */
+  .deliv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card)}
+  .deliv-card h4{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .deliv-card pre{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--text-soft);background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:10px 12px;white-space:pre;overflow:auto}
+
+  /* Sidebar */
+  .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card)}
+  .sb-card h4{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .sb-progress{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mute);font-weight:400;text-transform:none;letter-spacing:0}
+  .sb-progress-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .sb-progress-bar div{height:100%;background:var(--success);transition:width .4s}
+
+  .toc-list{list-style:none;padding:0;margin:0}
+  .toc-list a{display:block;padding:6px 10px;font-size:13px;color:var(--text-soft);border-radius:var(--radius-sm);transition:.15s;text-decoration:none}
+  .toc-list a:hover{background:var(--bg-soft);color:var(--text)}
+  .toc-list a.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+
+  .complete-btn{width:100%;padding:12px;background:var(--success);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+  .complete-btn:hover{filter:brightness(1.05)}
+  .complete-btn.done{background:var(--bg-card);color:var(--success);border:1.5px solid var(--success)}
+
+  .mini-nav{display:flex;gap:8px;margin-top:32px}
+  .mini-nav a{flex:1;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-soft);transition:.15s;text-decoration:none}
+  .mini-nav a:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-nav .label{font-size:11px;color:var(--text-mute);margin-bottom:4px;display:block}
+  .mini-nav .title{color:var(--text);font-weight:500}
+  .mini-nav .next{text-align:right}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* Quiz block */
+  .quiz{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:var(--shadow-card)}
+  .quiz h4{font-size:14px;margin-bottom:12px;font-weight:600}
+  .quiz-q{margin:12px 0;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .quiz-q .q{font-size:13px;margin-bottom:8px;font-weight:500}
+  .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .quiz-opt{padding:5px 14px;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.15s;cursor:pointer}
+  .quiz-opt:hover{border-color:var(--accent)}
+  .quiz-opt.right{background:var(--success);color:#fff;border-color:var(--success)}
+  .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .quiz-explain{margin-top:8px;font-size:12px;color:var(--text-soft);display:none}
+  .quiz-explain.show{display:block}
+  .quiz-explain .right-tag{color:var(--success);font-weight:600}
+
+  /* Footer note */
+  .lesson-footer{margin-top:48px;padding:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);text-align:center;font-size:13px;color:var(--text-soft)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">PM 培训学习平台</a>
+      <span class="sep">/</span>
+      <a href="../index.html#map">课程地图</a>
+      <span class="sep">/</span>
+      <span class="current">L0 · Chat vs Agent</span>
+    </div>
+    <div class="topbar-right">
+      <div class="track-switch" id="trackSwitch" title="切换练手场景">
+        <div class="ind"></div>
+        <button data-track="backlog">📋 需求池</button>
+        <button data-track="meeting">📝 会议纪要</button>
+        <button data-track="news">📰 行业周报</button>
+      </div>
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button data-theme-btn="stealth">📊 摸鱼</button>
+        <button data-theme-btn="dark">🌙 暗色</button>
+      </div>
+      <a class="nav-btn" href="../index.html">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ====== ARTICLE ====== -->
+  <article class="article">
+
+    <header class="lesson-header">
+      <div class="lesson-meta">
+        <span class="lesson-badge">L0 · 模块 A 认知与上手</span>
+        <span>⏱ 30 min</span>
+        <span class="sep"></span>
+        <span>难度 ⭐</span>
+        <span class="sep"></span>
+        <span>当前练手场景：<strong id="currentTrackName" style="color:var(--accent)">需求池整理</strong></span>
+      </div>
+      <h1 class="lesson-title">Chat vs Agent：差别到底在哪</h1>
+      <p class="lesson-tagline">用同一个问题做两遍，亲手感受普通 LLM 与 Agent 的本质差别。</p>
+    </header>
+
+    <!-- ===== 1. 你将学会 ===== -->
+    <section id="s1">
+      <h2 class="section-h"><span class="num">1</span>你将学会</h2>
+      <p>勾选完成情况会自动同步到首页学习进度。</p>
+      <ul class="check-list" id="learnGoals">
+        <li data-goal="g1">我能用一个具体例子说清"Chat 和 Agent 差在哪"，不用任何术语</li>
+        <li data-goal="g2">我能识别一个工具是不是真正的 Agent（看它有没有"看-想-做-再看"的循环）</li>
+        <li data-goal="g3">我能判断"这个任务该用 Chat 还是该用 Agent"</li>
+      </ul>
+    </section>
+
+    <!-- ===== 2. 背景小知识 ===== -->
+    <section id="s2">
+      <h2 class="section-h"><span class="num">2</span>背景小知识</h2>
+      <p>把 LLM 想象成一个<strong>只会动嘴、不会动手的超级实习生</strong>。</p>
+      <ul>
+        <li><strong>普通 Chat</strong>：你问一句，它答一句。它聪明但被关在屋子里——不能上网、不能写文件、不能点按钮。</li>
+        <li><strong>Agent</strong>：同一个实习生，但<strong>给了它键盘、浏览器、文件柜的钥匙</strong>。你给它一个目标，它会<strong>自己决定先做什么、再看结果、再决定下一步</strong>，直到完成或卡住。</li>
+      </ul>
+      <p>差别不在模型大小，而在<strong>"它能不能动手 + 能不能多步连贯地动"</strong>。</p>
+      <div class="note-tip"><strong>核心公式：</strong>Agent = LLM × 工具 × 自主循环。后面所有讲义都建立在这一个直觉上。</div>
+
+      <details class="inline-glossary" style="margin-top:14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px">
+        <summary style="cursor:pointer;font-weight:600;font-size:14px;color:var(--text);padding:6px 0">📖 5 个核心词建立 Agent 直觉（点开速读，不必现在搞懂全部）</summary>
+        <div style="padding:6px 0 10px;font-size:13.5px;line-height:1.7;color:var(--text-soft)">
+          <p style="margin:8px 0"><strong>1. Agent（智能体）</strong> · 能自己"看-想-做-再看"的 LLM。给目标→主动调工具→看结果→决定下一步，直到完成或卡住。<em>把它当成需要你把目标讲清楚的实习生。</em></p>
+          <p style="margin:8px 0"><strong>2. Tool（工具）</strong> · Agent 的"手脚"。读写文件、搜网、跑命令、调企业 API。<em>模型本身只会"想"，能不能"做事"全靠 Tool。</em></p>
+          <p style="margin:8px 0"><strong>3. Skill（技能 / 工作流封装）</strong> · 把"提示词 + 步骤 + 约束 + 产物路径"打包，让 Agent 下次稳定复现。<em>Skill 之于 Agent，就像 SOP 之于团队——是 Agent 时代真正可累积的生产资料。</em></p>
+          <p style="margin:8px 0"><strong>4. Context（上下文）</strong> · 这一次回答时它"能看到的所有信息"。窗口有限会被挤掉。<em>当你觉得 Agent "变笨了"，多半不是模型差，而是上下文管理不好。L4 会教解法。</em></p>
+          <p style="margin:8px 0"><strong>5. RAG / LLM Wiki</strong> · 让 Agent 每次回答前先去外部知识库查一下再答。<em>与其每次粘贴背景，不如一次性写进 <code>llm-wiki/</code>。L4 会带你建一个最简版。</em></p>
+          <p style="margin:10px 0 4px;font-size:12px;color:var(--text-mute)">进阶概念（先不用懂）：MCP（L6/L8）· Plan/Spec Mode（L9）· Human-in-the-loop（L10）· Eval（L11+）· Multi-Agent（进阶选读）。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===== Demo: Chat vs Agent ===== -->
+    <div class="demo-section">
+      <div class="demo-head">
+        <h3>🧪 互动演示：同一个问题分别给 Chat 和 Agent</h3>
+        <button class="demo-run" id="demoRun">▶ 开始演示</button>
+      </div>
+      <p style="font-size:13px;color:var(--text-soft);margin-bottom:6px">点击运行，观察两边处理同一个问题的方式差异。</p>
+      <div class="demo-grid">
+        <div class="demo-col chat">
+          <div class="demo-col-h">💬 普通 Chat<span class="demo-tag">只会说</span></div>
+          <div class="demo-body" id="demoChat"></div>
+        </div>
+        <div class="demo-col agent">
+          <div class="demo-col-h">🤖 Agent<span class="demo-tag">会动手</span></div>
+          <div class="demo-body" id="demoAgent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 3. 准备工作 ===== -->
+    <section id="s3">
+      <h2 class="section-h"><span class="num">3</span>准备工作</h2>
+      <p style="font-size:13.5px;color:var(--text-soft);margin-bottom:6px">点击勾选——以下都是 L0 开始前需要就位的东西。全部约 20–40 分钟（取决于 lark-cli 是否之前装过）。</p>
+      <ul class="check-list" id="prepList">
+        <li data-prep="p1"><strong>Agent 客户端可用</strong>：Codex / Claude Code / Trae 任选其一，能跑通"帮我列一下今天的日期"这种最小请求</li>
+        <li data-prep="p2"><strong>工作目录已建好</strong>：在常用工作盘下建一个空目录 <code>pm-agent-lab/</code>（建议放在 iCloud / OneDrive / 公司云盘里）</li>
+        <li data-prep="p3"><strong>已粗读上一节"5 个核心词"</strong>（Agent / Tool / Skill / Context / RAG）</li>
+        <li data-prep="p4"><strong>留出 30 分钟不被打断</strong> 的时间做 L0</li>
+        <li data-prep="p5"><strong>两个对照窗口已开</strong>：A = 普通 Chat（豆包/ChatGPT 网页版） · B = Agent 客户端</li>
+        <li data-prep="p6"><strong>（可选）企业办公 CLI 可用</strong>：C 篇章 L6–L9 才用得上，A/B 篇章可跳过。本手册以飞书 <code>lark-cli</code> 为例；如果你公司用钉钉、企微、Notion、Slack 等其他办公套件，把对应的 CLI / SDK / API 同等代入即可</li>
+      </ul>
+
+      <details class="env-detail" style="margin-top:10px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px">
+        <summary style="cursor:pointer;font-weight:600;font-size:14px;color:var(--text);padding:6px 0">⚙️ 环境与目录详解（点开看怎么装、怎么排坑）</summary>
+        <div style="padding:8px 0 10px;font-size:13.5px;line-height:1.7;color:var(--text-soft)">
+
+          <h4 style="margin:10px 0 4px;color:var(--text);font-size:14px">① 选定一款 Agent 客户端</h4>
+          <p style="margin:4px 0">任选其一，公司允许即可。本手册的 prompt 在三者上都验证过：</p>
+          <table style="width:100%;font-size:12.5px;border-collapse:collapse;margin:6px 0">
+            <thead><tr style="text-align:left;color:var(--text-mute);border-bottom:1px solid var(--border)">
+              <th style="padding:4px 8px 4px 0">客户端</th><th style="padding:4px 8px">适合谁</th><th style="padding:4px 0">备注</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:4px 8px 4px 0"><strong>Codex / ChatGPT Agent Mode</strong></td><td style="padding:4px 8px">对终端不熟、希望开箱即用</td><td style="padding:4px 0">入门最丝滑</td></tr>
+              <tr><td style="padding:4px 8px 4px 0"><strong>Claude Code</strong></td><td style="padding:4px 8px">喜欢命令行、要操作较多本地文件</td><td style="padding:4px 0">Skill 体系最成熟</td></tr>
+              <tr><td style="padding:4px 8px 4px 0"><strong>Trae（公司内部）</strong></td><td style="padding:4px 8px">字节同事</td><td style="padding:4px 0">集成度高、安全合规</td></tr>
+            </tbody>
+          </table>
+          <p style="margin:4px 0;font-size:12.5px;color:var(--text-mute)">后续讲义中所有 prompt 都直接给原文，不依赖某一款客户端的特殊语法。</p>
+
+          <h4 style="margin:14px 0 4px;color:var(--text);font-size:14px">② 工作目录</h4>
+          <p style="margin:4px 0">在常用工作盘下，建一个空目录作为整门课的<strong>根</strong>：</p>
+          <pre style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:12.5px;margin:6px 0">pm-agent-lab/</pre>
+          <p style="margin:4px 0">每一讲都会在它下面新增子目录，不要和别的项目混在一起。强烈建议放在你日常会备份的位置（iCloud / OneDrive / 公司云盘任选）。</p>
+
+          <h4 style="margin:14px 0 4px;color:var(--text);font-size:14px">③ 企业办公 CLI（C 篇章必选，A/B 不强制）</h4>
+          <div class="note-tip" style="margin:6px 0"><strong>口径说明：</strong>本手册以飞书 <code>lark-cli</code> 为示例工具，因为它在字节内部最完整、覆盖 doc / sheets / im / calendar / base / wiki。如果你的公司用钉钉、企微、Notion、Slack、Microsoft 365 等其他办公套件，把对应的 CLI / Open API / 官方 SDK 同等代入即可——课程讲的是"如何让 Agent 调企业能力"这件事，不绑定某一家厂商。</div>
+          <p style="margin:4px 0">C 篇章（L6–L9）会大量使用企业原生能力（文档 / 表格 / 即时消息 / 日历 / 多维表 / 知识库）。以 lark-cli 为例的最小安装步骤：</p>
+          <ol style="margin:4px 0 4px 18px;padding:0">
+            <li>按公司内文档安装 <code>lark-cli</code>（其他套件请安装对应 CLI / SDK）</li>
+            <li>第一次使用前执行：<code>lark-cli config init</code></li>
+            <li>登录授权：<code>lark-cli auth login</code></li>
+            <li>验证：随便跑一个只读命令，例如查一下今天的日程</li>
+          </ol>
+          <p style="margin:4px 0;font-size:12.5px;color:var(--text-mute)">遇到 <code>Permission denied</code> 几乎都是 scope/权限范围不全；按提示加 scope、重新授权即可。其他套件的等价问题通常也是"OAuth 授权范围不够"，处理思路一致。</p>
+
+          <h4 style="margin:14px 0 4px;color:var(--text);font-size:14px">④ 常见踩坑</h4>
+          <table style="width:100%;font-size:12.5px;border-collapse:collapse;margin:6px 0">
+            <thead><tr style="text-align:left;color:var(--text-mute);border-bottom:1px solid var(--border)">
+              <th style="padding:4px 8px 4px 0">现象</th><th style="padding:4px 8px">多半原因</th><th style="padding:4px 0">处理</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:4px 8px 4px 0">Agent 一直说"我无法访问外网"</td><td style="padding:4px 8px">客户端没开联网 / 没装 web 工具</td><td style="padding:4px 0">切到带联网能力的模式</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">Agent 说"我没有权限写入文件"</td><td style="padding:4px 8px">客户端在受限模式</td><td style="padding:4px 0">启用"允许读写本地文件"权限</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">同样的 prompt 结果差异很大</td><td style="padding:4px 8px">上下文不一致 / 模型随机性</td><td style="padding:4px 0">把 prompt 写得更精确（L3 会教）</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">lark-cli 报 <code>Permission denied</code></td><td style="padding:4px 8px">scope 不全</td><td style="padding:4px 0">重新跑 <code>auth login</code> 并加上提示的 scope</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <div class="track-info">
+        <strong>🎯 三选一练手主线</strong>
+        <p style="margin-top:6px">每讲都给三种场景的 prompt，你可以在<strong>顶栏切换</strong>切到最贴近你工作的那个。每讲只需选 1 个跑透。</p>
+        <table>
+          <tr><td>场景</td><td>适合谁</td><td>主线产物路径</td></tr>
+          <tr><td>📋 需求池整理</td><td>几乎所有 PM</td><td><code>pm-agent-lab/backlog-lab/L0-demo/</code></td></tr>
+          <tr><td>📝 会议纪要跟进</td><td>跨团队协作 PM</td><td><code>pm-agent-lab/meeting-lab/L0-demo/</code></td></tr>
+          <tr><td>📰 行业 / 竞品周报</td><td>战略 / 对外型 PM</td><td><code>pm-agent-lab/news-lab/L0-demo/</code></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== 4. 实战任务 ===== -->
+    <section id="s4">
+      <h2 class="section-h"><span class="num">4</span>实战任务</h2>
+      <p>我们让两个窗口完成<strong>同一件事</strong>。注意观察的不是答案本身，而是<strong>它们处理问题的方式</strong>。</p>
+
+      <!-- Step 1 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">1</span>在 Chat 窗口（窗口 A）问一遍</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让普通 Chat 给你"过去一周的素材整理"——根据你的练手场景。</p>
+
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step1">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">帮我把下面这一周散落在各处的需求线索（飞书 IM 提到的、邮件里收到的、用户访谈摘录），
+整理成 5–10 条候选需求，每条带：需求一句话描述、来源、初步价值判断。
+按重要性排序。
+
+[这里你想象贴入：3-5 段杂乱的来源原文]</pre>
+          <pre class="prompt-body" data-track-text="meeting">帮我从下面这一周的 3 段会议纪要里，提取出 5–10 个待办与决策事项，
+每条带：事项一句话描述、归属人（如纪要里有提到）、紧急度。
+按紧急度排序。
+
+[这里你想象贴入：3 段会议纪要全文]</pre>
+          <pre class="prompt-body" data-track-text="news">帮我整理过去一周 AI Agent 行业的 5–10 条重要新闻，每条带：标题、来源、一句话摘要。
+按重要性排序。</pre>
+        </div>
+
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>它会<strong>直接给一段 markdown 列表</strong>，看起来很整齐。</li>
+          <li>仔细看会发现一个或多个问题：时间不准、来源含糊、链接是编的、问"刚才那些来源能确认吗"它会道歉但还是给不出真链接。</li>
+        </ul>
+
+        <div class="note-warn"><strong>⚠️ 偏差纠偏</strong><br>
+          · 它说"我无法访问实时信息"——<strong>这就是答案，恰恰证明它是普通 Chat</strong>。继续下一步。<br>
+          · 它居然给了带链接的真实新闻 → 多半是它接了搜索插件，已经偏 Agent 了。换一个不带搜索的更纯粹的 Chat 再试。
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">2</span>在 Agent 窗口（窗口 B）问一遍</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">同样的问题给 Agent，但<strong>先什么都不要补充</strong>，看它自己怎么动。</p>
+
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step2">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">请你扮演 PM 助理。读取我桌面上的这一周需求来源原文（我把它们汇总在
+pm-agent-lab/backlog-lab/L0-demo/sources.md 里，你可以直接打开读），
+帮我整理成 5–10 条候选需求，每条字段：
+- 需求一句话描述（动词+宾语+受益对象）
+- 来源（具体到哪条飞书消息 / 哪段访谈）
+- 初步价值判断（1-2 句话）
+- 我建议的下一步动作
+按"价值大、待办近"两条线综合排序。</pre>
+          <pre class="prompt-body" data-track-text="meeting">请你扮演 PM 助理。读取我桌面上 pm-agent-lab/meeting-lab/L0-demo/notes/
+目录下这一周所有 .md 会议纪要，提取出 5–10 个待办与决策事项，每条字段：
+- 事项一句话描述
+- 归属人（纪要里若没有，就标"待指派"）
+- 紧急度（高/中/低）+ 截止建议日期
+- 该事项关联的会议名/日期
+按紧急度排序，并在末尾告诉我"哪几条没有归属人需要我决定"。</pre>
+          <pre class="prompt-body" data-track-text="news">帮我调研过去 7 天 AI Agent 行业的 5–10 条重要新闻，每条带：标题、来源链接、发布日期、一句话摘要。
+按重要性排序。</pre>
+        </div>
+
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>它<strong>不会立刻给答案</strong>，而是会先做一连串动作：调用 <code>web search</code> / <code>read file</code> / <code>list dir</code>，"我搜到 X 条，正在整理"。</li>
+          <li>最终给你的列表里，链接可点、日期真实、来源具体。</li>
+        </ul>
+        <div class="note-tip"><strong>📝 重点观察</strong>：Agent 在动手之前你能看到它的"思考-动作-观察"循环。<strong>这就是它和 Chat 的根本差别。</strong></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">3</span>让 Agent 把结果"存到本地"——这是 Chat 完全做不到的</h3>
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 把刚才的清单<strong>写到你电脑的指定目录</strong>。这是本讲最关键的一步——<strong>让你亲眼看到 Agent 在动手</strong>。</p>
+
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step3">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">把刚才整理的需求候选清单写到我本地：
+- 路径：pm-agent-lab/backlog-lab/L0-demo/backlog.md
+- 格式：markdown 表格，列分别是 需求描述 / 来源 / 价值判断 / 下一步 / 提出日期
+- 如果目录不存在，请先创建
+完成后告诉我你创建/修改了哪些文件。</pre>
+          <pre class="prompt-body" data-track-text="meeting">把刚才整理的待办与决策清单写到我本地：
+- 路径：pm-agent-lab/meeting-lab/L0-demo/follow-up.md
+- 格式：markdown 表格，列分别是 事项 / 归属人 / 紧急度 / 截止日期 / 来源会议
+- 如果目录不存在，请先创建
+完成后告诉我你创建/修改了哪些文件。</pre>
+          <pre class="prompt-body" data-track-text="news">把刚才整理的新闻清单写到我本地：
+- 路径：pm-agent-lab/news-lab/L0-demo/news.md
+- 格式：markdown 表格，列分别是 标题 / 来源 / 日期 / 摘要 / 链接
+- 如果目录不存在，请先创建
+完成后告诉我你创建/修改了哪些文件。</pre>
+        </div>
+
+        <div class="note-shock">
+          <h4>🤯 这一步要让你"破防"</h4>
+          现在回到窗口 A，让那个普通 Chat 也"把结果写到我本地 pm-agent-lab/..."。<br>
+          它会<strong>很有礼貌地告诉你它做不到</strong>——它只能在对话框里输出文字，没有手。<br>
+          <strong>这就是 Chat vs Agent 最直观的差别。</strong>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">4</span>让 Agent 自己"复盘"刚才做了什么</h3>
+        <p style="font-size:14px;color:var(--text-soft)">让它用自己的话总结一遍它刚才的动作链。这个总结你后面会用到，三个场景通用。</p>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step4">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="all" style="border-bottom-color:var(--accent);color:var(--accent)">三场景通用</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="all">请用 5 行以内回答：
+1) 你刚才一共调用了哪些工具？
+2) 它们是按什么顺序调用的？
+3) 在哪一步你做了一次"看到结果再决定下一步"的判断？
+4) 这件事如果不让你联网/不让你写文件，能完成吗？
+5) 这是 Chat 做不到、但你能做到的核心原因是什么？</pre>
+        </div>
+        <p style="font-size:13px;color:var(--text-soft);margin-top:8px">把这段回答<strong>保存到</strong> <code>&lt;场景&gt;-lab/L0-demo/agent-vs-chat.md</code>，作为本讲学习笔记。</p>
+      </div>
+    </section>
+
+    <!-- ===== 5. 自检 ===== -->
+    <section id="s5">
+      <h2 class="section-h"><span class="num">5</span>自检清单</h2>
+      <ul class="check-list" id="selfCheck">
+        <li data-check="c1">我能拿出 <code id="deliverPath">backlog.md</code> 这个文件给同事看</li>
+        <li data-check="c2">我能用 30 秒讲清"Chat 和 Agent 差在哪"，例子就是我刚才做的这件事</li>
+        <li data-check="c3">我能判断下面三个任务该用 Chat 还是 Agent（解释法规条文 / 把法规要点存表格到本地 / 跨竞品调研写到 PRD）</li>
+      </ul>
+
+      <div class="quiz">
+        <h4>🧠 快速自测</h4>
+        <div class="quiz-q">
+          <div class="q">Q1. 下列哪个最准确地描述 Agent 与 Chat 的差别？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. Agent 用的模型更大、更聪明</button>
+            <button class="quiz-opt">B. Agent 训练数据比 Chat 新</button>
+            <button class="quiz-opt">C. Agent 有工具调用 + 看结果决定下一步的循环</button>
+            <button class="quiz-opt">D. Agent 必须联网</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：Agent 的本质是 LLM × 工具 × 自主循环，模型大小和是否联网都不是充要条件。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q2. 下面哪一个任务<strong>必须</strong>用 Agent？</div>
+          <div class="quiz-opts" data-correct="1">
+            <button class="quiz-opt">A. 解释一段法规条文的含义</button>
+            <button class="quiz-opt">B. 把竞品最近一周动态汇总并写到我本地的 PRD 附录</button>
+            <button class="quiz-opt">C. 翻译一段英文产品介绍</button>
+            <button class="quiz-opt">D. 帮我润色一段邮件文案</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 B</span>：B 同时需要"联网调研 + 写本地文件"两类工具，Chat 都做不到。其余三项纯文本任务，Chat 即可。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. 思考题 & 下一讲 ===== -->
+    <section id="s6">
+      <h2 class="section-h"><span class="num">6</span>思考题 & 下一讲引子</h2>
+      <p><strong>思考题</strong></p>
+      <ul>
+        <li>回看 Step 2 的 prompt，如果你是 Agent，你会怎么决定<strong>搜哪些关键词</strong>？这反映：你给目标越清晰，Agent 走弯路越少。</li>
+        <li>在你过去一周的工作里，<strong>有哪 3 个任务</strong>是你曾经"问过 Chat 但发现只能给空话"的？记下来，L12 时回来检视。</li>
+      </ul>
+      <p style="margin-top:12px"><strong>下一讲引子</strong></p>
+      <p>L1 我们会用同样的"调研 + 落盘"流程，但把它做得更<strong>结构化</strong>——不是输出 markdown，而是输出可被下游消费的 JSON / 表格，为 L2 用 HTML 做可视化打地基。</p>
+    </section>
+
+    <!-- ===== 7. 交付物 ===== -->
+    <section id="s7">
+      <h2 class="section-h"><span class="num">7</span>本讲交付物</h2>
+      <p>按你选定的场景，下面三选一即可：</p>
+      <div class="deliv-card">
+        <h4>📁 目录结构</h4>
+        <pre id="deliverTree">pm-agent-lab/
+└── backlog-lab/
+    └── L0-demo/
+        ├── backlog.md           # Agent 写入的需求候选清单
+        └── agent-vs-chat.md     # Agent 自己复盘的"我和 Chat 的差别"</pre>
+      </div>
+    </section>
+
+    <!-- ===== 8. 副线 ===== -->
+    <section id="s8">
+      <h2 class="section-h"><span class="num">8</span>副线练习（可选）</h2>
+      <p>本讲主线已可在三个场景切换，副线建议<strong>再用另一个场景跑一遍 Step 1–3</strong>——你会非常直观地感受到："同一套 Agent 能力，套到完全不同的工作场景上，方法是一样的"。</p>
+      <p>也可以挑一个更贴近你真实工作的场景：</p>
+      <ul>
+        <li>用户反馈：过去一周 App Store / 小红书 / 微博上对某产品的差评热点</li>
+        <li>行业政策：过去一个月 <code>&lt;你所在行业&gt;</code> 的政策/合规变化</li>
+        <li>OKR 进度：当前季度你部门 OKR 各 KR 的最新进展（来自飞书文档）</li>
+      </ul>
+    </section>
+
+    <!-- 上一讲 / 下一讲 -->
+    <nav class="mini-nav">
+      <a href="../index.html"><span class="label">← 返回</span><span class="title">课程目录</span></a>
+      <a href="L1.html" class="next"><span class="label">下一讲 →</span><span class="title">L1 · 操作本地文件</span></a>
+    </nav>
+
+    <div class="lesson-footer">学完这一讲，你已经亲手感受过 Agent 的"动手能力"。下一讲我们会把"调研 + 落盘"做得更结构化。</div>
+
+  </article>
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sb-card">
+      <h4>本讲进度
+        <span class="sb-progress">
+          <span class="sb-progress-bar"><div id="sbBar" style="width:0%"></div></span>
+          <span id="sbText">0%</span>
+        </span>
+      </h4>
+      <ul class="toc-list">
+        <li><a href="#s1">1. 你将学会</a></li>
+        <li><a href="#s2">2. 背景小知识</a></li>
+        <li><a href="#s3">3. 准备工作</a></li>
+        <li><a href="#s4">4. 实战任务</a></li>
+        <li><a href="#s5">5. 自检清单</a></li>
+        <li><a href="#s6">6. 思考题</a></li>
+        <li><a href="#s7">7. 交付物</a></li>
+        <li><a href="#s8">8. 副线练习</a></li>
+      </ul>
+    </div>
+
+    <div class="sb-card">
+      <h4>当前练手场景</h4>
+      <p style="font-size:13px;color:var(--text-soft)" id="sbTrackInfo">📋 需求池整理</p>
+      <p style="font-size:11px;color:var(--text-mute);margin-top:4px">顶栏可一键切换三场景，所有 prompt 联动。</p>
+    </div>
+
+    <div class="sb-card">
+      <h4>键盘快捷键</h4>
+      <p style="font-size:12px;color:var(--text-soft)">
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">1</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">2</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">3</kbd> 切换三场景<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">T</kbd> 切换主题
+      </p>
+    </div>
+
+    <button class="complete-btn" id="completeBtn">
+      <span id="completeText">✓ 标记本讲已学完</span>
+    </button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+const LESSON_ID = "L0";
+const TOTAL_LESSONS = 14;
+const THEME_KEY = "agentOnboarding.theme";
+const TRACK_KEY = "agentOnboarding.track";
+const PROGRESS_KEY = "agentOnboarding.progress.v1";
+const STATE_KEY = `agentOnboarding.${LESSON_ID}.state`;
+const html = document.documentElement;
+
+const TRACK_INFO = {
+  backlog: {name:"需求池整理",       emoji:"📋", deliverFile:"backlog.md",
+            tree:`pm-agent-lab/
+└── backlog-lab/
+    └── L0-demo/
+        ├── backlog.md           # Agent 写入的需求候选清单
+        └── agent-vs-chat.md     # Agent 自己复盘的"我和 Chat 的差别"`},
+  meeting: {name:"会议纪要跟进",     emoji:"📝", deliverFile:"follow-up.md",
+            tree:`pm-agent-lab/
+└── meeting-lab/
+    └── L0-demo/
+        ├── follow-up.md         # Agent 写入的待办与决策清单
+        └── agent-vs-chat.md     # Agent 自己复盘的"我和 Chat 的差别"`},
+  news:    {name:"行业 / 竞品周报", emoji:"📰", deliverFile:"news.md",
+            tree:`pm-agent-lab/
+└── news-lab/
+    └── L0-demo/
+        ├── news.md              # Agent 写入的新闻清单
+        └── agent-vs-chat.md     # Agent 自己复盘的"我和 Chat 的差别"`}
+};
+
+/* =============== Theme =============== */
+const themeSwitch = document.getElementById("themeSwitch");
+function applyTheme(theme){
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.themeBtn===theme));
+  moveIndicator(themeSwitch);
+  localStorage.setItem(THEME_KEY, theme);
+}
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =============== Track =============== */
+const trackSwitch = document.getElementById("trackSwitch");
+function applyTrack(track){
+  if(!TRACK_INFO[track]) track = "backlog";
+  localStorage.setItem(TRACK_KEY, track);
+  trackSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
+  moveIndicator(trackSwitch);
+  // Update prompts
+  document.querySelectorAll(".prompt-box").forEach(box=>{
+    const tabs = box.querySelectorAll(".prompt-tab");
+    const bodies = box.querySelectorAll(".prompt-body");
+    // Skip universal "all" prompt
+    const isUniversal = box.querySelector('[data-track-tab="all"]');
+    if(isUniversal){
+      bodies.forEach(b=>b.style.display="block");
+      return;
+    }
+    tabs.forEach(t=>t.classList.toggle("active", t.dataset.trackTab===track));
+    bodies.forEach(b=>{
+      b.style.display = b.dataset.trackText===track ? "block" : "none";
+    });
+  });
+  // Update labels
+  const info = TRACK_INFO[track];
+  document.getElementById("currentTrackName").textContent = info.name;
+  document.getElementById("sbTrackInfo").textContent = `${info.emoji} ${info.name}`;
+  document.getElementById("deliverPath").textContent = info.deliverFile;
+  document.getElementById("deliverTree").textContent = info.tree;
+}
+trackSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTrack(btn.dataset.track));
+});
+applyTrack(localStorage.getItem(TRACK_KEY) || "backlog");
+
+/* =============== Indicator =============== */
+function moveIndicator(switchEl){
+  const ind = switchEl.querySelector(".ind");
+  const active = switchEl.querySelector("button.active");
+  if(!ind || !active) return;
+  ind.style.width = active.offsetWidth + "px";
+  ind.style.transform = `translateX(${active.offsetLeft - 2}px)`;
+}
+window.addEventListener("resize",()=>{moveIndicator(themeSwitch);moveIndicator(trackSwitch)});
+
+/* =============== Tab click within prompt box =============== */
+document.querySelectorAll(".prompt-tab[data-track-tab]").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    const target = tab.dataset.trackTab;
+    if(target==="all") return;
+    applyTrack(target);
+  });
+});
+
+/* =============== Copy =============== */
+document.querySelectorAll(".prompt-copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box = btn.closest(".prompt-box");
+    const visible = [...box.querySelectorAll(".prompt-body")].find(b=>b.style.display!=="none") || box.querySelector(".prompt-body");
+    const text = visible.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = "✓ 已复制";
+      btn.classList.add("copied");
+      showToast("已复制 prompt 到剪贴板");
+      setTimeout(()=>{btn.textContent="📋 复制";btn.classList.remove("copied")}, 1500);
+    });
+  });
+});
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* =============== Demo animation =============== */
+const demoChat = [
+  {ico:"💬", txt:"用户：帮我整理过去一周的需求线索…", delay:300},
+  {ico:"🤔", txt:"思考中…", cls:"", delay:1000},
+  {ico:"📝", txt:"以下是几条候选需求（仅基于训练数据想象）：", delay:900},
+  {ico:"  ", txt:"1. 优化登录流程（来源：客服反馈）", delay:600},
+  {ico:"  ", txt:"2. 增加导出功能（来源：用户访谈）", delay:600},
+  {ico:"  ", txt:"3. ...", delay:500},
+  {ico:"⚠️", txt:"注意：以上内容是基于常见模式推测，无法访问你的真实数据。", cls:"warn", delay:900}
+];
+const demoAgent = [
+  {ico:"🤖", txt:"用户：帮我整理过去一周的需求线索…", delay:300},
+  {ico:"🔧", txt:"调用工具：list_dir(pm-agent-lab/backlog-lab/L0-demo/)", cls:"tool", delay:900},
+  {ico:"📂", txt:"找到 sources.md（126 行）", delay:700},
+  {ico:"🔧", txt:"调用工具：read_file(sources.md)", cls:"tool", delay:900},
+  {ico:"🧠", txt:"分析中：识别出 8 条需求线索…", delay:1000},
+  {ico:"🔧", txt:"调用工具：write_file(backlog.md)", cls:"tool", delay:900},
+  {ico:"✅", txt:"已写入 backlog.md（8 条候选需求，按价值排序）", cls:"ok", delay:600}
+];
+const demoRunBtn = document.getElementById("demoRun");
+const demoChatEl = document.getElementById("demoChat");
+const demoAgentEl = document.getElementById("demoAgent");
+
+function appendLine(container, line){
+  const div = document.createElement("div");
+  div.className = "demo-line " + (line.cls||"");
+  div.innerHTML = `<span class="ico">${line.ico}</span><span class="txt">${line.txt}</span>`;
+  container.appendChild(div);
+  // force reflow
+  div.offsetHeight;
+  div.classList.add("show");
+  container.scrollTop = container.scrollHeight;
+}
+
+async function runDemo(){
+  demoRunBtn.disabled = true;
+  demoRunBtn.textContent = "▶ 运行中…";
+  demoChatEl.innerHTML = "";
+  demoAgentEl.innerHTML = "";
+  // Run both columns roughly in parallel
+  const runChat = (async ()=>{
+    for(const l of demoChat){
+      await new Promise(r=>setTimeout(r,l.delay));
+      appendLine(demoChatEl, l);
+    }
+  })();
+  const runAgent = (async ()=>{
+    for(const l of demoAgent){
+      await new Promise(r=>setTimeout(r,l.delay));
+      appendLine(demoAgentEl, l);
+    }
+  })();
+  await Promise.all([runChat, runAgent]);
+  demoRunBtn.disabled = false;
+  demoRunBtn.textContent = "↻ 再来一次";
+}
+demoRunBtn.addEventListener("click", runDemo);
+
+/* =============== Check lists =============== */
+const STATE = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(STATE)); updateProgress(); }
+
+function bindCheckList(ulId, key){
+  const ul = document.getElementById(ulId);
+  if(!ul) return;
+  STATE[key] = STATE[key] || {};
+  ul.querySelectorAll("li").forEach(li=>{
+    const id = li.dataset.goal || li.dataset.prep || li.dataset.check;
+    if(STATE[key][id]) li.classList.add("done");
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      STATE[key][id] = li.classList.contains("done");
+      saveState();
+    });
+  });
+}
+bindCheckList("learnGoals","goals");
+bindCheckList("prepList","preps");
+bindCheckList("selfCheck","checks");
+
+/* =============== Progress =============== */
+function updateProgress(){
+  // Combined progress: each list contributes
+  const sources = [
+    {key:"goals",  count:3},
+    {key:"preps",  count:6},
+    {key:"checks", count:3},
+    {key:"quiz",   count:2}
+  ];
+  let done = 0, total = 0;
+  sources.forEach(s=>{
+    total += s.count;
+    if(STATE[s.key]) done += Object.values(STATE[s.key]).filter(Boolean).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("sbBar").style.width = pct + "%";
+  document.getElementById("sbText").textContent = pct + "%";
+}
+updateProgress();
+
+/* =============== Quiz =============== */
+document.querySelectorAll(".quiz-q").forEach((q,idx)=>{
+  const opts = q.querySelector(".quiz-opts");
+  const correct = parseInt(opts.dataset.correct, 10);
+  const explain = q.querySelector(".quiz-explain");
+  STATE.quiz = STATE.quiz || {};
+  if(STATE.quiz[`q${idx}`]){
+    opts.children[correct].classList.add("right");
+    explain.classList.add("show");
+  }
+  opts.querySelectorAll(".quiz-opt").forEach((opt,i)=>{
+    opt.addEventListener("click",()=>{
+      if(opts.querySelector(".right")) return; // already answered
+      if(i===correct){
+        opt.classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }else{
+        opt.classList.add("wrong");
+        opts.children[correct].classList.add("right");
+        STATE.quiz[`q${idx}`] = true; // count as attempted
+        saveState();
+      }
+      explain.classList.add("show");
+    });
+  });
+});
+
+/* =============== Mark complete =============== */
+const completeBtn = document.getElementById("completeBtn");
+const completeText = document.getElementById("completeText");
+function refreshCompleteUI(){
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  const isDone = doneSet.has(LESSON_ID);
+  completeBtn.classList.toggle("done", isDone);
+  completeText.textContent = isDone ? "✓ 已学完（点击取消）" : "✓ 标记本讲已学完";
+}
+completeBtn.addEventListener("click",()=>{
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  if(doneSet.has(LESSON_ID)){
+    doneSet.delete(LESSON_ID);
+  }else{
+    doneSet.add(LESSON_ID);
+    showToast(`L0 已标记为完成 · ${doneSet.size}/${TOTAL_LESSONS}`);
+  }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...doneSet]));
+  refreshCompleteUI();
+});
+refreshCompleteUI();
+
+/* =============== TOC active highlight =============== */
+const tocLinks = document.querySelectorAll(".toc-list a");
+const sections = [...document.querySelectorAll(".article section[id]")];
+function onScroll(){
+  let cur = sections[0];
+  const top = window.scrollY + 120;
+  for(const s of sections){
+    if(s.offsetTop <= top) cur = s;
+  }
+  tocLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#" + cur.id));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* =============== Keyboard shortcuts =============== */
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea")) return;
+  if(e.key==="1") applyTrack("backlog");
+  else if(e.key==="2") applyTrack("meeting");
+  else if(e.key==="3") applyTrack("news");
+  else if(e.key==="t" || e.key==="T") applyTheme(html.getAttribute("data-theme")==="dark"?"stealth":"dark");
+});
+
+/* =============== Cross-tab sync =============== */
+window.addEventListener("storage", e=>{
+  if(e.key===THEME_KEY) applyTheme(e.newValue);
+  else if(e.key===TRACK_KEY) applyTrack(e.newValue);
+  else if(e.key===PROGRESS_KEY) refreshCompleteUI();
+});
+</script>
+</body>
+</html>

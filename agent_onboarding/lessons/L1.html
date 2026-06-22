@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="stealth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>L1 · 让 Agent 第一次"动手" | PM 培训学习平台</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html[data-theme="dark"]{
+    --bg:#0b0d12; --bg-soft:#11141b; --bg-card:#161a23; --bg-card-hover:#1c2230;
+    --border:#252b39; --border-strong:#323a4d;
+    --text:#e6e8ee; --text-soft:#a4abbb; --text-mute:#6b7186;
+    --accent:#7c5cff; --accent-2:#22d3ee; --accent-soft:rgba(124,92,255,.18);
+    --success:#34d399; --danger:#f87171; --warn:#fbbf24;
+    --A:#22d3ee; --code-bg:#0d1018; --code-border:#1f2533;
+    --shadow:0 20px 48px -16px rgba(0,0,0,.6);
+    --shadow-card:0 1px 2px rgba(0,0,0,.3);
+    --topbar-bg:rgba(11,13,18,.7);
+    --pip-bg:rgba(255,255,255,.04);
+    --radius:14px; --radius-sm:8px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html[data-theme="stealth"]{
+    --bg:#f5f6f8; --bg-soft:#eceff3; --bg-card:#ffffff; --bg-card-hover:#fafbfc;
+    --border:#e4e7eb; --border-strong:#cbd0d8;
+    --text:#1f2329; --text-soft:#4e5969; --text-mute:#8a93a6;
+    --accent:#1664ff; --accent-2:#0e62e3; --accent-soft:#e6f0ff;
+    --success:#00a870; --danger:#f53f3f; --warn:#ff7d00;
+    --A:#1664ff; --code-bg:#f7f8fa; --code-border:#e4e7eb;
+    --shadow:0 4px 12px rgba(31,35,41,.06);
+    --shadow-card:0 1px 2px rgba(31,35,41,.04);
+    --topbar-bg:rgba(255,255,255,.92);
+    --pip-bg:#f5f6f8;
+    --radius:6px; --radius-sm:4px;
+    --font-sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    --font-mono:"SF Mono","Menlo","Consolas",monospace;
+  }
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+  code{font-family:var(--font-mono);font-size:.92em;background:var(--pip-bg);padding:1px 6px;border-radius:4px;border:1px solid var(--border)}
+  strong{color:var(--text);font-weight:600}
+  ul,ol{padding-left:1.6em}
+  li{margin:.3em 0}
+
+  .topbar{position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);background:var(--topbar-bg);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mute)}
+  .breadcrumb a{color:var(--text-soft)}
+  .breadcrumb .current{color:var(--text);font-weight:500}
+  .breadcrumb .sep{color:var(--text-mute)}
+  .topbar-right{display:flex;align-items:center;gap:10px}
+  .theme-switch,.track-switch{display:inline-flex;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:2px;position:relative}
+  .theme-switch button,.track-switch button{padding:5px 10px;border-radius:4px;font-size:12px;font-weight:500;color:var(--text-soft);transition:color .2s;display:inline-flex;align-items:center;gap:5px;position:relative;z-index:1;white-space:nowrap}
+  .theme-switch button.active,.track-switch button.active{color:#fff}
+  .theme-switch .ind,.track-switch .ind{position:absolute;top:2px;bottom:2px;background:var(--accent);border-radius:4px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s}
+  .nav-btn{font-size:12px;color:var(--text-soft);border:1px solid var(--border);padding:5px 10px;border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s}
+  .nav-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+  .layout{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:flex-start}
+  @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static !important}}
+  .article{padding:32px 0 96px;min-width:0}
+  .sidebar{position:sticky;top:64px;padding:24px 0;max-height:calc(100vh - 64px);overflow:auto}
+
+  .lesson-header{margin-bottom:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card)}
+  .lesson-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--text-mute);margin-bottom:12px;align-items:center}
+  .lesson-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius-sm);font-weight:600}
+  .lesson-meta .sep{width:1px;height:12px;background:var(--border)}
+  h1.lesson-title{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.3;margin-bottom:10px}
+  .lesson-tagline{color:var(--text-soft);font-size:15px;font-style:italic;border-left:3px solid var(--accent);padding-left:12px;margin-top:8px}
+  h2.section-h{font-size:20px;font-weight:600;letter-spacing:-.3px;margin:48px 0 14px;display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h2.section-h .num{font-size:13px;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--accent)}
+  h3.step-h{font-size:17px;font-weight:600;margin:28px 0 10px;color:var(--text);display:flex;align-items:center;gap:10px}
+  h3.step-h .badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+  .step-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+  .label-row{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:6px;font-size:13px;font-weight:600;color:var(--text)}
+  .label-row .icon{font-size:14px}
+  .label-row.tone-warn{color:var(--warn)}
+
+  .prompt-box{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);overflow:hidden;margin:8px 0 4px;position:relative}
+  .prompt-tabs{display:flex;align-items:center;gap:0;background:var(--bg-soft);border-bottom:1px solid var(--code-border);padding:0 6px}
+  .prompt-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text-mute);border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .prompt-tab:hover{color:var(--text-soft)}
+  .prompt-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .prompt-spacer{flex:1}
+  .prompt-copy{font-size:11px;color:var(--text-mute);padding:4px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);transition:.15s;display:inline-flex;align-items:center;gap:4px;margin-right:8px}
+  .prompt-copy:hover{color:var(--accent);border-color:var(--accent)}
+  .prompt-copy.copied{color:var(--success);border-color:var(--success);background:var(--bg-card)}
+  .prompt-body{font-family:var(--font-mono);font-size:13px;line-height:1.65;padding:14px 16px;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+  .note-tip{background:var(--accent-soft);border:1px solid var(--accent);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--text-soft);margin:10px 0}
+  .note-tip strong{color:var(--accent)}
+  .note-warn{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-left-width:3px;border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;margin:10px 0}
+  .note-shock{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:14px;margin:14px 0}
+  .note-shock h4{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:700}
+
+  .track-info{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:16px 0;font-size:13px;color:var(--text-soft)}
+  .track-info table{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}
+  .track-info td{padding:4px 10px 4px 0;border-top:1px dashed var(--border)}
+  .track-info tr:first-child td{border-top:none;font-weight:600;color:var(--text-mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .track-info code{font-size:.85em}
+
+  .check-list{list-style:none;padding-left:0;margin:8px 0}
+  .check-list li{padding-left:28px;position:relative;margin:6px 0;font-size:14px;cursor:pointer}
+  .check-list li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;background:var(--bg-card);transition:.15s}
+  .check-list li.done::before{background:var(--success);border-color:var(--success);content:"✓";color:#fff;font-size:11px;text-align:center;line-height:11px;font-weight:700}
+  .check-list li:hover::before{border-color:var(--accent)}
+  .check-list li.done{color:var(--text-soft)}
+
+  .deliv-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card)}
+  .deliv-card h4{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .deliv-card pre{font-family:var(--font-mono);font-size:11.5px;line-height:1.6;color:var(--text-soft);background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:10px 12px;white-space:pre;overflow:auto}
+
+  .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-card)}
+  .sb-card h4{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .sb-progress{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mute);font-weight:400;text-transform:none;letter-spacing:0}
+  .sb-progress-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .sb-progress-bar div{height:100%;background:var(--success);transition:width .4s}
+  .toc-list{list-style:none;padding:0;margin:0}
+  .toc-list a{display:block;padding:6px 10px;font-size:13px;color:var(--text-soft);border-radius:var(--radius-sm);transition:.15s;text-decoration:none}
+  .toc-list a:hover{background:var(--bg-soft);color:var(--text)}
+  .toc-list a.active{background:var(--accent-soft);color:var(--accent);font-weight:500}
+  .complete-btn{width:100%;padding:12px;background:var(--success);color:#fff;border-radius:var(--radius-sm);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
+  .complete-btn:hover{filter:brightness(1.05)}
+  .complete-btn.done{background:var(--bg-card);color:var(--success);border:1.5px solid var(--success)}
+
+  .mini-nav{display:flex;gap:8px;margin-top:32px}
+  .mini-nav a{flex:1;padding:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-soft);transition:.15s;text-decoration:none}
+  .mini-nav a:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-nav .label{font-size:11px;color:var(--text-mute);margin-bottom:4px;display:block}
+  .mini-nav .title{color:var(--text);font-weight:500}
+  .mini-nav .next{text-align:right}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .quiz{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:18px 0;box-shadow:var(--shadow-card)}
+  .quiz h4{font-size:14px;margin-bottom:12px;font-weight:600}
+  .quiz-q{margin:12px 0;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .quiz-q .q{font-size:13px;margin-bottom:8px;font-weight:500}
+  .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+  .quiz-opt{padding:5px 14px;border:1px solid var(--border);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.15s;cursor:pointer}
+  .quiz-opt:hover{border-color:var(--accent)}
+  .quiz-opt.right{background:var(--success);color:#fff;border-color:var(--success)}
+  .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .quiz-explain{margin-top:8px;font-size:12px;color:var(--text-soft);display:none}
+  .quiz-explain.show{display:block}
+  .quiz-explain .right-tag{color:var(--success);font-weight:600}
+
+  .lesson-footer{margin-top:48px;padding:20px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius);text-align:center;font-size:13px;color:var(--text-soft)}
+
+  /* === Schema Builder === */
+  .sb-builder{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:24px 0;box-shadow:var(--shadow-card)}
+  .sb-builder h3{font-size:15px;font-weight:600;margin-bottom:6px}
+  .sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+  @media (max-width:680px){.sb-grid{grid-template-columns:1fr}}
+  .field-pool{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;min-height:300px}
+  .field-pool h5{font-size:12px;font-weight:600;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .field-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;margin:3px 4px 3px 0;background:var(--bg-card);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text);cursor:pointer;transition:.15s;user-select:none}
+  .field-chip:hover{border-color:var(--accent);color:var(--accent)}
+  .field-chip.required::after{content:"*";color:var(--danger);margin-left:2px;font-weight:700}
+  .field-chip.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .schema-preview{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius-sm);padding:12px;font-family:var(--font-mono);font-size:12.5px;color:var(--text);min-height:300px;white-space:pre-wrap;line-height:1.6}
+  .schema-preview .k{color:var(--accent)}
+  .schema-preview .t{color:var(--success)}
+  .schema-preview .req{color:var(--danger)}
+  .schema-preview .empty{color:var(--text-mute);font-style:italic}
+  .builder-hint{margin-top:10px;font-size:12px;color:var(--text-mute);display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .builder-hint .reset-btn{font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-soft);cursor:pointer}
+  .builder-hint .reset-btn:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">PM 培训学习平台</a>
+      <span class="sep">/</span>
+      <a href="../index.html#map">课程地图</a>
+      <span class="sep">/</span>
+      <span class="current">L1 · 让 Agent 第一次"动手"</span>
+    </div>
+    <div class="topbar-right">
+      <div class="track-switch" id="trackSwitch" title="切换练手场景">
+        <div class="ind"></div>
+        <button data-track="backlog">📋 需求池</button>
+        <button data-track="meeting">📝 会议纪要</button>
+        <button data-track="news">📰 行业周报</button>
+      </div>
+      <div class="theme-switch" id="themeSwitch" title="切换显示风格">
+        <div class="ind"></div>
+        <button data-theme-btn="stealth">📊 摸鱼</button>
+        <button data-theme-btn="dark">🌙 暗色</button>
+      </div>
+      <a class="nav-btn" href="../index.html">← 返回首页</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <article class="article">
+
+    <header class="lesson-header">
+      <div class="lesson-meta">
+        <span class="lesson-badge">L1 · 模块 A 认知与上手</span>
+        <span>⏱ 45 min</span>
+        <span class="sep"></span>
+        <span>难度 ⭐⭐</span>
+        <span class="sep"></span>
+        <span>当前练手场景：<strong id="currentTrackName" style="color:var(--accent)">需求池整理</strong></span>
+      </div>
+      <h1 class="lesson-title">让 Agent 第一次"动手"：操作本地文件</h1>
+      <p class="lesson-tagline">把 L0 那次"随手存"升级成结构化、可复用的本地数据，为 L2 做可视化打地基。</p>
+    </header>
+
+    <!-- ===== 1. 你将学会 ===== -->
+    <section id="s1">
+      <h2 class="section-h"><span class="num">1</span>你将学会</h2>
+      <p>勾选完成情况会自动同步到首页学习进度。</p>
+      <ul class="check-list" id="learnGoals">
+        <li data-goal="g1">我能让 Agent <strong>按我指定的目录、文件名、字段结构</strong>写入数据</li>
+        <li data-goal="g2">我能区分"自由文本"和"结构化数据"，并知道为什么 PM 应该优先要后者</li>
+        <li data-goal="g3">我能让 Agent 在写入前先<strong>预览方案</strong>，避免一上来就写错</li>
+      </ul>
+    </section>
+
+    <!-- ===== 2. 背景小知识 ===== -->
+    <section id="s2">
+      <h2 class="section-h"><span class="num">2</span>背景小知识</h2>
+      <p>L0 你看到 Agent 能动手，但写出来的 markdown 表格——好看，但<strong>不好被下游消费</strong>。</p>
+      <p>PM 工作里有两种数据形态：</p>
+      <table style="width:100%;font-size:13px;border-collapse:collapse;margin:8px 0">
+        <thead><tr style="text-align:left;color:var(--text-mute);border-bottom:1px solid var(--border)">
+          <th style="padding:6px 10px 6px 0">形态</th><th style="padding:6px 10px">长什么样</th><th style="padding:6px 0">适合</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:5px 10px 5px 0"><strong>自由文本</strong></td><td style="padding:5px 10px">一段话 / 一篇文档</td><td style="padding:5px 0">给人读</td></tr>
+          <tr><td style="padding:5px 10px 5px 0"><strong>结构化数据</strong></td><td style="padding:5px 10px">JSON / CSV / 表格</td><td style="padding:5px 0">给程序读、给下一个 Agent 步骤读</td></tr>
+        </tbody>
+      </table>
+      <div class="note-tip"><strong>💡 一个直觉口诀：</strong>先想清楚下游谁来用，再决定存什么格式。一旦你想"做可视化、做筛选、做月度对比、做自动化"，<strong>结构化数据就是必选项</strong>。</div>
+      <p>L2 我们要让 Agent 把这堆数据渲染成 HTML dashboard，所以本讲就要先把数据存对。</p>
+    </section>
+
+    <!-- ===== Interactive: Schema Builder ===== -->
+    <div class="sb-builder">
+      <h3>🧪 互动演示：Schema 字段定义器</h3>
+      <p style="font-size:13px;color:var(--text-soft)">点击左边的字段加进右边的 schema，体验一下「PM 用自然语言定义数据契约」是什么感觉。带 <span style="color:var(--danger);font-weight:700">*</span> 的是建议必填。</p>
+      <div class="sb-grid">
+        <div class="field-pool">
+          <h5>可选字段池 · <span id="trackPoolName">需求池整理</span></h5>
+          <div id="fieldPool"></div>
+          <div class="builder-hint">
+            <span>已选 <strong id="selectedCount">0</strong> 个字段（建议 6–10 个）</span>
+            <button class="reset-btn" id="resetFields">重置</button>
+          </div>
+        </div>
+        <div>
+          <h5 style="font-size:12px;font-weight:600;color:var(--text-mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">实时 schema 预览 · <code id="schemaFile">backlog.schema.md</code></h5>
+          <div class="schema-preview" id="schemaPreview"></div>
+          <div class="builder-hint">
+            <span>这就是你给下游 Agent 看的「数据契约」</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 3. 准备工作 ===== -->
+    <section id="s3">
+      <h2 class="section-h"><span class="num">3</span>准备工作</h2>
+      <ul class="check-list" id="prepList">
+        <li data-prep="p1">已完成 <a href="L0.html">L0</a>，本地有 <code id="prepL0File">backlog.md</code> 这种"L0 随手产物"</li>
+        <li data-prep="p2">Agent 客户端可联网、可写本地文件</li>
+        <li data-prep="p3">心里默认一个<strong>调研主题</strong>（推荐继续用你 L0 选定的那个场景，副线随意）</li>
+      </ul>
+
+      <div class="track-info">
+        <strong>🎯 三选一练手主线</strong>
+        <p style="margin-top:6px">本讲示例默认演示当前选中的场景。每讲只需选 1 个跑透。HTML 单课页会根据顶栏切换自动联动 prompt。</p>
+        <table>
+          <tr><td>场景</td><td>适合谁</td><td>本讲产物路径</td></tr>
+          <tr><td>📋 需求池整理</td><td>几乎所有 PM</td><td><code>pm-agent-lab/backlog-lab/L1-demo/</code></td></tr>
+          <tr><td>📝 会议纪要跟进</td><td>跨团队协作 PM</td><td><code>pm-agent-lab/meeting-lab/L1-demo/</code></td></tr>
+          <tr><td>📰 行业 / 竞品周报</td><td>战略 / 对外型 PM</td><td><code>pm-agent-lab/news-lab/L1-demo/</code></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== 4. 实战任务 ===== -->
+    <section id="s4">
+      <h2 class="section-h"><span class="num">4</span>实战任务</h2>
+      <p>本讲我们在 <code id="trackLabPath">pm-agent-lab/backlog-lab/</code> 下建立一个<strong>正经的数据目录</strong>，并教 Agent 按规范写入。</p>
+      <div class="deliv-card" style="margin:10px 0 18px">
+        <h4>📁 目标产物结构</h4>
+        <pre id="goalTree">pm-agent-lab/backlog-lab/
+├── data/
+│   └── 2026-W25/                    # 按周分目录
+│       ├── backlog.json              # 结构化主数据
+│       └── backlog.md                # 同一份数据的 markdown 视图
+└── schema/
+    └── backlog.schema.md             # 字段定义，告诉 Agent 该写什么</pre>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">1</span>先和 Agent 一起定 schema（字段定义）</h3>
+        <div class="note-tip"><strong>💡 重要：</strong>这一步比直接喊"开始抓"重要 10 倍。<strong>没 schema 的 Agent，下游永远在返工。</strong></div>
+
+        <div class="label-row"><span class="icon">🎯</span>你要做什么</div>
+        <p style="font-size:14px;color:var(--text-soft)">让 Agent 先给你一个字段定义草案，你来 review 和确认。</p>
+
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step1">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">我要做一个"需求池整理"主线任务，每周把散落在飞书/邮件/访谈里的需求线索整理一次，存到本地，下游会用这些数据做 HTML 可视化。
+
+帮我设计 backlog.json 的 schema（字段定义），要求：
+1) 字段尽量原子化（一个字段只装一种信息）
+2) 必含：需求描述、来源（具体到哪条 IM/邮件/访谈）、提出人、提出日期、所属模块、价值判断（1-5）、下一步动作
+3) 给我两份产物：
+   - schema/backlog.schema.md：字段名、类型、是否必填、示例值
+   - 一条 mock 数据 sample.json，按 schema 长什么样
+
+先不要去整理真实线索，先把这两份产物给我看。</pre>
+          <pre class="prompt-body" data-track-text="meeting">我要做一个"会议纪要跟进"主线任务，每周把会议纪要里的待办与决策提取一次，存到本地，下游会用这些数据做 HTML 可视化。
+
+帮我设计 follow-up.json 的 schema（字段定义），要求：
+1) 字段尽量原子化（一个字段只装一种信息）
+2) 必含：事项描述、归属人、紧急度（高/中/低）、截止日期、来源会议、会议日期、当前状态（待开始/进行中/已完成）
+3) 给我两份产物：
+   - schema/follow-up.schema.md：字段名、类型、是否必填、示例值
+   - 一条 mock 数据 sample.json，按 schema 长什么样
+
+先不要去抓真实纪要，先把这两份产物给我看。</pre>
+          <pre class="prompt-body" data-track-text="news">我要做一个"行业新闻周报"主线任务，每周抓一次新闻，存到本地，下游会用这些数据做 HTML 可视化。
+
+帮我设计 news.json 的 schema（字段定义），要求：
+1) 字段尽量原子化（一个字段只装一种信息）
+2) 必含：标题、来源媒体、原文链接、发布时间、行业标签、一句话摘要、重要性分（1-5）
+3) 给我两份产物：
+   - schema/news.schema.md：字段名、类型、是否必填、示例值
+   - 一条 mock 数据 sample.json，按 schema 长什么样
+
+先不要去抓真实新闻，先把这两份产物给我看。</pre>
+        </div>
+
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>Agent 在 <code id="schemaPathHint">pm-agent-lab/backlog-lab/schema/backlog.schema.md</code> 写一份字段表</li>
+          <li>同目录或临时位置生成一条 <code>sample.json</code> 示例</li>
+          <li>自然地停在这里<strong>等你确认</strong></li>
+        </ul>
+
+        <div class="label-row"><span class="icon">📝</span>你要在这里做的事</div>
+        <p style="font-size:14px;color:var(--text-soft)">认真 review schema：</p>
+        <ul style="font-size:14px;color:var(--text-soft)">
+          <li>有没有字段是"两件事塞一起"的？比如"来源(标题)" → 拆成 <code>source_name</code> 和 <code>source_title</code></li>
+          <li>枚举字段是单选还是多选？（PM 视角：多选场景多，建议用数组）</li>
+          <li>评分由谁打？是 Agent 自己评估的，还是你后续手工调整的？要不要再加一个 <code>editor_note</code> 字段？</li>
+        </ul>
+        <div class="note-tip"><strong>这个对话本身就是 PM 工作的高频姿势：</strong>用自然语言定义数据契约。</div>
+
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>偏差 A：Agent 直接开始抓数据了</strong> → 纠偏：<br><code>停一下。我现在不需要数据，只需要 schema 设计。请只产出 schema 和一条 mock sample.json，等我确认后再开始。</code></li>
+          <li><strong>偏差 B：schema 字段堆了 20 多个</strong> → 纠偏：<br><code>字段太多了。请按"一周后我用这些数据做 HTML dashboard"的最小必要集合精简到 8 个字段以内，其它放进 optional。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">2</span>让 Agent 抓本周数据并按 schema 写入</h3>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step2">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">现在按已确认的 schema 整理本周（过去 7 天）散落在飞书/邮件/访谈里的需求线索 8–12 条，要求：
+1) 严格按 schema 字段写入，缺失字段写 null，不要编造
+2) 价值判断分（1-5）由你给，并把判断理由写进 editor_note
+3) 写入路径：pm-agent-lab/backlog-lab/data/2026-W25/backlog.json
+4) 同时生成一份 backlog.md（同样的内容，markdown 表格，给人读）
+5) 写完告诉我：本次整理出几条、有几条因来源不清被丢弃、写入了哪些文件</pre>
+          <pre class="prompt-body" data-track-text="meeting">现在按已确认的 schema 提取本周（过去 7 天）会议纪要里的待办与决策事项 8–12 条，要求：
+1) 严格按 schema 字段写入，缺失字段写 null，不要编造
+2) 紧急度由你给，并把判断理由写进 editor_note
+3) 写入路径：pm-agent-lab/meeting-lab/data/2026-W25/follow-up.json
+4) 同时生成一份 follow-up.md（同样的内容，markdown 表格，给人读）
+5) 写完告诉我：本次提取出几条、有几条因归属人不明确被丢弃、写入了哪些文件</pre>
+          <pre class="prompt-body" data-track-text="news">现在按已确认的 schema 抓本周（过去 7 天）AI Agent 行业新闻 8–12 条，要求：
+1) 严格按 schema 字段写入，缺失字段写 null，不要编造
+2) 重要性分（1-5）由你给，并把判断理由写进 editor_note
+3) 写入路径：pm-agent-lab/news-lab/data/2026-W25/news.json
+4) 同时生成一份 news.md（同样的内容，markdown 表格，给人读）
+5) 写完告诉我：本次抓到几条、有几条因找不到链接被丢弃、写入了哪些文件</pre>
+        </div>
+        <div class="note-warn"><strong>📅 本周 ISO 周编号</strong>：把 <code>2026-W25</code> 替换成实际值；不会算就直接告诉 Agent："按本周的 ISO 周编号命名目录"。</div>
+
+        <div class="label-row"><span class="icon">👀</span>预期看到什么</div>
+        <ul>
+          <li>真的产生 <code>.json</code> 和 <code>.md</code> 两个文件</li>
+          <li>打开 <code>.json</code>，每条记录字段齐全、JSON 格式合法</li>
+          <li>Agent 给你一个<strong>汇报式总结</strong>："抓到 11 条，丢弃 2 条（无来源链接），写入路径..."</li>
+        </ul>
+
+        <div class="label-row tone-warn"><span class="icon">⚠️</span>如果出错怎么办</div>
+        <ul>
+          <li><strong>JSON 不合法</strong>：<code>请用标准 JSON 格式重写，不要 // 注释、不要末尾逗号；写完用 python -m json.tool 验证一遍并告诉我结果。</code></li>
+          <li><strong>瞎编内容（最重要）</strong>：<code>找不到真实来源/链接的条目直接丢弃，并在汇报里告诉我丢弃了几条、为什么。不要编造，这是硬要求。</code></li>
+          <li><strong>覆盖了上一周的目录</strong>：<code>请确认你写入的路径是 data/&lt;本周 ISO 周编号&gt;/，不要覆盖其它周的数据。如果本周目录已存在，告诉我里面有什么，让我决定是覆盖还是合并。</code></li>
+        </ul>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">3</span>给数据加一层"质量自检"</h3>
+        <div class="note-tip"><strong>💡</strong> PM 不能等下游用数据时才发现质量问题。让 Agent 写完后<strong>自己 QA 一遍</strong>。</div>
+
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么</div>
+        <div class="prompt-box" data-prompt-group="step3">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">对刚写入的 backlog.json 做一次自检，按下面清单逐项给我答案：
+1) 总条数 / 必填字段缺失的条数 / 价值判断分布
+2) 有没有重复需求（描述高度相似或来源指向同一条线索）
+3) 提出日期字段是否都在过去 7 天范围内
+4) 所属模块里有没有明显错的、或者粒度不一致的（比如有的写"登录"有的写"账号体系"）
+5) 给出 3 条改进建议，但不要直接动数据，先告诉我。</pre>
+          <pre class="prompt-body" data-track-text="meeting">对刚写入的 follow-up.json 做一次自检，按下面清单逐项给我答案：
+1) 总条数 / 必填字段缺失的条数 / 紧急度分布
+2) 有没有重复事项（描述高度相似或来源指向同一次会议）
+3) 截止日期字段是否合理（不应早于会议日期、不应过于久远）
+4) 归属人字段里有没有缺失的、或者写法不一致的
+5) 给出 3 条改进建议，但不要直接动数据，先告诉我。</pre>
+          <pre class="prompt-body" data-track-text="news">对刚写入的 news.json 做一次自检，按下面清单逐项给我答案：
+1) 总条数 / 必填字段缺失的条数 / 重要性分布
+2) 有没有重复新闻（标题或链接重复）
+3) 时间字段是否都在过去 7 天范围内
+4) 行业标签里有没有明显错的、或者粒度不一致的
+5) 给出 3 条改进建议，但不要直接动数据，先告诉我。</pre>
+        </div>
+
+        <div class="label-row"><span class="icon">📝</span>PM 决策时刻</div>
+        <p style="font-size:14px;color:var(--text-soft)">看完报告，挑 1 个最值得修的问题，让 Agent 修：</p>
+        <div class="prompt-box" data-prompt-group="step3-fix">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="backlog">📋 需求池</button>
+            <button class="prompt-tab" data-track-tab="meeting">📝 会议纪要</button>
+            <button class="prompt-tab" data-track-tab="news">📰 行业周报</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="backlog">把所属模块统一成下面这套受控词表：
+[账号体系, 核心交易, 内容/社区, 增长/活动, 数据/后台, 平台/合规, 其他]
+其它字段不要动。修完再跑一遍自检。</pre>
+          <pre class="prompt-body" data-track-text="meeting">把归属人字段统一成下面这套受控写法：
+[使用花名+所在团队，如"小明@增长"；待指派的统一写"待指派"]
+其它字段不要动。修完再跑一遍自检。</pre>
+          <pre class="prompt-body" data-track-text="news">把行业标签统一成下面这套受控词表：
+[Agent 框架, Agent 应用, 模型能力, 投融资, 政策合规, 工具/CLI, 其他]
+其它字段不要动。修完再跑一遍自检。</pre>
+        </div>
+        <div class="note-tip"><strong>这就是「人 + Agent」协作的标准姿势</strong>：Agent 做体力活，PM 做判断和定义。</div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-block">
+        <h3 class="step-h"><span class="badge">4</span>把整套流程沉淀成一段"使用说明"</h3>
+        <div class="label-row"><span class="icon">⌨️</span>你输入什么（三场景通用）</div>
+        <div class="prompt-box" data-prompt-group="step4">
+          <div class="prompt-tabs">
+            <button class="prompt-tab" data-track-tab="all" style="border-bottom-color:var(--accent);color:var(--accent)">三场景通用</button>
+            <span class="prompt-spacer"></span>
+            <button class="prompt-copy">📋 复制</button>
+          </div>
+          <pre class="prompt-body" data-track-text="all">把刚才整套流程写成一份"操作笔记"，存到当前 lab 目录的 data/2026-W25/HOWTO.md：
+- 先列输入（覆盖的来源渠道、时间范围、目标条数）
+- 再列步骤（schema → 抓取 / 整理 → 自检 → 修订）
+- 每步贴出关键 prompt
+- 末尾写一段"下周复用"指引：哪些要改、哪些可不改</pre>
+        </div>
+        <div class="note-tip"><strong>💡 引子：</strong>这份 HOWTO.md 就是 L5 你要做 Skill 化的"前体"。<strong>先沉淀文字，再升级成 Skill</strong>，是非常稳健的路径。</div>
+      </div>
+    </section>
+
+    <!-- ===== 5. 自检 ===== -->
+    <section id="s5">
+      <h2 class="section-h"><span class="num">5</span>自检清单</h2>
+      <ul class="check-list" id="selfCheck">
+        <li data-check="c1">我打开 <code id="checkJsonPath">backlog.json</code>，看到字段整齐、JSON 合法、内容真实</li>
+        <li data-check="c2">我能向 Agent 一句话说清"为什么我要 schema 而不是直接给 markdown"</li>
+        <li data-check="c3">我能在新会话里，仅靠 <code>schema/*.schema.md</code> + <code>HOWTO.md</code>，让 Agent 复现这一周的整理</li>
+        <li data-check="c4">我已经主动做过 ≥1 次"让 Agent 先停下、先给方案、再执行"的 prompt 介入</li>
+      </ul>
+
+      <div class="quiz">
+        <h4>🧠 快速自测</h4>
+        <div class="quiz-q">
+          <div class="q">Q1. PM 为什么要 schema 而不是让 Agent 直接给 markdown？</div>
+          <div class="quiz-opts" data-correct="2">
+            <button class="quiz-opt">A. JSON 比 markdown 看起来高级</button>
+            <button class="quiz-opt">B. JSON 文件更小、更省存储</button>
+            <button class="quiz-opt">C. 结构化数据可以被下游程序/Agent 消费，能做筛选、可视化、对比</button>
+            <button class="quiz-opt">D. markdown 不能给 Agent 写</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 C</span>：schema 的核心价值是为下游消费铺好"跑道"，让数据可被程序、可被下一个 Agent 步骤、可被未来的可视化工具直接用。</div>
+        </div>
+        <div class="quiz-q">
+          <div class="q">Q2. 你让 Agent 设计 schema 时，最该提醒它的是哪一条？</div>
+          <div class="quiz-opts" data-correct="1">
+            <button class="quiz-opt">A. 字段越多越好，反正不写就 null</button>
+            <button class="quiz-opt">B. 先停下，给 schema 草案 + 一条 mock 数据，等我确认再抓真数据</button>
+            <button class="quiz-opt">C. 直接按 markdown 表格设计，简单粗暴</button>
+            <button class="quiz-opt">D. 让它自己决定字段，不用 review</button>
+          </div>
+          <div class="quiz-explain"><span class="right-tag">正确答案 B</span>：让 Agent 先给方案再动手是 PM 必备姿势——一旦 schema 错了，下游一周白干。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. 思考题 ===== -->
+    <section id="s6">
+      <h2 class="section-h"><span class="num">6</span>思考题 & 下一讲引子</h2>
+      <p><strong>思考题</strong></p>
+      <ul>
+        <li>你的 schema 里有没有"该让 Agent 评分、但 PM 必须有覆写权"的字段？这种字段需要哪两列？</li>
+        <li>如果你不是抓行业新闻/需求/纪要，而是抓"产品的用户反馈"，schema 至少要补哪几个字段？</li>
+      </ul>
+      <p style="margin-top:12px"><strong>下一讲引子</strong></p>
+      <p>已经有了规整的本地数据，但 JSON 不适合人看。L2 会教你<strong>用一句话让 Agent 写一个可交互 HTML</strong>，把这些数据变成你和老板都爱看的 dashboard——而你不需要写一行代码。</p>
+    </section>
+
+    <!-- ===== 7. 交付物 ===== -->
+    <section id="s7">
+      <h2 class="section-h"><span class="num">7</span>本讲交付物</h2>
+      <p>按你选定的场景，下面三选一即可：</p>
+      <div class="deliv-card">
+        <h4>📁 目录结构</h4>
+        <pre id="deliverTree">pm-agent-lab/backlog-lab/
+├── schema/backlog.schema.md
+└── data/2026-W25/
+    ├── backlog.json
+    ├── backlog.md
+    └── HOWTO.md</pre>
+      </div>
+      <p style="margin-top:10px;font-size:13px;color:var(--text-soft)">三个场景共用同一套"schema → 数据 → HOWTO"产物结构，后面 L2 起会沿用你这一讲选定的场景目录。</p>
+    </section>
+
+    <!-- ===== 8. 副线 ===== -->
+    <section id="s8">
+      <h2 class="section-h"><span class="num">8</span>副线练习（可选）</h2>
+      <p>主线已经选了一个场景练手。如果时间允许，强烈推荐<strong>再用另一个场景跑一遍 Step 1–3</strong>——你会非常直观地感受到："同一套 schema 设计姿势，套到完全不同的工作场景上，方法是一样的"。</p>
+      <p>也可以挑一个更贴近你真实工作的数据流：</p>
+      <ul>
+        <li><strong>竞品动态库</strong>：<code>pm-agent-lab/competitor-lab/data/2026-W25/items.json</code><br>建议字段：<code>competitor_name / event_type / date / url / summary / impact_score / our_response</code></li>
+        <li><strong>用户反馈池</strong>：<code>pm-agent-lab/feedback-lab/data/2026-W25/feedbacks.json</code><br>建议字段：<code>channel / user_segment / sentiment / pain_point / verbatim / suggested_action</code></li>
+      </ul>
+      <div class="note-tip"><strong>💡</strong> 一旦你为某个工作流建好了 schema，就等于给未来的自己/Agent <strong>画好了跑道</strong>。这是 PM 在 Agent 时代最划算的一次性投入。</div>
+    </section>
+
+    <!-- 上一讲 / 下一讲 -->
+    <nav class="mini-nav">
+      <a href="L0.html"><span class="label">← 上一讲</span><span class="title">L0 · Chat vs Agent</span></a>
+      <a href="L2.html" class="next"><span class="label">下一讲 →</span><span class="title">L2 · Vibe Coding 初体验</span></a>
+    </nav>
+
+    <div class="lesson-footer">学完这一讲，你已经能让 Agent 按"数据契约"为你工作。下一讲我们用一句话把它变成可点击的 dashboard。</div>
+
+  </article>
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="sb-card">
+      <h4>本讲进度
+        <span class="sb-progress">
+          <span class="sb-progress-bar"><div id="sbBar" style="width:0%"></div></span>
+          <span id="sbText">0%</span>
+        </span>
+      </h4>
+      <ul class="toc-list">
+        <li><a href="#s1">1. 你将学会</a></li>
+        <li><a href="#s2">2. 背景小知识</a></li>
+        <li><a href="#s3">3. 准备工作</a></li>
+        <li><a href="#s4">4. 实战任务</a></li>
+        <li><a href="#s5">5. 自检清单</a></li>
+        <li><a href="#s6">6. 思考题</a></li>
+        <li><a href="#s7">7. 交付物</a></li>
+        <li><a href="#s8">8. 副线练习</a></li>
+      </ul>
+    </div>
+
+    <div class="sb-card">
+      <h4>当前练手场景</h4>
+      <p style="font-size:13px;color:var(--text-soft)" id="sbTrackInfo">📋 需求池整理</p>
+      <p style="font-size:11px;color:var(--text-mute);margin-top:4px">顶栏可一键切换三场景，所有 prompt + schema 联动。</p>
+    </div>
+
+    <div class="sb-card">
+      <h4>键盘快捷键</h4>
+      <p style="font-size:12px;color:var(--text-soft)">
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">1</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">2</kbd> /
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">3</kbd> 切换三场景<br>
+        <kbd style="font-family:var(--font-mono);background:var(--bg-soft);padding:1px 5px;border:1px solid var(--border);border-radius:3px;font-size:11px">T</kbd> 切换主题
+      </p>
+    </div>
+
+    <button class="complete-btn" id="completeBtn">
+      <span id="completeText">✓ 标记本讲已学完</span>
+    </button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+const LESSON_ID = "L1";
+const TOTAL_LESSONS = 14;
+const THEME_KEY = "agentOnboarding.theme";
+const TRACK_KEY = "agentOnboarding.track";
+const PROGRESS_KEY = "agentOnboarding.progress.v1";
+const STATE_KEY = `agentOnboarding.${LESSON_ID}.state`;
+const html = document.documentElement;
+
+const TRACK_INFO = {
+  backlog: {
+    name:"需求池整理", emoji:"📋",
+    schemaFile:"backlog.schema.md",
+    jsonFile:"backlog.json",
+    l0File:"backlog.md",
+    labPath:"pm-agent-lab/backlog-lab/",
+    schemaPathHint:"pm-agent-lab/backlog-lab/schema/backlog.schema.md",
+    goalTree:`pm-agent-lab/backlog-lab/
+├── data/
+│   └── 2026-W25/
+│       ├── backlog.json              # 结构化主数据
+│       └── backlog.md                # 同一份数据的 markdown 视图
+└── schema/
+    └── backlog.schema.md             # 字段定义`,
+    deliverTree:`pm-agent-lab/backlog-lab/
+├── schema/backlog.schema.md
+└── data/2026-W25/
+    ├── backlog.json
+    ├── backlog.md
+    └── HOWTO.md`,
+    fields:[
+      {k:"id",                  t:"string",  req:true,  desc:"唯一 id，建议 backlog-{周编号}-{序号}"},
+      {k:"description",         t:"string",  req:true,  desc:"需求一句话描述（动词+宾语+受益对象）"},
+      {k:"source_channel",      t:"enum",    req:true,  desc:"来源渠道：feishu_im / email / interview / pm_self"},
+      {k:"source_ref",          t:"string",  req:true,  desc:"来源具体引用，如 IM 链接 / 邮件主题 / 访谈记录段落"},
+      {k:"requester",           t:"string",  req:true,  desc:"提出人花名/团队"},
+      {k:"requested_at",        t:"date",    req:true,  desc:"提出日期 YYYY-MM-DD"},
+      {k:"module",              t:"enum",    req:true,  desc:"所属模块（受控词表）"},
+      {k:"value_score",         t:"int",     req:true,  desc:"价值判断 1-5"},
+      {k:"next_action",         t:"string",  req:true,  desc:"下一步动作"},
+      {k:"editor_note",         t:"string",  req:false, desc:"PM 备注 / Agent 评分理由"},
+      {k:"tags",                t:"array",   req:false, desc:"自由标签数组"},
+      {k:"linked_issue",        t:"string",  req:false, desc:"关联的需求/工单 id"}
+    ]
+  },
+  meeting: {
+    name:"会议纪要跟进", emoji:"📝",
+    schemaFile:"follow-up.schema.md",
+    jsonFile:"follow-up.json",
+    l0File:"follow-up.md",
+    labPath:"pm-agent-lab/meeting-lab/",
+    schemaPathHint:"pm-agent-lab/meeting-lab/schema/follow-up.schema.md",
+    goalTree:`pm-agent-lab/meeting-lab/
+├── data/
+│   └── 2026-W25/
+│       ├── follow-up.json
+│       └── follow-up.md
+└── schema/
+    └── follow-up.schema.md`,
+    deliverTree:`pm-agent-lab/meeting-lab/
+├── schema/follow-up.schema.md
+└── data/2026-W25/
+    ├── follow-up.json
+    ├── follow-up.md
+    └── HOWTO.md`,
+    fields:[
+      {k:"id",                  t:"string",  req:true,  desc:"事项 id"},
+      {k:"description",         t:"string",  req:true,  desc:"事项一句话描述"},
+      {k:"owner",               t:"string",  req:true,  desc:'归属人，如"小明@增长"，缺失统一写"待指派"'},
+      {k:"urgency",             t:"enum",    req:true,  desc:"紧急度：高/中/低"},
+      {k:"due_date",            t:"date",    req:true,  desc:"截止日期 YYYY-MM-DD"},
+      {k:"source_meeting",      t:"string",  req:true,  desc:"来源会议名"},
+      {k:"meeting_date",        t:"date",    req:true,  desc:"会议日期"},
+      {k:"status",              t:"enum",    req:true,  desc:"待开始/进行中/已完成"},
+      {k:"editor_note",         t:"string",  req:false, desc:"判断理由 / PM 备注"},
+      {k:"tags",                t:"array",   req:false, desc:"自由标签"},
+      {k:"depends_on",          t:"string",  req:false, desc:"前置依赖事项 id"},
+      {k:"linked_doc",          t:"string",  req:false, desc:"会议纪要文档链接"}
+    ]
+  },
+  news: {
+    name:"行业 / 竞品周报", emoji:"📰",
+    schemaFile:"news.schema.md",
+    jsonFile:"news.json",
+    l0File:"news.md",
+    labPath:"pm-agent-lab/news-lab/",
+    schemaPathHint:"pm-agent-lab/news-lab/schema/news.schema.md",
+    goalTree:`pm-agent-lab/news-lab/
+├── data/
+│   └── 2026-W25/
+│       ├── news.json
+│       └── news.md
+└── schema/
+    └── news.schema.md`,
+    deliverTree:`pm-agent-lab/news-lab/
+├── schema/news.schema.md
+└── data/2026-W25/
+    ├── news.json
+    ├── news.md
+    └── HOWTO.md`,
+    fields:[
+      {k:"id",                  t:"string",  req:true,  desc:"新闻 id"},
+      {k:"title",               t:"string",  req:true,  desc:"新闻标题"},
+      {k:"source_name",         t:"string",  req:true,  desc:"来源媒体名"},
+      {k:"url",                 t:"string",  req:true,  desc:"原文链接（必须真实可访问）"},
+      {k:"published_at",        t:"date",    req:true,  desc:"发布时间 YYYY-MM-DD"},
+      {k:"industry_tags",       t:"array",   req:true,  desc:"行业标签数组（受控词表）"},
+      {k:"summary_one_liner",   t:"string",  req:true,  desc:"一句话摘要"},
+      {k:"importance_score",    t:"int",     req:true,  desc:"重要性 1-5"},
+      {k:"editor_note",         t:"string",  req:false, desc:"评分理由 / PM 备注"},
+      {k:"region",              t:"string",  req:false, desc:"地区，如 CN / US / Global"},
+      {k:"company",             t:"string",  req:false, desc:"主角公司"},
+      {k:"linked_news",         t:"array",   req:false, desc:"相关报道 url 数组"}
+    ]
+  }
+};
+
+/* =============== Theme =============== */
+const themeSwitch = document.getElementById("themeSwitch");
+function applyTheme(theme){
+  if(theme!=="dark" && theme!=="stealth") theme="stealth";
+  html.setAttribute("data-theme", theme);
+  themeSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.themeBtn===theme));
+  moveIndicator(themeSwitch);
+  localStorage.setItem(THEME_KEY, theme);
+}
+themeSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTheme(btn.dataset.themeBtn));
+});
+applyTheme(localStorage.getItem(THEME_KEY) || "stealth");
+
+/* =============== Track =============== */
+const trackSwitch = document.getElementById("trackSwitch");
+function applyTrack(track){
+  if(!TRACK_INFO[track]) track = "backlog";
+  localStorage.setItem(TRACK_KEY, track);
+  trackSwitch.querySelectorAll("button").forEach(b=>b.classList.toggle("active", b.dataset.track===track));
+  moveIndicator(trackSwitch);
+  document.querySelectorAll(".prompt-box").forEach(box=>{
+    const tabs = box.querySelectorAll(".prompt-tab");
+    const bodies = box.querySelectorAll(".prompt-body");
+    const isUniversal = box.querySelector('[data-track-tab="all"]');
+    if(isUniversal){ bodies.forEach(b=>b.style.display="block"); return; }
+    tabs.forEach(t=>t.classList.toggle("active", t.dataset.trackTab===track));
+    bodies.forEach(b=>{ b.style.display = b.dataset.trackText===track ? "block" : "none"; });
+  });
+  const info = TRACK_INFO[track];
+  document.getElementById("currentTrackName").textContent = info.name;
+  document.getElementById("sbTrackInfo").textContent = `${info.emoji} ${info.name}`;
+  document.getElementById("schemaFile").textContent = info.schemaFile;
+  document.getElementById("checkJsonPath").textContent = info.jsonFile;
+  document.getElementById("prepL0File").textContent = info.l0File;
+  document.getElementById("trackLabPath").textContent = info.labPath;
+  document.getElementById("schemaPathHint").textContent = info.schemaPathHint;
+  document.getElementById("trackPoolName").textContent = info.name;
+  document.getElementById("goalTree").textContent = info.goalTree;
+  document.getElementById("deliverTree").textContent = info.deliverTree;
+  rebuildBuilder(track);
+}
+trackSwitch.querySelectorAll("button").forEach(btn=>{
+  btn.addEventListener("click",()=> applyTrack(btn.dataset.track));
+});
+
+/* =============== Indicator =============== */
+function moveIndicator(switchEl){
+  const ind = switchEl.querySelector(".ind");
+  const active = switchEl.querySelector("button.active");
+  if(!ind || !active) return;
+  ind.style.width = active.offsetWidth + "px";
+  ind.style.transform = `translateX(${active.offsetLeft - 2}px)`;
+}
+window.addEventListener("resize",()=>{moveIndicator(themeSwitch);moveIndicator(trackSwitch)});
+
+/* =============== Tabs in prompt boxes =============== */
+document.querySelectorAll(".prompt-tab[data-track-tab]").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    const target = tab.dataset.trackTab;
+    if(target==="all") return;
+    applyTrack(target);
+  });
+});
+
+/* =============== Copy =============== */
+document.querySelectorAll(".prompt-copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box = btn.closest(".prompt-box");
+    const visible = [...box.querySelectorAll(".prompt-body")].find(b=>b.style.display!=="none") || box.querySelector(".prompt-body");
+    const text = visible.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = "✓ 已复制";
+      btn.classList.add("copied");
+      showToast("已复制 prompt 到剪贴板");
+      setTimeout(()=>{btn.textContent="📋 复制";btn.classList.remove("copied")}, 1500);
+    });
+  });
+});
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* =============== Schema Builder =============== */
+const fieldPoolEl = document.getElementById("fieldPool");
+const schemaPreviewEl = document.getElementById("schemaPreview");
+const selectedCountEl = document.getElementById("selectedCount");
+let selectedFields = new Set();
+
+function rebuildBuilder(track){
+  const info = TRACK_INFO[track];
+  fieldPoolEl.innerHTML = "";
+  selectedFields = new Set();
+  // restore default required
+  info.fields.filter(f=>f.req).forEach(f=> selectedFields.add(f.k));
+  info.fields.forEach(f=>{
+    const chip = document.createElement("span");
+    chip.className = "field-chip" + (f.req?" required":"") + (selectedFields.has(f.k)?" selected":"");
+    chip.dataset.k = f.k;
+    chip.textContent = f.k;
+    chip.title = f.desc;
+    chip.addEventListener("click",()=>{
+      if(selectedFields.has(f.k)) selectedFields.delete(f.k);
+      else selectedFields.add(f.k);
+      chip.classList.toggle("selected");
+      renderSchema(track);
+    });
+    fieldPoolEl.appendChild(chip);
+  });
+  renderSchema(track);
+}
+function renderSchema(track){
+  const info = TRACK_INFO[track];
+  const sel = info.fields.filter(f=>selectedFields.has(f.k));
+  selectedCountEl.textContent = sel.length;
+  if(sel.length===0){
+    schemaPreviewEl.innerHTML = '<span class="empty">还没选字段。点左边任意 chip 试试。</span>';
+    return;
+  }
+  let html = `# ${info.schemaFile}\n\n| 字段 | 类型 | 必填 | 说明 |\n| --- | --- | --- | --- |\n`;
+  sel.forEach(f=>{
+    html += `| <span class="k">${f.k}</span> | <span class="t">${f.t}</span> | ${f.req?'<span class="req">是</span>':'否'} | ${escapeHTML(f.desc)} |\n`;
+  });
+  schemaPreviewEl.innerHTML = html;
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.getElementById("resetFields").addEventListener("click",()=>{
+  rebuildBuilder(localStorage.getItem(TRACK_KEY) || "backlog");
+});
+
+/* Initialize track + builder */
+applyTrack(localStorage.getItem(TRACK_KEY) || "backlog");
+
+/* =============== Check lists =============== */
+const STATE = JSON.parse(localStorage.getItem(STATE_KEY) || "{}");
+function saveState(){ localStorage.setItem(STATE_KEY, JSON.stringify(STATE)); updateProgress(); }
+function bindCheckList(ulId, key){
+  const ul = document.getElementById(ulId);
+  if(!ul) return;
+  STATE[key] = STATE[key] || {};
+  ul.querySelectorAll("li").forEach(li=>{
+    const id = li.dataset.goal || li.dataset.prep || li.dataset.check;
+    if(STATE[key][id]) li.classList.add("done");
+    li.addEventListener("click",()=>{
+      li.classList.toggle("done");
+      STATE[key][id] = li.classList.contains("done");
+      saveState();
+    });
+  });
+}
+bindCheckList("learnGoals","goals");
+bindCheckList("prepList","preps");
+bindCheckList("selfCheck","checks");
+
+/* =============== Progress =============== */
+function updateProgress(){
+  const sources = [
+    {key:"goals",  count:3},
+    {key:"preps",  count:3},
+    {key:"checks", count:4},
+    {key:"quiz",   count:2}
+  ];
+  let done = 0, total = 0;
+  sources.forEach(s=>{
+    total += s.count;
+    if(STATE[s.key]) done += Object.values(STATE[s.key]).filter(Boolean).length;
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("sbBar").style.width = pct + "%";
+  document.getElementById("sbText").textContent = pct + "%";
+}
+updateProgress();
+
+/* =============== Quiz =============== */
+document.querySelectorAll(".quiz-q").forEach((q,idx)=>{
+  const opts = q.querySelector(".quiz-opts");
+  const correct = parseInt(opts.dataset.correct, 10);
+  const explain = q.querySelector(".quiz-explain");
+  STATE.quiz = STATE.quiz || {};
+  if(STATE.quiz[`q${idx}`]){
+    opts.children[correct].classList.add("right");
+    explain.classList.add("show");
+  }
+  opts.querySelectorAll(".quiz-opt").forEach((opt,i)=>{
+    opt.addEventListener("click",()=>{
+      if(opts.querySelector(".right")) return;
+      if(i===correct){
+        opt.classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }else{
+        opt.classList.add("wrong");
+        opts.children[correct].classList.add("right");
+        STATE.quiz[`q${idx}`] = true;
+        saveState();
+      }
+      explain.classList.add("show");
+    });
+  });
+});
+
+/* =============== Mark complete =============== */
+const completeBtn = document.getElementById("completeBtn");
+const completeText = document.getElementById("completeText");
+function refreshCompleteUI(){
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  const isDone = doneSet.has(LESSON_ID);
+  completeBtn.classList.toggle("done", isDone);
+  completeText.textContent = isDone ? "✓ 已学完（点击取消）" : "✓ 标记本讲已学完";
+}
+completeBtn.addEventListener("click",()=>{
+  const doneSet = new Set(JSON.parse(localStorage.getItem(PROGRESS_KEY) || "[]"));
+  if(doneSet.has(LESSON_ID)) doneSet.delete(LESSON_ID);
+  else { doneSet.add(LESSON_ID); showToast(`L1 已标记为完成 · ${doneSet.size}/${TOTAL_LESSONS}`); }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...doneSet]));
+  refreshCompleteUI();
+});
+refreshCompleteUI();
+
+/* =============== TOC active highlight =============== */
+const tocLinks = document.querySelectorAll(".toc-list a");
+const sections = [...document.querySelectorAll(".article section[id]")];
+function onScroll(){
+  let cur = sections[0];
+  const top = window.scrollY + 120;
+  for(const s of sections){ if(s.offsetTop <= top) cur = s; }
+  tocLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#" + cur.id));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* =============== Keyboard shortcuts =============== */
+document.addEventListener("keydown",e=>{
+  if(e.target.matches("input,textarea")) return;
+  if(e.key==="1") applyTrack("backlog");
+  else if(e.key==="2") applyTrack("meeting");
+  else if(e.key==="3") applyTrack("news");
+  else if(e.key==="t" || e.key==="T") applyTheme(html.getAttribute("data-theme")==="dark"?"stealth":"dark");
+});
+
+/* =============== Cross-tab sync =============== */
+window.addEventListener("storage", e=>{
+  if(e.key===THEME_KEY) applyTheme(e.newValue);
+  else if(e.key===TRACK_KEY) applyTrack(e.newValue);
+  else if(e.key===PROGRESS_KEY) refreshCompleteUI();
+});
+</script>
+</body>
+</html>
