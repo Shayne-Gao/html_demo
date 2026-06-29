@@ -1,0 +1,3070 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今日变身生存 - 变身循环 Alpha</title>
+  <style>
+    :root {
+      --panel: rgba(16, 22, 19, 0.84);
+      --panel-border: rgba(229, 234, 220, 0.12);
+      --text: #eff6e8;
+      --muted: #aeb9a9;
+      --accent: #ffd76f;
+      --accent-2: #ff8bb4;
+      --danger: #ff8c8c;
+      --heal: #91d29d;
+      --shadow: rgba(0, 0, 0, 0.28);
+      --grass-drop: #8fd86a;
+      --wood-drop: #a57a4f;
+      --stone-drop: #a0a9b2;
+      --diamond-drop: #67d6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top, rgba(144, 196, 120, 0.18), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(74, 120, 185, 0.16), transparent 28%),
+        linear-gradient(180deg, #172118 0%, #0b0f0c 100%);
+      color: var(--text);
+      font-family: "Trebuchet MS", "Verdana", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: min(1360px, 100%);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel,
+    .canvas-shell {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 18px 60px rgba(0, 0, 0, 0.26);
+      backdrop-filter: blur(10px);
+    }
+
+    .panel {
+      padding: 18px;
+      border-radius: 22px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 215, 111, 0.12);
+      border: 1px solid rgba(255, 215, 111, 0.25);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow.phase-assault {
+      background: rgba(255, 140, 140, 0.12);
+      border-color: rgba(255, 140, 140, 0.25);
+      color: #ffc3c3;
+    }
+
+    .panel h1,
+    .panel h2 {
+      margin: 14px 0 10px;
+      font-family: "Courier New", monospace;
+      letter-spacing: 0.06em;
+    }
+
+    .panel h1 {
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .panel h2 {
+      font-size: 16px;
+      color: #f5f7ef;
+    }
+
+    .panel p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .stats,
+    .tips,
+    .legend,
+    .recipes,
+    .form-list,
+    .log-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat-item,
+    .tip-item,
+    .legend-item,
+    .recipe-card,
+    .log-item {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-item span:first-child,
+    .tip-item span:first-child,
+    .recipe-card span:first-child {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(239, 246, 232, 0.6);
+    }
+
+    .stat-item strong,
+    .tip-item strong,
+    .recipe-card strong {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff8e2;
+    }
+
+    .legend-item {
+      grid-template-columns: 18px 1fr;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .log-list {
+      max-height: 280px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .log-item {
+      gap: 6px;
+    }
+
+    .log-item strong {
+      color: #fff5d8;
+      font-size: 13px;
+    }
+
+    .log-item span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .form-item {
+      display: grid;
+      gap: 6px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .form-item.current {
+      border-color: rgba(255, 215, 111, 0.34);
+      background: rgba(255, 215, 111, 0.08);
+    }
+
+    .form-item strong {
+      color: #fff5d8;
+      font-size: 14px;
+    }
+
+    .form-item span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .canvas-shell {
+      border-radius: 28px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shell-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .canvas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .canvas-title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .canvas-title strong {
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      font-family: "Courier New", monospace;
+    }
+
+    .canvas-title span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .mission-badge {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 139, 180, 0.12);
+      border: 1px solid rgba(255, 139, 180, 0.2);
+      color: #ffd4e5;
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: right;
+      min-width: 200px;
+    }
+
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .pixel-btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff8e2;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+
+    .pixel-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .pixel-btn:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .pixel-btn.primary {
+      background: rgba(255, 215, 111, 0.14);
+      border-color: rgba(255, 215, 111, 0.3);
+      color: #ffe8a5;
+    }
+
+    .pixel-btn.danger {
+      background: rgba(255, 140, 140, 0.14);
+      border-color: rgba(255, 140, 140, 0.28);
+      color: #ffd0d0;
+    }
+
+    .pixel-select {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff8e2;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      min-width: 176px;
+    }
+
+    .canvas-frame {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(172, 208, 144, 0.14) 0%, rgba(14, 18, 15, 0.1) 100%),
+        #111712;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      min-height: 780px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 780px;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    .frame-topbar {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 6;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .frame-status-group,
+    .frame-menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      pointer-events: auto;
+    }
+
+    .compact-stat,
+    .compact-form {
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: rgba(8, 11, 10, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      display: grid;
+      align-content: center;
+      gap: 2px;
+    }
+
+    .compact-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(239, 246, 232, 0.6);
+    }
+
+    .compact-stat strong,
+    .compact-form strong {
+      color: #fff8e2;
+      font-size: 14px;
+      font-family: "Courier New", monospace;
+    }
+
+    .compact-form {
+      max-width: min(42vw, 360px);
+    }
+
+    .frame-toggle {
+      min-width: 82px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(8, 11, 10, 0.68);
+      color: #f7f0d8;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .frame-toggle.is-active {
+      background: rgba(255, 215, 111, 0.16);
+      border-color: rgba(255, 215, 111, 0.32);
+      color: #ffe8a5;
+    }
+
+    .frame-drawer {
+      position: absolute;
+      z-index: 5;
+      background: rgba(11, 15, 13, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.3);
+      overflow: auto;
+      pointer-events: none;
+      visibility: hidden;
+      transition: transform 180ms ease, opacity 180ms ease;
+    }
+
+    .frame-drawer-left,
+    .frame-drawer-right {
+      top: 74px;
+      bottom: 160px;
+      width: min(330px, calc(100% - 28px));
+      padding: 16px;
+      opacity: 0;
+    }
+
+    .frame-drawer-left {
+      left: 14px;
+      transform: translateX(-110%);
+    }
+
+    .frame-drawer-right {
+      right: 14px;
+      transform: translateX(110%);
+    }
+
+    .frame-drawer-bottom {
+      left: 14px;
+      right: 14px;
+      bottom: 170px;
+      max-height: 34%;
+      padding: 16px;
+      opacity: 0;
+      transform: translateY(115%);
+    }
+
+    .frame-drawer.is-open {
+      opacity: 1;
+      transform: translate(0, 0);
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .drawer-header {
+      margin: 0 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .drawer-header strong {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-family: "Courier New", monospace;
+      color: #fff3d3;
+    }
+
+    .drawer-header span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .overlay-hint {
+      position: absolute;
+      left: 18px;
+      bottom: 238px;
+      display: inline-flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: min(620px, calc(100% - 36px));
+      z-index: 4;
+    }
+
+    .hint-chip {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(8, 11, 10, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f1f5ea;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .hotbar {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .hotbar-overlay {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 102px;
+      margin-top: 0;
+      z-index: 4;
+    }
+
+    .slot {
+      min-height: 70px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+    }
+
+    .slot strong {
+      font-size: 12px;
+      color: #fff3d3;
+      font-family: "Courier New", monospace;
+    }
+
+    .slot span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .boss-card {
+      position: absolute;
+      right: 18px;
+      bottom: 240px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(47, 17, 17, 0.74);
+      border: 1px solid rgba(255, 140, 140, 0.22);
+      color: #ffe5dd;
+      max-width: 260px;
+      font-size: 13px;
+      line-height: 1.6;
+      z-index: 4;
+    }
+
+    .boss-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffd1c0;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .hud-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .meta-pill {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: grid;
+      gap: 3px;
+    }
+
+    .meta-pill span {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(239, 246, 232, 0.56);
+    }
+
+    .meta-pill strong {
+      font-size: 14px;
+      color: #fff3d3;
+      font-family: "Courier New", monospace;
+    }
+
+    .icon-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .icon-key {
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff4d4;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    .touch-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 4;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .touch-card {
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(8, 11, 10, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      pointer-events: auto;
+    }
+
+    .touch-card-title {
+      margin-bottom: 10px;
+      color: rgba(239, 246, 232, 0.72);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .touch-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 58px);
+      grid-template-rows: repeat(2, 58px);
+      gap: 8px;
+      grid-template-areas:
+        ". up ."
+        "left down right";
+    }
+
+    .touch-btn,
+    .action-btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff6df;
+      border-radius: 16px;
+      cursor: pointer;
+      font-family: "Courier New", monospace;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .touch-btn {
+      width: 58px;
+      height: 58px;
+      font-size: 22px;
+    }
+
+    .touch-btn[data-key="w"] { grid-area: up; }
+    .touch-btn[data-key="a"] { grid-area: left; }
+    .touch-btn[data-key="s"] { grid-area: down; }
+    .touch-btn[data-key="d"] { grid-area: right; }
+
+    .touch-btn.is-pressed,
+    .action-btn:active,
+    .touch-btn:active {
+      transform: scale(0.96);
+      background: rgba(255, 215, 111, 0.16);
+      border-color: rgba(255, 215, 111, 0.28);
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 86px));
+      gap: 8px;
+    }
+
+    .action-btn {
+      min-height: 74px;
+      padding: 10px 8px;
+      display: grid;
+      gap: 6px;
+      align-content: center;
+      justify-items: center;
+      font-size: 12px;
+    }
+
+    .action-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .action-hint {
+      color: rgba(239, 246, 232, 0.56);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: rgba(239, 246, 232, 0.58);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meter {
+      display: grid;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .meter-track {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff7d7d, #ffc679);
+      width: 100%;
+    }
+
+    .meter-fill.shield {
+      background: linear-gradient(90deg, #6eb7ff, #97ddff);
+      width: 0%;
+    }
+
+    @media (max-width: 1240px) {
+      .canvas-frame,
+      canvas {
+        min-height: 720px;
+        height: 720px;
+      }
+
+      .hotbar {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .compact-form {
+        max-width: min(44vw, 300px);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .shell-banner,
+      .canvas-header,
+      .frame-topbar,
+      .touch-hud {
+        gap: 10px;
+      }
+
+      .frame-topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .frame-status-group,
+      .frame-menu {
+        justify-content: space-between;
+      }
+
+      .frame-drawer-left,
+      .frame-drawer-right {
+        width: calc(100% - 28px);
+        bottom: 220px;
+      }
+
+      .frame-drawer-bottom {
+        bottom: 220px;
+        max-height: 40%;
+      }
+
+      .overlay-hint,
+      .boss-card {
+        bottom: 292px;
+      }
+
+      .hotbar-overlay {
+        bottom: 136px;
+      }
+
+      .touch-hud {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .touch-card {
+        width: fit-content;
+      }
+
+      .action-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 12px;
+      }
+
+      .canvas-shell {
+        border-radius: 20px;
+      }
+
+      .shell-banner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .canvas-frame,
+      canvas {
+        min-height: 680px;
+        height: 680px;
+      }
+
+      .hotbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .frame-status-group,
+      .frame-menu {
+        justify-content: flex-start;
+      }
+
+      .compact-form {
+        max-width: 100%;
+      }
+
+      .touch-pad {
+        grid-template-columns: repeat(3, 52px);
+        grid-template-rows: repeat(2, 52px);
+      }
+
+      .touch-btn {
+        width: 52px;
+        height: 52px;
+      }
+
+      .action-grid {
+        grid-template-columns: repeat(3, minmax(0, 72px));
+      }
+
+      .action-btn {
+        min-height: 68px;
+      }
+
+      .overlay-hint {
+        max-width: calc(100% - 28px);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .canvas-frame,
+      canvas {
+        min-height: 760px;
+        height: 760px;
+      }
+
+      .frame-drawer-left,
+      .frame-drawer-right,
+      .frame-drawer-bottom {
+        bottom: 250px;
+      }
+
+      .overlay-hint,
+      .boss-card {
+        display: none;
+      }
+
+      .hotbar-overlay {
+        bottom: 164px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="canvas-shell game-shell">
+      <div class="shell-banner">
+        <div class="canvas-title">
+          <strong>今日变身生存 / Overworld Alpha</strong>
+          <span id="subtitleText">女孩在清晨变身，世界更大、资源更多、玩法每天不再重复。</span>
+        </div>
+        <div id="missionText" class="mission-badge">
+          今日目标：先用新形态活下来<br />
+          白天囤资源，夜晚打怪
+        </div>
+      </div>
+
+      <div class="canvas-frame">
+        <canvas id="gameCanvas" aria-label="今日变身生存试玩版"></canvas>
+
+        <div class="frame-topbar">
+          <div class="frame-status-group">
+            <div id="phaseBadge" class="eyebrow">准备阶段</div>
+            <div class="compact-stat">
+              <span class="compact-label">Day</span>
+              <strong id="dayText">Day 1</strong>
+            </div>
+            <div class="compact-form">
+              <span class="compact-label">当前变身</span>
+              <strong id="formText">女孩 -> 飞天猫</strong>
+            </div>
+          </div>
+          <div class="frame-menu">
+            <button id="toggleInfoBtn" class="frame-toggle is-active" type="button" aria-expanded="true">信息</button>
+            <button id="toggleWorldBtn" class="frame-toggle" type="button" aria-expanded="false">世界</button>
+            <button id="toggleCraftBtn" class="frame-toggle" type="button" aria-expanded="false">工坊</button>
+          </div>
+        </div>
+
+        <aside id="infoDrawer" class="frame-drawer frame-drawer-left is-open">
+          <div class="drawer-header">
+            <strong>生存面板</strong>
+            <span>游戏内信息 HUD</span>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <span>当前地块</span>
+              <strong id="terrainText">生成中</strong>
+            </div>
+            <div class="stat-item">
+              <span>世界坐标</span>
+              <strong id="positionText">0, 0</strong>
+            </div>
+          </div>
+
+          <div class="meter">
+            <span>生命值 <strong id="hpText">10 / 10</strong></span>
+            <div class="meter-track"><div id="hpBar" class="meter-fill"></div></div>
+          </div>
+          <div class="meter">
+            <span>护甲值 <strong id="shieldText">0 / 0</strong></span>
+            <div class="meter-track"><div id="shieldBar" class="meter-fill shield"></div></div>
+          </div>
+
+          <div class="recipes">
+            <div class="recipe-card">
+              <span>草</span>
+              <strong id="grassText">0</strong>
+            </div>
+            <div class="recipe-card">
+              <span>木头</span>
+              <strong id="woodText">0</strong>
+            </div>
+            <div class="recipe-card">
+              <span>石头 / 钉子</span>
+              <strong id="stoneText">0 / 0</strong>
+            </div>
+            <div class="recipe-card">
+              <span>土块</span>
+              <strong id="dirtText">0</strong>
+            </div>
+            <div class="recipe-card">
+              <span>钻石</span>
+              <strong id="diamondText">0</strong>
+            </div>
+            <div class="recipe-card">
+              <span>装备状态</span>
+              <strong id="equipmentText">无武器 / 无护甲 / 无铲子 / 无床</strong>
+            </div>
+          </div>
+
+          <div class="hud-meta">
+            <div class="meta-pill">
+              <span>移动速度</span>
+              <strong id="speedText">3.4</strong>
+            </div>
+            <div class="meta-pill">
+              <span>存活怪物</span>
+              <strong id="monsterCountText">0</strong>
+            </div>
+            <div class="meta-pill">
+              <span>世界大小</span>
+              <strong id="worldSizeText">104 x 104</strong>
+            </div>
+            <div class="meta-pill">
+              <span>Seed</span>
+              <strong id="seedText">daily-morph-alpha</strong>
+            </div>
+          </div>
+
+          <div class="tips">
+            <div class="tip-item">
+              <span>移动</span>
+              <strong>键盘和平板都能直接操作</strong>
+              <div class="icon-row">
+                <span class="icon-key">W</span>
+                <span class="icon-key">A</span>
+                <span class="icon-key">S</span>
+                <span class="icon-key">D</span>
+                <span class="icon-key">▲</span>
+                <span class="icon-key">◀</span>
+                <span class="icon-key">▼</span>
+                <span class="icon-key">▶</span>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span>技能</span>
+              <strong>空格释放技能，平板点按右下角技能按钮</strong>
+              <div class="icon-row">
+                <span class="icon-key">Space</span>
+                <span class="icon-key">✦</span>
+              </div>
+            </div>
+            <div class="tip-item">
+              <span>采集</span>
+              <strong>草自动采，树要先做斧头，石头和钻石仍靠铲子</strong>
+            </div>
+          </div>
+        </aside>
+
+        <aside id="worldDrawer" class="frame-drawer frame-drawer-right">
+          <div class="drawer-header">
+            <strong>世界情报</strong>
+            <span>可展开 / 可隐藏</span>
+          </div>
+
+          <h2>地图图例</h2>
+          <div class="legend">
+            <div class="legend-item"><span class="swatch" style="background:#5f9d54"></span><span>草地，可通行</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#7d5838"></span><span>泥地，可通行</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#4a78b9"></span><span>水域，不可通行</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#7f857f"></span><span>石块，不可通行</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#8fd86a"></span><span>草，可做草护甲和床</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#a57a4f"></span><span>树，必须先做斧头才能砍</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#a0a9b2"></span><span>矿石，可采出石头</span></div>
+            <div class="legend-item"><span class="swatch" style="background:#67d6ff"></span><span>钻石矿，可做高级武器和盔甲</span></div>
+          </div>
+
+          <h2>事件记录</h2>
+          <div id="logList" class="log-list"></div>
+
+          <h2>形态轮替</h2>
+          <div id="formList" class="form-list"></div>
+
+          <h2>世界生物</h2>
+          <p>现在世界里已经有慢慢闲逛的牛和飞来飞去的鸟，先作为环境生物让地图活起来。后面可以继续接成养牛、掉落、驯养和生态系统。</p>
+          <p>夜晚刷出的怪物仍然是一只毛茸茸的彩色椭圆生物，只有一只大眼睛、三只手和四只腿，会主动追击玩家。</p>
+        </aside>
+
+        <aside id="craftDrawer" class="frame-drawer frame-drawer-bottom">
+          <div class="drawer-header">
+            <strong>工坊与测试</strong>
+            <span>合成 / 挖搭 / 切换动物</span>
+          </div>
+          <div class="control-bar">
+            <button id="craftWoodWeaponBtn" class="pixel-btn" type="button">木武器（3 木）</button>
+            <button id="craftGrassArmorBtn" class="pixel-btn" type="button">草护甲（3 草）</button>
+            <button id="craftAxeBtn" class="pixel-btn" type="button">斧头（5 木）</button>
+            <button id="craftShovelBtn" class="pixel-btn" type="button">铲子（5 木）</button>
+            <button id="craftNailsBtn" class="pixel-btn" type="button">4 钉子（2 石）</button>
+            <button id="craftBedBtn" class="pixel-btn" type="button">床（4 钉+4 木+2 草）</button>
+            <button id="craftDiamondWeaponBtn" class="pixel-btn" type="button">钻石武器（3 钻+1 木）</button>
+            <button id="craftDiamondArmorBtn" class="pixel-btn" type="button">钻石护甲（4 钻+1 草）</button>
+            <button id="digDirtBtn" class="pixel-btn" type="button">挖土（F）</button>
+            <button id="placeDirtBtn" class="pixel-btn" type="button">搭土（G）</button>
+            <select id="testFormSelect" class="pixel-select" aria-label="测试切换动物"></select>
+            <button id="applyFormBtn" class="pixel-btn" type="button">切换动物测试</button>
+            <button id="clearFormBtn" class="pixel-btn" type="button">恢复每日变身</button>
+            <button id="phaseBtn" class="pixel-btn primary" type="button">结束白天，开始袭击</button>
+            <button id="restartBtn" class="pixel-btn danger" type="button">重新开始</button>
+          </div>
+        </aside>
+
+        <div class="overlay-hint">
+          <div class="hint-chip">按右上角按钮可收起信息，让画面更沉浸</div>
+          <div class="hint-chip">平板可直接点按方向键和技能 / 挖土 / 搭土图标</div>
+        </div>
+        <div class="boss-card">
+          <strong>Final Boss</strong>
+          现在先跑通“每天变身 + 资源合成 + 夜袭守家”的主循环。等世界里的动物、资源链和夜袭节奏稳定后，再把最终 Boss 正式接进祭坛。
+        </div>
+
+        <div id="hotbar" class="hotbar hotbar-overlay"></div>
+
+        <div class="touch-hud">
+          <div class="touch-card">
+            <div class="touch-card-title">移动</div>
+            <div class="touch-pad">
+              <button class="touch-btn" id="moveUpBtn" type="button" data-key="w" aria-label="向上移动">▲</button>
+              <button class="touch-btn" id="moveLeftBtn" type="button" data-key="a" aria-label="向左移动">◀</button>
+              <button class="touch-btn" id="moveDownBtn" type="button" data-key="s" aria-label="向下移动">▼</button>
+              <button class="touch-btn" id="moveRightBtn" type="button" data-key="d" aria-label="向右移动">▶</button>
+            </div>
+          </div>
+
+          <div class="touch-card">
+            <div class="touch-card-title">技能 / 动作</div>
+            <div class="action-grid">
+              <button id="touchSkillBtn" class="action-btn" type="button" aria-label="释放技能">
+                <span class="action-icon">✦</span>
+                <span>技能</span>
+                <span class="action-hint">Space</span>
+              </button>
+              <button id="touchDigBtn" class="action-btn" type="button" aria-label="挖土">
+                <span class="action-icon">⛏</span>
+                <span>挖土</span>
+                <span class="action-hint">F</span>
+              </button>
+              <button id="touchPlaceBtn" class="action-btn" type="button" aria-label="搭土">
+                <span class="action-icon">▣</span>
+                <span>搭土</span>
+                <span class="action-hint">G</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const phaseBadge = document.getElementById("phaseBadge");
+    const dayText = document.getElementById("dayText");
+    const formText = document.getElementById("formText");
+    const terrainText = document.getElementById("terrainText");
+    const positionText = document.getElementById("positionText");
+    const hpText = document.getElementById("hpText");
+    const shieldText = document.getElementById("shieldText");
+    const grassText = document.getElementById("grassText");
+    const woodText = document.getElementById("woodText");
+    const stoneText = document.getElementById("stoneText");
+    const dirtText = document.getElementById("dirtText");
+    const diamondText = document.getElementById("diamondText");
+    const equipmentText = document.getElementById("equipmentText");
+    const hpBar = document.getElementById("hpBar");
+    const shieldBar = document.getElementById("shieldBar");
+    const subtitleText = document.getElementById("subtitleText");
+    const missionText = document.getElementById("missionText");
+    const seedLabel = document.getElementById("seedText");
+    const speedText = document.getElementById("speedText");
+    const monsterCountText = document.getElementById("monsterCountText");
+    const worldSizeText = document.getElementById("worldSizeText");
+    const hotbar = document.getElementById("hotbar");
+    const formList = document.getElementById("formList");
+    const craftWoodWeaponBtn = document.getElementById("craftWoodWeaponBtn");
+    const craftGrassArmorBtn = document.getElementById("craftGrassArmorBtn");
+    const craftAxeBtn = document.getElementById("craftAxeBtn");
+    const craftShovelBtn = document.getElementById("craftShovelBtn");
+    const craftNailsBtn = document.getElementById("craftNailsBtn");
+    const craftBedBtn = document.getElementById("craftBedBtn");
+    const craftDiamondWeaponBtn = document.getElementById("craftDiamondWeaponBtn");
+    const craftDiamondArmorBtn = document.getElementById("craftDiamondArmorBtn");
+    const digDirtBtn = document.getElementById("digDirtBtn");
+    const placeDirtBtn = document.getElementById("placeDirtBtn");
+    const testFormSelect = document.getElementById("testFormSelect");
+    const applyFormBtn = document.getElementById("applyFormBtn");
+    const clearFormBtn = document.getElementById("clearFormBtn");
+    const phaseBtn = document.getElementById("phaseBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const logList = document.getElementById("logList");
+    const infoDrawer = document.getElementById("infoDrawer");
+    const worldDrawer = document.getElementById("worldDrawer");
+    const craftDrawer = document.getElementById("craftDrawer");
+    const toggleInfoBtn = document.getElementById("toggleInfoBtn");
+    const toggleWorldBtn = document.getElementById("toggleWorldBtn");
+    const toggleCraftBtn = document.getElementById("toggleCraftBtn");
+    const moveUpBtn = document.getElementById("moveUpBtn");
+    const moveLeftBtn = document.getElementById("moveLeftBtn");
+    const moveDownBtn = document.getElementById("moveDownBtn");
+    const moveRightBtn = document.getElementById("moveRightBtn");
+    const touchSkillBtn = document.getElementById("touchSkillBtn");
+    const touchDigBtn = document.getElementById("touchDigBtn");
+    const touchPlaceBtn = document.getElementById("touchPlaceBtn");
+
+    const WORLD = {
+      seed: "daily-morph-alpha",
+      tileSize: 32,
+      width: 104,
+      height: 104,
+      tiles: [],
+      altar: { x: 89, y: 14, radius: 5 }
+    };
+
+    const forms = [
+      {
+        key: "skyCat",
+        name: "飞天猫",
+        intro: "粉色身体、黄色翅膀、1 条尾巴、4 条腿。",
+        skill: "按空格吐鱼刺弹，可飞越水面和石块。",
+        speedBonus: 0.25,
+        canFly: true,
+        projectileColor: "#ffe07a",
+        projectileShape: "diamond"
+      },
+      {
+        key: "caterpillar",
+        name: "毛毛虫",
+        intro: "会衍生伪装叶团，怪物不容易发现你。",
+        skill: "按空格进入潜行叶茧，持续几秒几乎不会被怪发现。",
+        speedBonus: 0.1,
+        canFly: false,
+        stealthBase: 96,
+        hideDuration: 3.6
+      },
+      {
+        key: "football",
+        name: "足球",
+        intro: "只能滚，但滚得特别快。",
+        skill: "按空格进入高速翻滚，撞到怪物会造成伤害。",
+        speedBonus: 0.75,
+        canFly: false,
+        rollDuration: 0.75,
+        rollDamage: 2,
+        rollBoost: 2.2
+      },
+      {
+        key: "mimicBeast",
+        name: "伪装兽",
+        intro: "长得和怪兽很像，远处看不出来。",
+        skill: "按空格强化伪装，怪物几乎不会主动识别你。",
+        speedBonus: 0.16,
+        canFly: false,
+        mimicDetectRange: 18,
+        mimicBurstDuration: 4.2
+      },
+      {
+        key: "angel",
+        name: "天使",
+        intro: "会飞，会吐牛奶净化怪物。",
+        skill: "按空格发射牛奶弹，命中的怪物会直接被净化。",
+        speedBonus: 0.22,
+        canFly: true,
+        projectileColor: "#f7fbff",
+        projectileShape: "orb",
+        holyMilk: true
+      },
+      {
+        key: "dragon",
+        name: "龙",
+        intro: "会飞，会吐火球，压制范围更大。",
+        skill: "按空格吐出火球，命中怪物造成 2 点伤害。",
+        speedBonus: 0.28,
+        canFly: true,
+        projectileColor: "#ff9348",
+        projectileShape: "flame",
+        fireball: true,
+        fireballDamage: 2
+      },
+      {
+        key: "centipede",
+        name: "蜈蚣",
+        intro: "会钻石头，石块不再挡路。",
+        skill: "石头地形对你失效，可以直接钻过去。",
+        speedBonus: 0.18,
+        canFly: false,
+        burrowStone: true,
+        mineHard: true
+      },
+      {
+        key: "sheep",
+        name: "羊",
+        intro: "会自动带一张床，跑得快，还能踩怪。",
+        skill: "变成羊时自动有床；高速奔跑碰到怪物会踩伤它。",
+        speedBonus: 0.35,
+        canFly: false,
+        grantBed: true,
+        stompDamage: 1
+      }
+    ];
+
+    const hero = {
+      baseForm: "女孩",
+      form: "女孩",
+      x: 0,
+      y: 0,
+      baseSpeed: 3.4,
+      speed: 3.4,
+      facing: "down",
+      bob: 0,
+      moving: false,
+      size: 22,
+      baseMaxHp: 10,
+      maxHp: 10,
+      hp: 10,
+      maxShield: 0,
+      shield: 0,
+      attackDamage: 1,
+      attackRange: 38,
+      collectRange: 32,
+      attackCooldown: 0,
+      skillCooldown: 0,
+      hiddenTimer: 0,
+      rollTimer: 0,
+      revealedTimer: 0,
+      mimicBurstTimer: 0,
+      hitFlash: 0,
+      dead: false
+    };
+
+    const game = {
+      day: 1,
+      phase: "prepare",
+      inventory: {
+        grass: 0,
+        wood: 0,
+        stone: 0,
+        dirt: 0,
+        diamond: 0,
+        nails: 0
+      },
+      equipment: {
+        weapon: "none",
+        armor: "none",
+        axe: false,
+        shovel: false,
+        bed: false
+      },
+      nodes: [],
+      monsters: [],
+      projectiles: [],
+      critters: {
+        cows: [],
+        birds: []
+      },
+      logs: [],
+      nextMonsterId: 1,
+      testFormKey: null,
+      assaultDotTimer: 1
+    };
+
+    const camera = { x: 0, y: 0 };
+    const keys = new Set();
+    let lastTime = 0;
+
+    seedLabel.textContent = WORLD.seed;
+    worldSizeText.textContent = WORLD.width + " x " + WORLD.height;
+    speedText.textContent = hero.speed.toFixed(1);
+
+    function hash2D(x, y, seed) {
+      const s = Math.sin(x * 127.1 + y * 311.7 + seed * 0.017) * 43758.5453123;
+      return s - Math.floor(s);
+    }
+
+    function smoothstep(t) {
+      return t * t * (3 - 2 * t);
+    }
+
+    function valueNoise(x, y, seed) {
+      const x0 = Math.floor(x);
+      const y0 = Math.floor(y);
+      const x1 = x0 + 1;
+      const y1 = y0 + 1;
+      const sx = smoothstep(x - x0);
+      const sy = smoothstep(y - y0);
+
+      const n00 = hash2D(x0, y0, seed);
+      const n10 = hash2D(x1, y0, seed);
+      const n01 = hash2D(x0, y1, seed);
+      const n11 = hash2D(x1, y1, seed);
+
+      const ix0 = n00 + (n10 - n00) * sx;
+      const ix1 = n01 + (n11 - n01) * sx;
+      return ix0 + (ix1 - ix0) * sy;
+    }
+
+    function fractalNoise(x, y, seed) {
+      let sum = 0;
+      let amplitude = 1;
+      let frequency = 1;
+      let weight = 0;
+
+      for (let octave = 0; octave < 4; octave += 1) {
+        sum += valueNoise(x * frequency, y * frequency, seed + octave * 113) * amplitude;
+        weight += amplitude;
+        amplitude *= 0.5;
+        frequency *= 2;
+      }
+
+      return sum / weight;
+    }
+
+    function classifyTile(x, y) {
+      const elevation = fractalNoise(x * 0.085, y * 0.085, 17);
+      const moisture = fractalNoise((x + 80) * 0.1, (y - 40) * 0.1, 39);
+      const detail = fractalNoise((x - 30) * 0.24, (y + 75) * 0.24, 91);
+      const altarDistance = Math.hypot(x - WORLD.altar.x, y - WORLD.altar.y);
+
+      if (altarDistance <= WORLD.altar.radius) {
+        return {
+          type: "altar",
+          walkable: altarDistance > WORLD.altar.radius - 1.2,
+          detail
+        };
+      }
+
+      if (elevation < 0.27 || (elevation < 0.34 && moisture > 0.72)) {
+        return { type: "water", walkable: false, detail };
+      }
+
+      if (elevation > 0.76 || (elevation > 0.69 && moisture < 0.28)) {
+        return { type: "stone", walkable: false, detail };
+      }
+
+      if (moisture < 0.35 || detail > 0.8) {
+        return { type: "dirt", walkable: true, detail };
+      }
+
+      return { type: "grass", walkable: true, detail };
+    }
+
+    function generateWorld() {
+      WORLD.tiles = new Array(WORLD.width * WORLD.height);
+
+      for (let y = 0; y < WORLD.height; y += 1) {
+        for (let x = 0; x < WORLD.width; x += 1) {
+          WORLD.tiles[y * WORLD.width + x] = classifyTile(x, y);
+        }
+      }
+    }
+
+    function getTile(x, y) {
+      if (x < 0 || y < 0 || x >= WORLD.width || y >= WORLD.height) {
+        return { type: "void", walkable: false, detail: 0 };
+      }
+      return WORLD.tiles[y * WORLD.width + x];
+    }
+
+    function setTile(x, y, type, walkable, detail) {
+      if (x < 0 || y < 0 || x >= WORLD.width || y >= WORLD.height) return;
+      WORLD.tiles[y * WORLD.width + x] = {
+        type,
+        walkable,
+        detail
+      };
+    }
+
+    function getFacingTilePosition() {
+      let offsetX = 0;
+      let offsetY = 0;
+      if (hero.facing === "left") offsetX = -1;
+      else if (hero.facing === "right") offsetX = 1;
+      else if (hero.facing === "up") offsetY = -1;
+      else offsetY = 1;
+
+      return {
+        x: Math.floor(hero.x / WORLD.tileSize) + offsetX,
+        y: Math.floor(hero.y / WORLD.tileSize) + offsetY
+      };
+    }
+
+    function canFormStandAtTile(form, tileX, tileY) {
+      const worldX = (tileX + 0.5) * WORLD.tileSize;
+      const worldY = (tileY + 0.5) * WORLD.tileSize;
+      return checkCollisionAt(worldX, worldY, hero.size, !!form.canFly, !!form.burrowStone);
+    }
+
+    function findSpawn(form = getCurrentForm()) {
+      const centerX = Math.floor(WORLD.width * 0.34);
+      const centerY = Math.floor(WORLD.height * 0.56);
+
+      for (let radius = 0; radius < 18; radius += 1) {
+        for (let oy = -radius; oy <= radius; oy += 1) {
+          for (let ox = -radius; ox <= radius; ox += 1) {
+            const x = centerX + ox;
+            const y = centerY + oy;
+            const tile = getTile(x, y);
+            if (canFormUseTile(form, tile.type) && canFormStandAtTile(form, x, y)) {
+              hero.x = (x + 0.5) * WORLD.tileSize;
+              hero.y = (y + 0.5) * WORLD.tileSize;
+              return;
+            }
+          }
+        }
+      }
+    }
+
+    function canFormUseTile(form, tileType) {
+      if (!form) return false;
+      if (form.canFly) return tileType !== "void";
+      if (form.burrowStone && tileType === "stone") return true;
+      return canWalkOnTile(tileType);
+    }
+
+    function ensureHeroValidForForm() {
+      const currentForm = getCurrentForm();
+      const currentTileX = Math.floor(hero.x / WORLD.tileSize);
+      const currentTileY = Math.floor(hero.y / WORLD.tileSize);
+      const currentTile = getTile(currentTileX, currentTileY);
+
+      if (canFormUseTile(currentForm, currentTile.type) && canFormStandAtTile(currentForm, currentTileX, currentTileY)) {
+        return;
+      }
+
+      for (let radius = 1; radius < 24; radius += 1) {
+        for (let oy = -radius; oy <= radius; oy += 1) {
+          for (let ox = -radius; ox <= radius; ox += 1) {
+            const x = currentTileX + ox;
+            const y = currentTileY + oy;
+            const tile = getTile(x, y);
+            if (canFormUseTile(currentForm, tile.type) && canFormStandAtTile(currentForm, x, y)) {
+              hero.x = (x + 0.5) * WORLD.tileSize;
+              hero.y = (y + 0.5) * WORLD.tileSize;
+              addLog("落点修正", currentForm.name + " 不能待在原地形，已自动挪到最近可站位置。");
+              return;
+            }
+          }
+        }
+      }
+
+      findSpawn(currentForm);
+      addLog("落点修正", currentForm.name + " 被送回安全出生点。");
+    }
+
+    function resizeCanvas() {
+      const frame = canvas.parentElement;
+      const rect = frame.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * ratio);
+      canvas.height = Math.floor(rect.height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+    }
+
+    function tileColor(type) {
+      if (type === "grass") return "#5f9d54";
+      if (type === "dirt") return "#7d5838";
+      if (type === "water") return "#4a78b9";
+      if (type === "stone") return "#7f857f";
+      if (type === "altar") return "#c75e73";
+      return "#000000";
+    }
+
+    function getCurrentForm() {
+      if (game.testFormKey) {
+        return forms.find((form) => form.key === game.testFormKey) || forms[(game.day - 1) % forms.length];
+      }
+      return forms[(game.day - 1) % forms.length];
+    }
+
+    function renderTestFormOptions() {
+      testFormSelect.innerHTML = "";
+      forms.forEach((form) => {
+        const option = document.createElement("option");
+        option.value = form.key;
+        option.textContent = form.name;
+        testFormSelect.appendChild(option);
+      });
+      testFormSelect.value = getCurrentForm().key;
+    }
+
+    function drawBlock(x, y, size, base, light, dark) {
+      ctx.fillStyle = base;
+      ctx.fillRect(x, y, size, size);
+      ctx.fillStyle = light;
+      ctx.fillRect(x, y, size, 4);
+      ctx.fillRect(x, y, 4, size);
+      ctx.fillStyle = dark;
+      ctx.fillRect(x + size - 4, y, 4, size);
+      ctx.fillRect(x, y + size - 4, size, 4);
+    }
+
+    function drawTile(tile, screenX, screenY, tileSize, tileX, tileY) {
+      const base = tileColor(tile.type);
+
+      if (tile.type === "grass") {
+        drawBlock(screenX, screenY, tileSize, base, "#85bf75", "#486e40");
+        ctx.fillStyle = tile.detail > 0.55 ? "#79b96f" : "#6ba85e";
+        ctx.fillRect(screenX + 6, screenY + 6, 6, 10);
+        ctx.fillRect(screenX + 14, screenY + 4, 4, 8);
+        ctx.fillRect(screenX + 20, screenY + 10, 4, 8);
+      } else if (tile.type === "dirt") {
+        drawBlock(screenX, screenY, tileSize, base, "#9d7350", "#5b3e26");
+        ctx.fillStyle = "#6f4e32";
+        ctx.fillRect(screenX + 6, screenY + 10, 7, 5);
+        ctx.fillRect(screenX + 17, screenY + 19, 9, 5);
+        ctx.fillRect(screenX + 11, screenY + 23, 4, 4);
+      } else if (tile.type === "water") {
+        drawBlock(screenX, screenY, tileSize, base, "#6b96d6", "#335989");
+        ctx.fillStyle = "rgba(255,255,255,0.2)";
+        const ripple = Math.floor((tileX * 5 + tileY * 7 + performance.now() * 0.01) % 16);
+        ctx.fillRect(screenX + 4 + ripple, screenY + 8, 10, 3);
+        ctx.fillRect(screenX + ((ripple + 10) % 20), screenY + 20, 8, 3);
+      } else if (tile.type === "stone") {
+        drawBlock(screenX, screenY, tileSize, base, "#9ea39d", "#646963");
+        ctx.fillStyle = "#6c726c";
+        ctx.fillRect(screenX + 6, screenY + 6, 8, 7);
+        ctx.fillRect(screenX + 15, screenY + 15, 9, 6);
+        ctx.fillRect(screenX + 9, screenY + 21, 6, 5);
+      } else if (tile.type === "altar") {
+        drawBlock(screenX, screenY, tileSize, base, "#e57c94", "#88384b");
+        ctx.fillStyle = tile.walkable ? "#ffd5df" : "#6c2735";
+        ctx.fillRect(screenX + 10, screenY + 7, 12, 18);
+        ctx.fillStyle = "#fff2bf";
+        ctx.fillRect(screenX + 13, screenY + 10, 6, 6);
+      }
+    }
+
+    function drawWorld(viewWidth, viewHeight) {
+      const tileSize = WORLD.tileSize;
+      const startX = Math.floor(camera.x / tileSize) - 1;
+      const startY = Math.floor(camera.y / tileSize) - 1;
+      const endX = startX + Math.ceil(viewWidth / tileSize) + 3;
+      const endY = startY + Math.ceil(viewHeight / tileSize) + 3;
+
+      for (let y = startY; y < endY; y += 1) {
+        for (let x = startX; x < endX; x += 1) {
+          const tile = getTile(x, y);
+          const screenX = Math.round(x * tileSize - camera.x);
+          const screenY = Math.round(y * tileSize - camera.y);
+          drawTile(tile, screenX, screenY, tileSize, x, y);
+        }
+      }
+    }
+
+    function drawShadow(x, y, width, alpha) {
+      ctx.fillStyle = "rgba(0, 0, 0, " + alpha + ")";
+      ctx.fillRect(Math.round(x - width / 2), Math.round(y + 11), width, 6);
+    }
+
+    function drawCow(cow) {
+      const x = cow.x - camera.x;
+      const y = cow.y - camera.y;
+      drawShadow(x, y, 22, 0.14);
+      ctx.fillStyle = "#d1b089";
+      ctx.fillRect(x - 11, y - 10, 22, 16);
+      ctx.fillStyle = "#fff4e8";
+      ctx.fillRect(x - 4, y - 8, 7, 6);
+      ctx.fillStyle = "#8f5e3a";
+      ctx.fillRect(x - 10, y - 9, 5, 4);
+      ctx.fillRect(x + 4, y - 2, 5, 4);
+      ctx.fillRect(x - 8, y + 7, 3, 8);
+      ctx.fillRect(x - 2, y + 7, 3, 8);
+      ctx.fillRect(x + 4, y + 7, 3, 8);
+      ctx.strokeStyle = "#4b3527";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x - 10, y - 10);
+      ctx.lineTo(x - 14, y - 14);
+      ctx.moveTo(x + 10, y - 10);
+      ctx.lineTo(x + 14, y - 14);
+      ctx.stroke();
+    }
+
+    function drawBird(bird) {
+      const x = bird.x - camera.x;
+      const y = bird.y - camera.y;
+      ctx.strokeStyle = bird.color;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(x - 10, y);
+      ctx.lineTo(x, y - 6);
+      ctx.lineTo(x + 10, y);
+      ctx.stroke();
+      ctx.fillStyle = bird.color;
+      ctx.fillRect(x - 2, y - 1, 4, 4);
+    }
+
+    function drawGirl(x, y) {
+      const px = 4;
+      const bob = Math.sin(hero.bob) * 1.2;
+      const left = Math.round(x - 3 * px);
+      const top = Math.round(y - 6 * px + bob);
+      const currentForm = getCurrentForm();
+
+      const colors = {
+        hair: "#5a3323",
+        skin: "#f4c9a9",
+        shirt: hero.hitFlash > 0 ? "#ffd0d8" : "#f19ac0",
+        skirt: "#8ec7ff",
+        outline: "#2b1a1a",
+        eye: "#2d1717",
+        sock: "#f8f0de",
+        shoe: "#47393b"
+      };
+
+      function pixel(dx, dy, w, h, fill) {
+        ctx.fillStyle = fill;
+        ctx.fillRect(left + dx * px, top + dy * px, w * px, h * px);
+      }
+
+      if (currentForm.key === "skyCat" || currentForm.key === "angel") {
+        const wingColor = currentForm.key === "skyCat" ? "#ffe567" : "#f4fbff";
+        const bodyColor = currentForm.key === "skyCat" ? "#ff9bd2" : "#e5f1ff";
+        pixel(1, 2, 4, 4, bodyColor);
+        pixel(0, 1, 1, 4, wingColor);
+        pixel(5, 1, 1, 4, wingColor);
+        pixel(2, 1, 2, 1, colors.skin);
+        pixel(2, 2, 1, 1, colors.eye);
+        pixel(3, 2, 1, 1, colors.eye);
+        pixel(5, 5, 2, 1, bodyColor);
+        pixel(1, 6, 1, 2, colors.sock);
+        pixel(2, 6, 1, 2, colors.sock);
+        pixel(3, 6, 1, 2, colors.sock);
+        pixel(4, 6, 1, 2, colors.sock);
+      } else if (currentForm.key === "dragon") {
+        pixel(1, 2, 4, 3, "#8fd06f");
+        pixel(0, 1, 1, 4, "#d95b3a");
+        pixel(5, 1, 1, 4, "#d95b3a");
+        pixel(4, 1, 2, 1, "#6cab55");
+        pixel(2, 2, 1, 1, colors.eye);
+        pixel(4, 3, 2, 1, "#ffd76f");
+        pixel(1, 5, 1, 2, "#6cab55");
+        pixel(2, 5, 1, 2, "#6cab55");
+        pixel(3, 5, 1, 2, "#6cab55");
+        pixel(4, 5, 1, 2, "#6cab55");
+      } else if (currentForm.key === "caterpillar") {
+        pixel(0, 2, 6, 3, "#8fd86a");
+        pixel(1, 1, 4, 1, "#b5f08d");
+        pixel(1, 5, 1, 1, "#67b655");
+        pixel(2, 5, 1, 1, "#67b655");
+        pixel(3, 5, 1, 1, "#67b655");
+        pixel(4, 5, 1, 1, "#67b655");
+        pixel(1, 2, 1, 1, colors.eye);
+        pixel(4, 2, 1, 1, colors.eye);
+      } else if (currentForm.key === "football") {
+        pixel(1, 1, 4, 4, "#f7f7f7");
+        pixel(2, 2, 2, 2, "#111111");
+        pixel(0, 2, 1, 1, "#111111");
+        pixel(5, 2, 1, 1, "#111111");
+        pixel(2, 0, 2, 1, "#111111");
+        pixel(2, 5, 2, 1, "#111111");
+      } else if (currentForm.key === "mimicBeast") {
+        pixel(1, 1, 4, 4, "#db73c4");
+        pixel(0, 2, 1, 2, "#a44f92");
+        pixel(5, 2, 1, 2, "#a44f92");
+        pixel(2, 2, 2, 2, "#fff5ef");
+        pixel(2, 2, 1, 1, colors.eye);
+        pixel(3, 2, 1, 1, colors.eye);
+        pixel(1, 5, 1, 2, "#7f5373");
+        pixel(4, 5, 1, 2, "#7f5373");
+      } else if (currentForm.key === "centipede") {
+        pixel(0, 2, 6, 2, "#844b28");
+        pixel(1, 1, 4, 1, "#b87043");
+        pixel(1, 4, 1, 2, "#4d2e1d");
+        pixel(2, 4, 1, 2, "#4d2e1d");
+        pixel(3, 4, 1, 2, "#4d2e1d");
+        pixel(4, 4, 1, 2, "#4d2e1d");
+        pixel(1, 2, 1, 1, colors.eye);
+        pixel(4, 2, 1, 1, colors.eye);
+      } else if (currentForm.key === "sheep") {
+        pixel(1, 1, 4, 4, "#f8f8f0");
+        pixel(0, 2, 1, 2, "#e7e7df");
+        pixel(5, 2, 1, 2, "#e7e7df");
+        pixel(2, 2, 1, 1, colors.eye);
+        pixel(3, 2, 1, 1, colors.eye);
+        pixel(1, 5, 1, 2, "#b8a18d");
+        pixel(2, 5, 1, 2, "#b8a18d");
+        pixel(3, 5, 1, 2, "#b8a18d");
+        pixel(4, 5, 1, 2, "#b8a18d");
+      } else {
+        pixel(0, 1, 5, 4, "#9a6d4f");
+        pixel(1, 2, 3, 2, "#e1b58a");
+        pixel(4, 1, 2, 1, "#9a6d4f");
+        pixel(2, 2, 1, 1, colors.eye);
+        pixel(0, 4, 2, 1, "#7b5d3b");
+        pixel(1, 5, 1, 3, colors.sock);
+        pixel(2, 5, 1, 3, colors.sock);
+        pixel(3, 5, 1, 3, colors.sock);
+        pixel(4, 5, 1, 3, colors.sock);
+      }
+
+      if (game.equipment.weapon !== "none") {
+        ctx.fillStyle = game.equipment.weapon === "diamond" ? "#8fe8ff" : "#cfd4db";
+        if (hero.facing === "right") ctx.fillRect(left + 24, top + 20, 10, 3);
+        else if (hero.facing === "left") ctx.fillRect(left - 10, top + 20, 10, 3);
+        else if (hero.facing === "up") ctx.fillRect(left + 10, top - 8, 3, 10);
+        else ctx.fillRect(left + 10, top + 42, 3, 10);
+      }
+
+      ctx.strokeStyle = colors.outline;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(left, top, 6 * px, 11 * px);
+    }
+
+    function drawResourceNode(node) {
+      const screenX = node.x - camera.x;
+      const screenY = node.y - camera.y;
+      let color = "#ffffff";
+      let glow = "rgba(255,255,255,0.2)";
+
+      if (node.kind === "grass") {
+        color = "#8fd86a";
+        glow = "rgba(143,216,106,0.22)";
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = color;
+        ctx.fillRect(screenX - 3, screenY - 9, 3, 16);
+        ctx.fillRect(screenX + 1, screenY - 11, 3, 18);
+        ctx.fillRect(screenX + 5, screenY - 7, 3, 14);
+        return;
+      }
+
+      if (node.kind === "tree") {
+        ctx.fillStyle = "#6d472b";
+        ctx.fillRect(screenX - 5, screenY - 4, 10, 16);
+        ctx.fillStyle = "#58a34e";
+        ctx.fillRect(screenX - 12, screenY - 16, 24, 14);
+        ctx.fillRect(screenX - 8, screenY - 22, 16, 10);
+        return;
+      }
+
+      if (node.kind === "stone") {
+        color = "#a0a9b2";
+        glow = "rgba(160,169,178,0.2)";
+      } else if (node.kind === "diamond") {
+        color = "#67d6ff";
+        glow = "rgba(103,214,255,0.24)";
+      }
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(screenX, screenY - 10);
+      ctx.lineTo(screenX + 8, screenY);
+      ctx.lineTo(screenX, screenY + 10);
+      ctx.lineTo(screenX - 8, screenY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.5)";
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+    }
+
+    function drawMonster(monster) {
+      const screenX = monster.x - camera.x;
+      const screenY = monster.y - camera.y;
+      drawShadow(screenX, screenY, 28, 0.2);
+
+      const gradient = ctx.createRadialGradient(screenX - 4, screenY - 8, 4, screenX, screenY, 28);
+      gradient.addColorStop(0, monster.colors.light);
+      gradient.addColorStop(1, monster.colors.base);
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.ellipse(screenX, screenY, 22, 18, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = monster.colors.outline;
+      ctx.lineWidth = 2;
+
+      for (let i = 0; i < 8; i += 1) {
+        const angle = (Math.PI * 2 * i) / 8;
+        const furX = screenX + Math.cos(angle) * 23;
+        const furY = screenY + Math.sin(angle) * 18;
+        ctx.beginPath();
+        ctx.moveTo(screenX + Math.cos(angle) * 14, screenY + Math.sin(angle) * 12);
+        ctx.lineTo(furX, furY);
+        ctx.stroke();
+      }
+
+      ctx.lineWidth = 3;
+      const armOffsets = [
+        { x: -18, y: -2, dx: -10, dy: -6 },
+        { x: 0, y: 12, dx: 0, dy: 10 },
+        { x: 18, y: -2, dx: 10, dy: -6 }
+      ];
+      armOffsets.forEach((arm) => {
+        ctx.beginPath();
+        ctx.moveTo(screenX + arm.x, screenY + arm.y);
+        ctx.lineTo(screenX + arm.x + arm.dx, screenY + arm.y + arm.dy);
+        ctx.stroke();
+      });
+
+      const legOffsets = [-12, -4, 4, 12];
+      legOffsets.forEach((legX, index) => {
+        ctx.beginPath();
+        ctx.moveTo(screenX + legX, screenY + 12);
+        ctx.lineTo(screenX + legX + (index % 2 === 0 ? -3 : 3), screenY + 24);
+        ctx.stroke();
+      });
+
+      ctx.fillStyle = "#fff7ef";
+      ctx.beginPath();
+      ctx.arc(screenX, screenY - 1, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = monster.colors.pupil;
+      ctx.beginPath();
+      ctx.arc(screenX + 1.5, screenY - 1, 3.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.32)";
+      ctx.fillRect(screenX - 10, screenY - 30, 20, 4);
+      ctx.fillStyle = "#e55d6f";
+      ctx.fillRect(screenX - 10, screenY - 30, 20 * (monster.hp / monster.maxHp), 4);
+    }
+
+    function canWalkOnTile(type) {
+      return type !== "water" && type !== "stone" && type !== "void";
+    }
+
+    function checkCollisionAt(x, y, size, flying, burrowStone = false) {
+      const radius = size * 0.4;
+      const points = [
+        [x - radius, y - radius],
+        [x + radius, y - radius],
+        [x - radius, y + radius],
+        [x + radius, y + radius]
+      ];
+
+      return points.every(([px, py]) => {
+        const tileX = Math.floor(px / WORLD.tileSize);
+        const tileY = Math.floor(py / WORLD.tileSize);
+        const tile = getTile(tileX, tileY);
+        if (flying) {
+          return tile.type !== "void";
+        }
+        if (burrowStone && tile.type === "stone") {
+          return true;
+        }
+        return canWalkOnTile(tile.type);
+      });
+    }
+
+    function addLog(title, detail) {
+      game.logs.unshift({
+        title,
+        detail,
+        id: Date.now() + Math.random()
+      });
+      game.logs = game.logs.slice(0, 8);
+      renderLogs();
+    }
+
+    function renderForms() {
+      const current = getCurrentForm();
+      formList.innerHTML = "";
+      forms.forEach((form, index) => {
+        const item = document.createElement("div");
+        item.className = "form-item" + (form.key === current.key ? " current" : "");
+        const title = document.createElement("strong");
+        title.textContent = "Day " + (index + 1) + " · " + form.name;
+        const intro = document.createElement("span");
+        intro.textContent = form.intro;
+        const skill = document.createElement("span");
+        skill.textContent = form.skill;
+        item.appendChild(title);
+        item.appendChild(intro);
+        item.appendChild(skill);
+        formList.appendChild(item);
+      });
+    }
+
+    function renderLogs() {
+      logList.innerHTML = "";
+      game.logs.forEach((entry) => {
+        const item = document.createElement("div");
+        item.className = "log-item";
+        const title = document.createElement("strong");
+        title.textContent = entry.title;
+        const detail = document.createElement("span");
+        detail.textContent = entry.detail;
+        item.appendChild(title);
+        item.appendChild(detail);
+        logList.appendChild(item);
+      });
+    }
+
+    function renderHotbar() {
+      const slots = [
+        { label: "草", value: game.inventory.grass, detail: "护甲 / 床" },
+        { label: "木", value: game.inventory.wood, detail: "武器 / 铲子 / 床" },
+        { label: "石", value: game.inventory.stone, detail: "钉子" },
+        { label: "土", value: game.inventory.dirt, detail: "搭桥 / 铺路" },
+        { label: "钻", value: game.inventory.diamond, detail: "高级装" },
+        { label: "钉", value: game.inventory.nails, detail: "床" },
+        { label: "斧", value: game.equipment.axe ? 1 : 0, detail: "砍树" },
+        { label: "铲", value: game.equipment.shovel ? 1 : 0, detail: "挖矿" },
+        { label: "武", value: game.equipment.weapon === "none" ? 0 : game.equipment.weapon === "diamond" ? 2 : 1, detail: game.equipment.weapon === "diamond" ? "钻武" : game.equipment.weapon === "wood" ? "木武" : "未做" }
+      ];
+
+      hotbar.innerHTML = "";
+      slots.forEach((slot) => {
+        const node = document.createElement("div");
+        node.className = "slot";
+        const strong = document.createElement("strong");
+        strong.textContent = slot.label + " · " + slot.value;
+        const span = document.createElement("span");
+        span.textContent = slot.detail;
+        node.appendChild(strong);
+        node.appendChild(span);
+        hotbar.appendChild(node);
+      });
+    }
+
+    function randomWalkableSpot(minDistanceFromHero) {
+      for (let tries = 0; tries < 500; tries += 1) {
+        const x = Math.floor(Math.random() * WORLD.width);
+        const y = Math.floor(Math.random() * WORLD.height);
+        const tile = getTile(x, y);
+        const worldX = (x + 0.5) * WORLD.tileSize;
+        const worldY = (y + 0.5) * WORLD.tileSize;
+        if (!canWalkOnTile(tile.type)) continue;
+        if (Math.hypot(worldX - hero.x, worldY - hero.y) < minDistanceFromHero) continue;
+        return { x: worldX, y: worldY };
+      }
+      return { x: hero.x + 48, y: hero.y + 48 };
+    }
+
+    function spawnNodesForDay() {
+      game.nodes = [];
+      const counts = {
+        grass: 32 + game.day * 2,
+        tree: 24 + game.day,
+        stone: 22 + game.day,
+        diamond: 10 + Math.floor(game.day / 2)
+      };
+
+      Object.entries(counts).forEach(([kind, count]) => {
+        for (let i = 0; i < count; i += 1) {
+          const spot = randomWalkableSpot(90);
+          game.nodes.push({
+            kind,
+            x: spot.x,
+            y: spot.y,
+            pulse: Math.random() * Math.PI * 2
+          });
+        }
+      });
+
+      addLog("白天开始", "第 " + game.day + " 天的世界刷新了草、树、石头和钻石矿。");
+    }
+
+    function spawnCritters() {
+      game.critters.cows = [];
+      game.critters.birds = [];
+
+      for (let i = 0; i < 7; i += 1) {
+        const spot = randomWalkableSpot(140);
+        game.critters.cows.push({
+          x: spot.x,
+          y: spot.y,
+          dirX: Math.random() > 0.5 ? 1 : -1,
+          dirY: Math.random() > 0.5 ? 1 : -1,
+          speed: 0.25 + Math.random() * 0.15,
+          timer: Math.random() * 2
+        });
+      }
+
+      for (let i = 0; i < 9; i += 1) {
+        game.critters.birds.push({
+          x: Math.random() * WORLD.width * WORLD.tileSize,
+          y: 120 + Math.random() * WORLD.height * WORLD.tileSize * 0.55,
+          speed: 36 + Math.random() * 18,
+          color: i % 2 === 0 ? "#cfe6ff" : "#ffe694"
+        });
+      }
+    }
+
+    function getRecipeCosts() {
+      return {
+        woodWeapon: { wood: 3 },
+        grassArmor: { grass: 3 },
+        axe: { wood: 5 },
+        shovel: { wood: 5 },
+        nails: { stone: 2 },
+        bed: { nails: 4, wood: 4, grass: 2 },
+        diamondWeapon: { diamond: 3, wood: 1 },
+        diamondArmor: { diamond: 4, grass: 1 }
+      };
+    }
+
+    function hasResources(cost) {
+      return Object.entries(cost).every(([key, value]) => game.inventory[key] >= value);
+    }
+
+    function spendResources(cost) {
+      Object.entries(cost).forEach(([key, value]) => {
+        game.inventory[key] -= value;
+      });
+    }
+
+    function createMonster(index) {
+      const spot = randomWalkableSpot(260);
+      const hue = (game.day * 45 + index * 73) % 360;
+      return {
+        id: game.nextMonsterId++,
+        x: spot.x,
+        y: spot.y,
+        size: 26,
+        hp: 3,
+        maxHp: 3,
+        speed: 1.2 + game.day * 0.08,
+        attackCooldown: Math.random() * 0.3,
+        colors: {
+          base: "hsl(" + hue + " 72% 58%)",
+          light: "hsl(" + hue + " 95% 72%)",
+          outline: "hsla(" + hue + " 35% 18% / 0.9)",
+          pupil: "hsl(" + ((hue + 150) % 360) + " 80% 22%)"
+        }
+      };
+    }
+
+    function spawnWave() {
+      game.monsters = [];
+      const count = Math.min(60, 18 + game.day * 6);
+      for (let i = 0; i < count; i += 1) {
+        game.monsters.push(createMonster(i));
+      }
+      addLog("怪物来袭", "夜晚降临，出现了 " + count + " 只毛茸茸的怪兽，这一波会非常挤。");
+    }
+
+    function setPhase(phase) {
+      game.phase = phase;
+      if (phase === "prepare") {
+        phaseBadge.textContent = "准备阶段";
+        phaseBadge.classList.remove("phase-assault");
+        phaseBtn.textContent = "结束白天，开始袭击";
+        subtitleText.textContent = "白天收集自然资源、合成工具和装备，然后准备迎接夜袭。";
+        missionText.innerHTML = "今日目标：收资源、做装备<br />清晨会发生新变身";
+      } else {
+        phaseBadge.textContent = "怪物袭击";
+        phaseBadge.classList.add("phase-assault");
+        phaseBtn.textContent = "袭击进行中";
+        subtitleText.textContent = "夜晚已经开始，怪物会追踪你；武器近战与形态技能都能帮你活下来。";
+        missionText.innerHTML = "夜袭目标：活下来<br />清空怪物后进入下一天";
+      }
+      updateHud();
+    }
+
+    function updateDerivedStats() {
+      hero.maxHp = hero.baseMaxHp + (game.equipment.bed ? 2 : 0);
+      const currentForm = getCurrentForm();
+      hero.speed = hero.baseSpeed + (currentForm.speedBonus || 0);
+
+      if (game.equipment.armor === "diamond") {
+        hero.maxShield = 6;
+      } else if (game.equipment.armor === "grass") {
+        hero.maxShield = 3;
+      } else {
+        hero.maxShield = 0;
+      }
+
+      hero.collectRange = 32 + (currentForm.collectBonus || 0);
+      hero.attackDamage = game.equipment.weapon === "diamond" ? 2 : game.equipment.weapon === "wood" ? 1 : 0;
+      speedText.textContent = hero.speed.toFixed(1);
+    }
+
+    function applyDailyMorph() {
+      const currentForm = getCurrentForm();
+      hero.form = hero.baseForm + " -> " + currentForm.name;
+      game.equipment.bed = !!currentForm.grantBed || game.equipment.bed;
+      addLog("清晨变身", "第 " + game.day + " 天，女孩变成了“" + currentForm.name + "”。" + currentForm.skill);
+      updateDerivedStats();
+      renderForms();
+      if (testFormSelect.value !== currentForm.key) {
+        testFormSelect.value = currentForm.key;
+      }
+    }
+
+    function startDay(dayNumber) {
+      game.day = dayNumber;
+      applyDailyMorph();
+      if (game.day === 1 && game.inventory.wood < 5 && !game.equipment.axe) {
+        game.inventory.wood = 5;
+        addLog("开局补给", "你先带了 5 个木头，方便尽快做出第一把斧头。");
+      }
+      hero.hp = hero.maxHp;
+      hero.shield = hero.maxShield;
+      hero.dead = false;
+      hero.hitFlash = 0;
+      hero.skillCooldown = 0;
+      hero.hiddenTimer = 0;
+      hero.rollTimer = 0;
+      hero.revealedTimer = 0;
+      hero.mimicBurstTimer = 0;
+      game.assaultDotTimer = 1;
+      keys.clear();
+      game.monsters = [];
+      game.projectiles = [];
+      ensureHeroValidForForm();
+      setPhase("prepare");
+      spawnNodesForDay();
+      updateHud();
+    }
+
+    function beginAssault() {
+      if (game.phase !== "prepare" || hero.dead) return;
+      game.assaultDotTimer = 1;
+      setPhase("assault");
+      spawnWave();
+      damageHero(1);
+      if (!hero.dead) {
+        addLog("夜袭压迫", "怪物刚出现就先让你掉了 1 点血，之后每秒还会继续掉血。");
+      }
+      updateHud();
+    }
+
+    function applyTestFormSwitch() {
+      game.testFormKey = testFormSelect.value || null;
+      applyDailyMorph();
+      ensureHeroValidForForm();
+      updateHud();
+      addLog("测试切换", "已临时切换到“" + getCurrentForm().name + "”用于测试。");
+    }
+
+    function clearTestFormSwitch() {
+      if (!game.testFormKey) return;
+      game.testFormKey = null;
+      applyDailyMorph();
+      ensureHeroValidForForm();
+      updateHud();
+      addLog("恢复轮替", "已恢复按天数正常变身。");
+    }
+
+    function craftWoodWeapon() {
+      const cost = getRecipeCosts().woodWeapon;
+      if (game.phase !== "prepare" || game.equipment.weapon !== "none" || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.weapon = "wood";
+      addLog("合成成功", "你用木头做出了一把基础木武器。");
+      updateHud();
+    }
+
+    function craftGrassArmor() {
+      const cost = getRecipeCosts().grassArmor;
+      if (game.phase !== "prepare" || game.equipment.armor !== "none" || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.armor = "grass";
+      updateDerivedStats();
+      hero.shield = hero.maxShield;
+      addLog("合成成功", "你用草编出了一套基础护甲。");
+      updateHud();
+    }
+
+    function craftAxe() {
+      const cost = getRecipeCosts().axe;
+      if (game.phase !== "prepare" || game.equipment.axe || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.axe = true;
+      addLog("合成成功", "你用 5 个木头做出了一把斧头，现在可以砍树。");
+      updateHud();
+    }
+
+    function craftShovel() {
+      const cost = getRecipeCosts().shovel;
+      if (game.phase !== "prepare" || game.equipment.shovel || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.shovel = true;
+      addLog("合成成功", "你用木头做出了一把铲子，现在可以挖石头、钻石，也能挖土和搭土。");
+      updateHud();
+    }
+
+    function craftNails() {
+      const cost = getRecipeCosts().nails;
+      if (game.phase !== "prepare" || !hasResources(cost)) return;
+      spendResources(cost);
+      game.inventory.nails += 4;
+      addLog("加工成功", "2 个石头被加工成了 4 个钉子。");
+      updateHud();
+    }
+
+    function craftBed() {
+      const cost = getRecipeCosts().bed;
+      if (game.phase !== "prepare" || game.equipment.bed || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.bed = true;
+      updateDerivedStats();
+      hero.hp = hero.maxHp;
+      addLog("合成成功", "你做出了一张床，清晨会更舒服，最大生命提高到 " + hero.maxHp + "。");
+      updateHud();
+    }
+
+    function craftDiamondWeapon() {
+      const cost = getRecipeCosts().diamondWeapon;
+      if (game.phase !== "prepare" || game.equipment.weapon === "diamond" || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.weapon = "diamond";
+      updateDerivedStats();
+      addLog("合成成功", "你做出了一把钻石武器，近战伤害提升到 2。");
+      updateHud();
+    }
+
+    function craftDiamondArmor() {
+      const cost = getRecipeCosts().diamondArmor;
+      if (game.phase !== "prepare" || game.equipment.armor === "diamond" || !hasResources(cost)) return;
+      spendResources(cost);
+      game.equipment.armor = "diamond";
+      updateDerivedStats();
+      hero.shield = hero.maxShield;
+      addLog("合成成功", "你做出了一套钻石盔甲，护甲值提高到 " + hero.maxShield + "。");
+      updateHud();
+    }
+
+    function restartGame() {
+      game.inventory.grass = 0;
+      game.inventory.wood = 5;
+      game.inventory.stone = 0;
+      game.inventory.dirt = 0;
+      game.inventory.diamond = 0;
+      game.inventory.nails = 0;
+      game.equipment.weapon = "none";
+      game.equipment.armor = "none";
+      game.equipment.axe = false;
+      game.equipment.shovel = false;
+      game.equipment.bed = false;
+      updateDerivedStats();
+      hero.hp = hero.maxHp;
+      hero.shield = 0;
+      hero.dead = false;
+      findSpawn();
+      addLog("重新开始", "新的生存循环已经开始。");
+      startDay(1);
+    }
+
+    function canMineHardNode() {
+      const currentForm = getCurrentForm();
+      return game.equipment.shovel || !!currentForm.mineHard;
+    }
+
+    function digFacingDirt() {
+      if (hero.dead || !game.equipment.shovel) return;
+      const target = getFacingTilePosition();
+      const tile = getTile(target.x, target.y);
+      if (tile.type !== "dirt") return;
+      game.inventory.dirt += 1;
+      setTile(target.x, target.y, "grass", true, tile.detail);
+      addLog("挖出土块", "前方泥地被铲起，土块 +1。");
+      updateHud();
+    }
+
+    function placeFacingDirt() {
+      if (hero.dead || game.inventory.dirt <= 0) return;
+      const target = getFacingTilePosition();
+      const tile = getTile(target.x, target.y);
+      if (tile.type === "void" || tile.type === "altar" || tile.type === "stone") return;
+      if (tile.type === "dirt") return;
+      game.inventory.dirt -= 1;
+      setTile(target.x, target.y, "dirt", true, tile.detail);
+      addLog("搭起土块", "你在前方搭了一格泥地。");
+      updateHud();
+    }
+
+    function gatherNearbyNodes() {
+      const currentForm = getCurrentForm();
+      game.nodes = game.nodes.filter((node) => {
+        const dist = Math.hypot(node.x - hero.x, node.y - hero.y);
+        if (dist <= hero.collectRange) {
+          if (node.kind === "grass") {
+            game.inventory.grass += 1;
+            addLog("拾取资源", "草 +1");
+            return false;
+          }
+          if (node.kind === "tree" && game.equipment.axe) {
+            game.inventory.wood += 1;
+            addLog("砍下木头", "木头 +1");
+            return false;
+          }
+          if (node.kind === "stone" && canMineHardNode()) {
+            game.inventory.stone += 1 + (currentForm.extraStoneYield || 0);
+            addLog("采到石头", "石头 +" + (1 + (currentForm.extraStoneYield || 0)));
+            return false;
+          }
+          if (node.kind === "diamond" && canMineHardNode()) {
+            game.inventory.diamond += 1;
+            addLog("采到钻石", "钻石 +1");
+            return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    function dropMonsterLoot(monster) {
+      const chance = Math.random();
+      if (chance < 0.44) {
+        game.nodes.push({ kind: "grass", x: monster.x + 8, y: monster.y + 2, pulse: 0 });
+      } else if (chance < 0.78) {
+        game.nodes.push({ kind: "grass", x: monster.x - 6, y: monster.y + 4, pulse: 1 });
+      } else {
+        game.nodes.push({ kind: "stone", x: monster.x + 4, y: monster.y - 4, pulse: 2 });
+      }
+    }
+
+    function getMonsterDetectionRange() {
+      const currentForm = getCurrentForm();
+      if (hero.hiddenTimer > 0) return 20;
+      if (currentForm.key === "caterpillar") return currentForm.stealthBase || 96;
+      if (currentForm.key === "mimicBeast") {
+        return hero.mimicBurstTimer > 0 ? 10 : currentForm.mimicDetectRange || 18;
+      }
+      return 9999;
+    }
+
+    function damageHero(amount) {
+      if (hero.shield > 0) {
+        const absorbed = Math.min(hero.shield, amount);
+        hero.shield -= absorbed;
+        amount -= absorbed;
+      }
+
+      if (amount > 0) hero.hp = Math.max(0, hero.hp - amount);
+
+      hero.hitFlash = 0.22;
+      if (hero.hp <= 0) {
+        hero.dead = true;
+        game.monsters = [];
+        setPhase("prepare");
+        addLog("你倒下了", "怪物击败了你，点击“重新开始”开启新的一轮。");
+      }
+    }
+
+    function updateHero(delta) {
+      const currentForm = getCurrentForm();
+      let moveX = 0;
+      let moveY = 0;
+
+      if (keys.has("w")) moveY -= 1;
+      if (keys.has("s")) moveY += 1;
+      if (keys.has("a")) moveX -= 1;
+      if (keys.has("d")) moveX += 1;
+
+      hero.moving = moveX !== 0 || moveY !== 0;
+      hero.attackCooldown = Math.max(0, hero.attackCooldown - delta);
+      hero.skillCooldown = Math.max(0, hero.skillCooldown - delta);
+      hero.hiddenTimer = Math.max(0, hero.hiddenTimer - delta);
+      hero.rollTimer = Math.max(0, hero.rollTimer - delta);
+      hero.revealedTimer = Math.max(0, hero.revealedTimer - delta);
+      hero.mimicBurstTimer = Math.max(0, hero.mimicBurstTimer - delta);
+      hero.hitFlash = Math.max(0, hero.hitFlash - delta);
+
+      if (currentForm.passiveRegen && game.phase === "prepare" && !hero.dead) {
+        hero.hp = Math.min(hero.maxHp, hero.hp + currentForm.passiveRegen * delta);
+      }
+
+      if (hero.moving && !hero.dead) {
+        const length = Math.hypot(moveX, moveY) || 1;
+        moveX /= length;
+        moveY /= length;
+
+        if (Math.abs(moveX) > Math.abs(moveY)) {
+          hero.facing = moveX > 0 ? "right" : "left";
+        } else {
+          hero.facing = moveY > 0 ? "down" : "up";
+        }
+
+        const rollBoost = hero.rollTimer > 0 ? currentForm.rollBoost || 1.8 : 1;
+        const nextX = hero.x + moveX * hero.speed * rollBoost * WORLD.tileSize * delta;
+        const nextY = hero.y + moveY * hero.speed * rollBoost * WORLD.tileSize * delta;
+        const flying = !!currentForm.canFly;
+        const burrowStone = !!currentForm.burrowStone;
+
+        if (checkCollisionAt(nextX, hero.y, hero.size, flying, burrowStone)) hero.x = nextX;
+        if (checkCollisionAt(hero.x, nextY, hero.size, flying, burrowStone)) hero.y = nextY;
+
+        hero.bob += delta * 12;
+      }
+    }
+
+    function updateCritters(delta) {
+      game.critters.cows.forEach((cow) => {
+        cow.timer -= delta;
+        if (cow.timer <= 0) {
+          cow.timer = 1.2 + Math.random() * 2;
+          cow.dirX = Math.random() * 2 - 1;
+          cow.dirY = Math.random() * 2 - 1;
+        }
+        const nextX = cow.x + cow.dirX * cow.speed * WORLD.tileSize * delta;
+        const nextY = cow.y + cow.dirY * cow.speed * WORLD.tileSize * delta;
+        if (checkCollisionAt(nextX, cow.y, 18, false)) cow.x = nextX;
+        else cow.dirX *= -1;
+        if (checkCollisionAt(cow.x, nextY, 18, false)) cow.y = nextY;
+        else cow.dirY *= -1;
+      });
+
+      const worldPixelWidth = WORLD.width * WORLD.tileSize;
+      game.critters.birds.forEach((bird) => {
+        bird.x += bird.speed * delta;
+        if (bird.x > worldPixelWidth + 100) {
+          bird.x = -80;
+        }
+      });
+    }
+
+    function tryCastSkill() {
+      const currentForm = getCurrentForm();
+      if (hero.dead || hero.skillCooldown > 0) return;
+      if (
+        currentForm.key !== "skyCat" &&
+        currentForm.key !== "caterpillar" &&
+        currentForm.key !== "football" &&
+        currentForm.key !== "mimicBeast" &&
+        currentForm.key !== "angel" &&
+        currentForm.key !== "dragon"
+      ) return;
+
+      if (currentForm.key === "caterpillar") {
+        hero.hiddenTimer = currentForm.hideDuration || 3.6;
+        hero.skillCooldown = 4.6;
+        addLog("形态技能", "毛毛虫缩进叶茧里，怪物暂时很难看到你。");
+        return;
+      }
+
+      if (currentForm.key === "football") {
+        hero.rollTimer = currentForm.rollDuration || 0.75;
+        hero.skillCooldown = 1.8;
+        addLog("形态技能", "足球开始高速翻滚，碰到怪物会造成撞击伤害。");
+        return;
+      }
+
+      if (currentForm.key === "mimicBeast") {
+        hero.mimicBurstTimer = currentForm.mimicBurstDuration || 4.2;
+        hero.skillCooldown = 5.2;
+        addLog("形态技能", "伪装兽进入强化伪装，怪物更难发现你。");
+        return;
+      }
+
+      let dirX = 0;
+      let dirY = 0;
+      if (hero.facing === "left") dirX = -1;
+      else if (hero.facing === "right") dirX = 1;
+      else if (hero.facing === "up") dirY = -1;
+      else dirY = 1;
+
+      let target = null;
+      if (game.monsters.length > 0) {
+        const nearest = game.monsters
+          .map((monster) => ({
+            monster,
+            dist: Math.hypot(monster.x - hero.x, monster.y - hero.y)
+          }))
+          .filter((entry) => entry.dist < 240)
+          .sort((a, b) => a.dist - b.dist)[0];
+        if (nearest) {
+          target = nearest.monster;
+          const dx = target.x - hero.x;
+          const dy = target.y - hero.y;
+          const len = Math.hypot(dx, dy) || 1;
+          dirX = dx / len;
+          dirY = dy / len;
+        }
+      }
+
+      hero.skillCooldown = currentForm.key === "angel" ? 1.2 : currentForm.key === "dragon" ? 0.9 : 0.62;
+      game.projectiles.push({
+        x: hero.x,
+        y: hero.y,
+        vx: dirX * (currentForm.key === "angel" ? 320 : currentForm.key === "dragon" ? 340 : 360),
+        vy: dirY * (currentForm.key === "angel" ? 320 : currentForm.key === "dragon" ? 340 : 360),
+        damage: currentForm.holyMilk ? 99 : currentForm.fireballDamage || 1,
+        life: 0.95,
+        color: currentForm.projectileColor,
+        shape: currentForm.projectileShape,
+        holy: !!currentForm.holyMilk,
+        fire: !!currentForm.fireball
+      });
+      addLog(
+        "形态技能",
+        currentForm.name + "释放了" + (currentForm.key === "angel" ? "牛奶弹" : currentForm.key === "dragon" ? "火球" : "鱼刺弹") + "。"
+      );
+    }
+
+    function updateProjectiles(delta) {
+      game.projectiles.forEach((projectile) => {
+        projectile.x += projectile.vx * delta;
+        projectile.y += projectile.vy * delta;
+        projectile.life -= delta;
+      });
+
+      game.projectiles = game.projectiles.filter((projectile) => {
+        if (projectile.life <= 0) {
+          return false;
+        }
+        const hit = game.monsters.find((monster) => Math.hypot(monster.x - projectile.x, monster.y - projectile.y) <= 26);
+        if (hit) {
+          hit.hp -= projectile.damage;
+          addLog(
+            "技能命中",
+            projectile.holy
+              ? "牛奶弹直接净化了怪物。"
+              : projectile.fire
+                ? "火球命中了怪物，造成 " + projectile.damage + " 点伤害。"
+                : "投射物击中了怪物，造成 " + projectile.damage + " 点伤害。"
+          );
+          return false;
+        }
+        return true;
+      });
+    }
+
+    function updateMonsters(delta) {
+      if (hero.dead) return;
+      const detectRange = getMonsterDetectionRange();
+
+      if (game.phase === "assault" && game.monsters.length > 0) {
+        game.assaultDotTimer -= delta;
+        if (game.assaultDotTimer <= 0) {
+          game.assaultDotTimer += 1;
+          damageHero(1);
+        }
+      }
+
+      game.monsters.forEach((monster) => {
+        monster.attackCooldown = Math.max(0, monster.attackCooldown - delta);
+        const dx = hero.x - monster.x;
+        const dy = hero.y - monster.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const dirX = dx / dist;
+        const dirY = dy / dist;
+
+        if (dist > detectRange && hero.revealedTimer <= 0) {
+          return;
+        }
+
+        if (dist > hero.attackRange - 6) {
+          const nextX = monster.x + dirX * monster.speed * WORLD.tileSize * delta;
+          const nextY = monster.y + dirY * monster.speed * WORLD.tileSize * delta;
+          if (checkCollisionAt(nextX, monster.y, monster.size, false, true)) monster.x = nextX;
+          if (checkCollisionAt(monster.x, nextY, monster.size, false, true)) monster.y = nextY;
+        }
+
+        if (dist <= hero.attackRange - 8 && monster.attackCooldown <= 0) {
+          monster.attackCooldown = 0.82;
+          damageHero(1);
+          addLog("受到攻击", "怪物对你造成了 1 点伤害。");
+        }
+      });
+
+      if (game.equipment.weapon !== "none" && hero.attackCooldown <= 0) {
+        const target = game.monsters
+          .map((monster) => ({
+            monster,
+            dist: Math.hypot(monster.x - hero.x, monster.y - hero.y)
+          }))
+          .filter((entry) => entry.dist <= hero.attackRange)
+          .sort((a, b) => a.dist - b.dist)[0];
+
+        if (target) {
+          hero.attackCooldown = 0.56;
+          target.monster.hp -= hero.attackDamage;
+          if (getCurrentForm().key === "mimicBeast") {
+            hero.revealedTimer = 1.6;
+          }
+          addLog("挥出武器", "你对怪物造成了 " + hero.attackDamage + " 点伤害。");
+        }
+      }
+
+      if (hero.rollTimer > 0) {
+        const currentForm = getCurrentForm();
+        game.monsters.forEach((monster) => {
+          if (Math.hypot(monster.x - hero.x, monster.y - hero.y) <= 26) {
+            monster.hp -= currentForm.rollDamage || 2;
+          }
+        });
+      }
+
+      if (getCurrentForm().key === "sheep" && hero.moving) {
+        game.monsters.forEach((monster) => {
+          if (Math.hypot(monster.x - hero.x, monster.y - hero.y) <= 24) {
+            monster.hp -= 1;
+          }
+        });
+      }
+
+      const before = game.monsters.length;
+      const deadMonsters = game.monsters.filter((monster) => monster.hp <= 0);
+      deadMonsters.forEach(dropMonsterLoot);
+      game.monsters = game.monsters.filter((monster) => monster.hp > 0);
+      if (before > game.monsters.length) {
+        addLog("怪物倒下", "你消灭了一只怪物。");
+      }
+
+      if (game.phase === "assault" && game.monsters.length === 0 && !hero.dead) {
+        addLog("夜袭结束", "你撑过了第 " + game.day + " 天的袭击，迎来新的白天。");
+        startDay(game.day + 1);
+      }
+    }
+
+    function updateCamera(viewWidth, viewHeight) {
+      const maxX = Math.max(0, WORLD.width * WORLD.tileSize - viewWidth);
+      const maxY = Math.max(0, WORLD.height * WORLD.tileSize - viewHeight);
+      const targetX = hero.x - viewWidth / 2;
+      const targetY = hero.y - viewHeight / 2;
+
+      camera.x += (targetX - camera.x) * 0.12;
+      camera.y += (targetY - camera.y) * 0.12;
+      camera.x = Math.max(0, Math.min(camera.x, maxX));
+      camera.y = Math.max(0, Math.min(camera.y, maxY));
+    }
+
+    function drawAtmosphere(viewWidth, viewHeight) {
+      const gradient = ctx.createRadialGradient(
+        viewWidth * 0.5,
+        viewHeight * 0.42,
+        90,
+        viewWidth * 0.5,
+        viewHeight * 0.52,
+        viewWidth * 0.7
+      );
+      gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+      gradient.addColorStop(1, game.phase === "assault" ? "rgba(8, 10, 18, 0.52)" : "rgba(8, 10, 10, 0.28)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, viewWidth, viewHeight);
+
+      if (game.phase === "assault") {
+        ctx.fillStyle = "rgba(37, 46, 82, 0.14)";
+        ctx.fillRect(0, 0, viewWidth, viewHeight);
+      }
+    }
+
+    function drawProjectile(projectile) {
+      const x = projectile.x - camera.x;
+      const y = projectile.y - camera.y;
+      ctx.fillStyle = projectile.color;
+      if (projectile.shape === "diamond") {
+        ctx.beginPath();
+        ctx.moveTo(x, y - 7);
+        ctx.lineTo(x + 7, y);
+        ctx.lineTo(x, y + 7);
+        ctx.lineTo(x - 7, y);
+        ctx.closePath();
+        ctx.fill();
+      } else if (projectile.shape === "orb") {
+        ctx.beginPath();
+        ctx.arc(x, y, 7, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (projectile.shape === "flame") {
+        ctx.beginPath();
+        ctx.moveTo(x, y - 9);
+        ctx.lineTo(x + 7, y - 1);
+        ctx.lineTo(x + 2, y + 8);
+        ctx.lineTo(x - 5, y + 5);
+        ctx.lineTo(x - 7, y - 2);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.fillRect(x - 2, y - 8, 4, 16);
+        ctx.fillRect(x - 6, y - 2, 12, 4);
+      }
+    }
+
+    function drawCurrentSkillLabel() {
+      const currentForm = getCurrentForm();
+      const x = hero.x - camera.x;
+      const y = hero.y - camera.y;
+      const text = currentForm.name + " · " + currentForm.skill;
+
+      ctx.font = "12px monospace";
+      const width = Math.min(250, ctx.measureText(text).width + 16);
+      ctx.fillStyle = "rgba(10, 14, 13, 0.72)";
+      ctx.fillRect(x - width / 2, y - 48, width, 20);
+      ctx.strokeStyle = "rgba(255,255,255,0.12)";
+      ctx.strokeRect(x - width / 2, y - 48, width, 20);
+      ctx.fillStyle = "#fff5d8";
+      ctx.fillText(text.slice(0, 32), x - width / 2 + 8, y - 34);
+    }
+
+    function drawFormEffects() {
+      const currentForm = getCurrentForm();
+      const x = hero.x - camera.x;
+      const y = hero.y - camera.y;
+      const t = performance.now() * 0.004;
+
+      if (hero.hiddenTimer > 0) {
+        ctx.strokeStyle = "rgba(168, 231, 129, 0.85)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 22 + Math.sin(t) * 2, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      if (hero.rollTimer > 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.fillRect(x - 20, y - 6, 10, 10);
+        ctx.fillRect(x - 32, y - 3, 8, 8);
+      }
+
+      if (hero.mimicBurstTimer > 0) {
+        ctx.strokeStyle = "rgba(219, 115, 196, 0.8)";
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(x - 20, y - 20, 40, 40);
+        ctx.setLineDash([]);
+      }
+
+      if (currentForm.key === "angel") {
+        ctx.strokeStyle = "rgba(255,255,255,0.85)";
+        ctx.beginPath();
+        ctx.ellipse(x, y - 26, 12, 4, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      if (currentForm.key === "dragon") {
+        ctx.fillStyle = "rgba(255, 147, 72, 0.75)";
+        ctx.fillRect(x + 14, y - 10, 4, 4);
+        ctx.fillRect(x + 18, y - 4, 3, 3);
+      }
+
+      if (currentForm.key === "centipede") {
+        ctx.fillStyle = "rgba(160,169,178,0.4)";
+        ctx.fillRect(x - 18, y + 12, 8, 3);
+        ctx.fillRect(x + 10, y + 12, 8, 3);
+      }
+
+      if (currentForm.key === "sheep" && hero.moving) {
+        ctx.fillStyle = "rgba(255,255,255,0.6)";
+        ctx.fillRect(x - 14, y + 12, 4, 4);
+        ctx.fillRect(x + 10, y + 12, 4, 4);
+      }
+    }
+
+    function drawEntities() {
+      game.critters.birds.forEach(drawBird);
+      game.nodes.forEach(drawResourceNode);
+      game.critters.cows.forEach(drawCow);
+      game.monsters.forEach(drawMonster);
+      game.projectiles.forEach(drawProjectile);
+      drawShadow(hero.x - camera.x, hero.y - camera.y, 18, 0.24);
+      drawGirl(hero.x - camera.x, hero.y - camera.y);
+      drawFormEffects();
+      drawCurrentSkillLabel();
+    }
+
+    function updateHud() {
+      const tileX = Math.floor(hero.x / WORLD.tileSize);
+      const tileY = Math.floor(hero.y / WORLD.tileSize);
+      const tile = getTile(tileX, tileY);
+      const labels = {
+        grass: "草地",
+        dirt: "泥地",
+        water: "水域",
+        stone: "石块",
+        altar: "Boss 祭坛"
+      };
+
+      dayText.textContent = "Day " + game.day;
+      terrainText.textContent = labels[tile.type] || "未知";
+      positionText.textContent = tileX + ", " + tileY;
+      hpText.textContent = hero.hp + " / " + hero.maxHp;
+      shieldText.textContent = hero.shield + " / " + hero.maxShield;
+      grassText.textContent = String(game.inventory.grass);
+      woodText.textContent = String(game.inventory.wood);
+      stoneText.textContent = game.inventory.stone + " / " + game.inventory.nails;
+      dirtText.textContent = String(game.inventory.dirt);
+      diamondText.textContent = String(game.inventory.diamond);
+      monsterCountText.textContent = String(game.monsters.length);
+      formText.textContent = hero.form;
+      equipmentText.textContent =
+        (game.equipment.weapon === "diamond" ? "钻石武器" : game.equipment.weapon === "wood" ? "木武器" : "无武器") +
+        " / " +
+        (game.equipment.armor === "diamond" ? "钻石护甲" : game.equipment.armor === "grass" ? "草护甲" : "无护甲") +
+        " / " +
+        (game.equipment.axe ? "有斧头" : "无斧头") +
+        " / " +
+        (game.equipment.shovel ? "有铲子" : "无铲子") +
+        " / " +
+        (game.equipment.bed ? "有床" : "无床");
+
+      hpBar.style.width = (hero.hp / hero.maxHp) * 100 + "%";
+      shieldBar.style.width = hero.maxShield > 0 ? (hero.shield / hero.maxShield) * 100 + "%" : "0%";
+
+      const costs = getRecipeCosts();
+      craftWoodWeaponBtn.disabled = game.phase !== "prepare" || game.equipment.weapon !== "none" || !hasResources(costs.woodWeapon);
+      craftGrassArmorBtn.disabled = game.phase !== "prepare" || game.equipment.armor !== "none" || !hasResources(costs.grassArmor);
+      craftAxeBtn.disabled = game.phase !== "prepare" || game.equipment.axe || !hasResources(costs.axe);
+      craftShovelBtn.disabled = game.phase !== "prepare" || game.equipment.shovel || !hasResources(costs.shovel);
+      craftNailsBtn.disabled = game.phase !== "prepare" || !hasResources(costs.nails);
+      craftBedBtn.disabled = game.phase !== "prepare" || game.equipment.bed || !hasResources(costs.bed);
+      craftDiamondWeaponBtn.disabled = game.phase !== "prepare" || game.equipment.weapon === "diamond" || !hasResources(costs.diamondWeapon);
+      craftDiamondArmorBtn.disabled = game.phase !== "prepare" || game.equipment.armor === "diamond" || !hasResources(costs.diamondArmor);
+      digDirtBtn.disabled = !game.equipment.shovel || hero.dead;
+      placeDirtBtn.disabled = game.inventory.dirt <= 0 || hero.dead;
+      clearFormBtn.disabled = !game.testFormKey;
+      phaseBtn.disabled = game.phase !== "prepare" || hero.dead;
+      renderHotbar();
+    }
+
+    function render(time) {
+      if (!lastTime) lastTime = time;
+      const delta = Math.min((time - lastTime) / 1000, 0.032);
+      lastTime = time;
+
+      const viewWidth = canvas.clientWidth;
+      const viewHeight = canvas.clientHeight;
+
+      updateHero(delta);
+      updateCritters(delta);
+      if (game.phase === "prepare") gatherNearbyNodes();
+      updateProjectiles(delta);
+      updateMonsters(delta);
+      updateCamera(viewWidth, viewHeight);
+      updateHud();
+
+      ctx.clearRect(0, 0, viewWidth, viewHeight);
+      drawWorld(viewWidth, viewHeight);
+      drawEntities();
+      drawAtmosphere(viewWidth, viewHeight);
+
+      requestAnimationFrame(render);
+    }
+
+    function runSelfCheck() {
+      return {
+        phase: game.phase,
+        day: game.day,
+        form: hero.form,
+        inventory: { ...game.inventory },
+        weapon: game.equipment.weapon,
+        armor: game.equipment.armor,
+        axe: game.equipment.axe,
+        shovel: game.equipment.shovel,
+        bed: game.equipment.bed,
+        hp: hero.hp,
+        shield: hero.shield,
+        monsters: game.monsters.length,
+        facingTile: getTile(getFacingTilePosition().x, getFacingTilePosition().y).type,
+        nodes: game.nodes.length,
+        projectiles: game.projectiles.length,
+        hiddenTimer: hero.hiddenTimer,
+        rollTimer: hero.rollTimer,
+        mimicBurstTimer: hero.mimicBurstTimer,
+        testFormKey: game.testFormKey
+      };
+    }
+
+    function setDrawerState(drawer, button, isOpen) {
+      drawer.classList.toggle("is-open", isOpen);
+      button.classList.toggle("is-active", isOpen);
+      button.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    function toggleDrawer(drawer, button) {
+      setDrawerState(drawer, button, !drawer.classList.contains("is-open"));
+    }
+
+    function bindTouchMovement(button, key) {
+      const release = () => {
+        keys.delete(key);
+        button.classList.remove("is-pressed");
+      };
+
+      button.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        keys.add(key);
+        button.classList.add("is-pressed");
+      });
+
+      button.addEventListener("pointerup", release);
+      button.addEventListener("pointercancel", release);
+      button.addEventListener("pointerleave", release);
+    }
+
+    function initializeHudLayout() {
+      if (window.innerWidth <= 980) {
+        setDrawerState(infoDrawer, toggleInfoBtn, false);
+      } else {
+        setDrawerState(infoDrawer, toggleInfoBtn, true);
+      }
+      setDrawerState(worldDrawer, toggleWorldBtn, false);
+      setDrawerState(craftDrawer, toggleCraftBtn, false);
+    }
+
+    window.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      if (["w", "a", "s", "d", " ", "f", "g"].includes(key)) {
+        event.preventDefault();
+        if (key === " ") {
+          tryCastSkill();
+        } else if (key === "f") {
+          digFacingDirt();
+        } else if (key === "g") {
+          placeFacingDirt();
+        } else {
+          keys.add(key);
+        }
+      }
+    });
+
+    window.addEventListener("keyup", (event) => {
+      const key = event.key.toLowerCase();
+      if (["w", "a", "s", "d"].includes(key)) {
+        keys.delete(key);
+      }
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+
+    toggleInfoBtn.addEventListener("click", () => toggleDrawer(infoDrawer, toggleInfoBtn));
+    toggleWorldBtn.addEventListener("click", () => toggleDrawer(worldDrawer, toggleWorldBtn));
+    toggleCraftBtn.addEventListener("click", () => toggleDrawer(craftDrawer, toggleCraftBtn));
+
+    craftWoodWeaponBtn.addEventListener("click", craftWoodWeapon);
+    craftGrassArmorBtn.addEventListener("click", craftGrassArmor);
+    craftAxeBtn.addEventListener("click", craftAxe);
+    craftShovelBtn.addEventListener("click", craftShovel);
+    craftNailsBtn.addEventListener("click", craftNails);
+    craftBedBtn.addEventListener("click", craftBed);
+    craftDiamondWeaponBtn.addEventListener("click", craftDiamondWeapon);
+    craftDiamondArmorBtn.addEventListener("click", craftDiamondArmor);
+    digDirtBtn.addEventListener("click", digFacingDirt);
+    placeDirtBtn.addEventListener("click", placeFacingDirt);
+    applyFormBtn.addEventListener("click", applyTestFormSwitch);
+    clearFormBtn.addEventListener("click", clearTestFormSwitch);
+    phaseBtn.addEventListener("click", beginAssault);
+    restartBtn.addEventListener("click", restartGame);
+    touchSkillBtn.addEventListener("click", tryCastSkill);
+    touchDigBtn.addEventListener("click", digFacingDirt);
+    touchPlaceBtn.addEventListener("click", placeFacingDirt);
+
+    bindTouchMovement(moveUpBtn, "w");
+    bindTouchMovement(moveLeftBtn, "a");
+    bindTouchMovement(moveDownBtn, "s");
+    bindTouchMovement(moveRightBtn, "d");
+
+    generateWorld();
+    findSpawn();
+    resizeCanvas();
+    initializeHudLayout();
+    renderLogs();
+    spawnCritters();
+    renderForms();
+    renderTestFormOptions();
+    startDay(1);
+
+    window.gameDebug = {
+      WORLD,
+      hero,
+      game,
+      camera,
+      keys,
+      press(key) {
+        keys.add(key);
+      },
+      release(key) {
+        keys.delete(key);
+      },
+      craftWoodWeapon,
+      craftGrassArmor,
+      craftAxe,
+      craftShovel,
+      craftNails,
+      craftBed,
+      craftDiamondWeapon,
+      craftDiamondArmor,
+      digFacingDirt,
+      placeFacingDirt,
+      applyTestFormSwitch,
+      clearTestFormSwitch,
+      beginAssault,
+      tryCastSkill,
+      restartGame,
+      runSelfCheck
+    };
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
