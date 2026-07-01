@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>幼儿园哈利波特魔术节目｜手机速记版</title>
+  <style>
+    :root{
+      --bg:#0a1020;
+      --panel:#121a30;
+      --panel-2:#17223d;
+      --line:rgba(255,255,255,.08);
+      --text:#f5f7ff;
+      --muted:#b8c3e0;
+      --gold:#f1cd79;
+      --pink:#ffb6d8;
+      --blue:#8dc7ff;
+      --red:#ff8b8b;
+      --green:#9fe3be;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;background:
+      radial-gradient(circle at top,rgba(77,87,180,.2),transparent 32%),
+      linear-gradient(180deg,#0b1020 0%,#080c18 100%);
+      color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif}
+    body{padding:14px}
+    h1,h2,h3,p{margin:0}
+
+    .shell{max-width:760px;margin:0 auto}
+    .hero{
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px 16px;
+      box-shadow:var(--shadow);
+    }
+    .eyebrow{
+      color:var(--gold);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .hero h1{
+      margin-top:8px;
+      font-size:26px;
+      line-height:1.2;
+    }
+    .hero p{
+      margin-top:10px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .nav{
+      position:sticky;
+      top:10px;
+      z-index:5;
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      padding:12px 2px 2px;
+      margin-bottom:10px;
+    }
+    .nav a{
+      flex:0 0 auto;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid var(--line);
+      background:rgba(18,26,48,.88);
+      backdrop-filter:blur(10px);
+      border-radius:999px;
+      padding:10px 12px;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .scene{
+      margin-top:14px;
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .scene-head{
+      padding:16px;
+      border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(circle at right top,rgba(241,205,121,.11),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+    }
+    .scene-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .scene-index{
+      color:var(--gold);
+      font-size:12px;
+      letter-spacing:.08em;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      border:1px solid rgba(241,205,121,.26);
+      color:var(--gold);
+      background:rgba(241,205,121,.12);
+    }
+    .scene-head h2{
+      margin-top:8px;
+      font-size:22px;
+      line-height:1.28;
+    }
+    .scene-head p{
+      margin-top:8px;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:14px;
+    }
+
+    .section{
+      padding:14px 16px;
+      border-top:1px solid rgba(255,255,255,.05);
+    }
+    .section h3{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:15px;
+      color:var(--text);
+      margin-bottom:10px;
+    }
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--gold);
+      flex:0 0 auto;
+    }
+    .section ul{
+      margin:0;
+      padding-left:1.2em;
+      display:grid;
+      gap:8px;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:14px;
+    }
+    .section li strong{color:var(--text)}
+
+    .quote-list{
+      display:grid;
+      gap:10px;
+    }
+    .quote{
+      border-radius:16px;
+      padding:12px 12px 12px 14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-left:3px solid var(--gold);
+      line-height:1.7;
+      color:var(--text);
+      font-size:14px;
+    }
+    .quote small{
+      display:block;
+      color:var(--pink);
+      margin-bottom:4px;
+      font-size:12px;
+      letter-spacing:.04em;
+    }
+
+    .warn .dot{background:var(--red)}
+    .warn ul li{color:#ffd6d6}
+    .tips .dot{background:var(--blue)}
+    .tips ul li{color:#d4e9ff}
+    .good .dot{background:var(--green)}
+
+    .footer{
+      margin:16px 2px 4px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="eyebrow">Mobile Cheatsheet</div>
+      <h1>幼儿园哈利波特魔术节目<br>手机速记版</h1>
+      <p>按最新版本精简：只保留每幕流程、关键台词、易错点和道具提醒。排练时直接往下扫，不用看长稿。</p>
+    </section>
+
+    <nav class="nav">
+      <a href="#s1">第一幕</a>
+      <a href="#s2">第二幕</a>
+      <a href="#s3">第三幕</a>
+      <a href="#s4">第四幕</a>
+      <a href="#s5">第五幕</a>
+      <a href="#s6">第六幕</a>
+    </nav>
+
+    <section class="scene" id="s1">
+      <div class="scene-head">
+        <div class="scene-top">
+          <span class="scene-index">第一幕</span>
+          <span class="tag">魔术：双人亮魔杖</span>
+        </div>
+        <h2>介绍 + 弟弟自我介绍</h2>
+        <p>妈妈先起场，弟弟介绍自己；这一幕里妈妈和弟弟都要拿出自己的魔杖。</p>
+      </div>
+      <div class="section">
+        <h3><span class="dot"></span>流程速记</h3>
+        <ul>
+          <li>妈妈先开场，建立“霍格沃茨 / 小魔法师”氛围。</li>
+          <li>弟弟接自我介绍，这是本幕最关键的长台词。</li>
+          <li>妈妈记得 <strong>cue 弟弟拿自己的魔杖</strong>，不要只顾自己展示。</li>
+          <li>两个人都亮魔杖后，再进入下一幕。</li>
+        </ul>
+      </div>
+      <div class="section good">
+        <h3><span class="dot"></span>关键台词</h3>
+        <div class="quote-list">
+          <div class="quote">
+            <small>弟弟长台词</small>
+            大家好我叫高瑾博，是来霍格沃茨上学的小魔法师。
+          </div>
+        </div>
+      </div>
+      <div class="section warn">
+        <h3><span class="dot"></span>容易犯错</h3>
+        <ul>
+          <li>妈妈自己拿完魔杖就往下走，忘了 <strong>cue 弟弟拿魔杖</strong>。</li>
+          <li>弟弟长台词说太快，开场听不清名字和身份。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="scene" id="s2">
+      <div class="scene-head">
+        <div class="scene-top">
+          <span class="scene-index">第二幕</span>
+          <span class="tag">魔术：盒子变领结和眼镜</span>
+        </div>
+        <h2>看弟弟是不是收到了邀请</h2>
+        <p>盒子里只变出领结和眼镜，没有介绍信。重点是展示动作慢、盒子始终正面朝前。</p>
+      </div>
+      <div class="section">
+        <h3><span class="dot"></span>流程速记</h3>
+        <ul>
+          <li>提前准备好盒子、领结、眼镜。</li>
+          <li>妈妈拿出盒子给弟弟。</li>
+          <li>弟弟先 <strong>放下魔杖</strong>，再拿起盒子给大家展示。</li>
+          <li>展示要慢，而且 <strong>一定正面朝前</strong>。</li>
+          <li>展示完放下盒子，再挥舞魔杖。</li>
+          <li>之后从盒子里拿出领结和眼镜。</li>
+          <li>推荐盒子 <strong>放在桌子上变</strong>，不要抱着。</li>
+        </ul>
+      </div>
+      <div class="section good">
+        <h3><span class="dot"></span>关键提醒</h3>
+        <div class="quote-list">
+          <div class="quote">
+            <small>动作重点</small>
+            全程盒子都正面朝前，确保前面的门是关闭的。
+          </div>
+        </div>
+      </div>
+      <div class="section warn">
+        <h3><span class="dot"></span>容易犯错</h3>
+        <ul>
+          <li>拿着盒子就直接挥魔杖，顺序乱掉。</li>
+          <li>盒子侧过来或门没关好，前排容易看到机关。</li>
+          <li>变的时候抱着盒子操作，画面不稳，也更容易穿帮。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="scene" id="s3">
+      <div class="scene-head">
+        <div class="scene-top">
+          <span class="scene-index">第三幕</span>
+          <span class="tag">魔术：空牛皮纸袋变 3 个盒子</span>
+        </div>
+        <h2>看弟弟是不是有魔法天赋</h2>
+        <p>弟弟从空牛皮纸袋里变出 3 个盒子。重点是“空袋演示”一定慢，盒子正面也一定始终朝前。</p>
+      </div>
+      <div class="section">
+        <h3><span class="dot"></span>流程速记</h3>
+        <ul>
+          <li>提前准备好空牛皮纸袋和 3 个盒子。</li>
+          <li>先演示袋子里没有东西，动作慢一些，让大家看清楚。</li>
+          <li>弟弟开始变盒子时，妈妈负责串场，吸引大家注意力。</li>
+          <li>拿出来的盒子正面朝前，放在桌子上也继续保持正面朝前。</li>
+          <li>如果要收回去，也注意动作别穿帮。</li>
+        </ul>
+      </div>
+      <div class="section good">
+        <h3><span class="dot"></span>关键提醒</h3>
+        <div class="quote-list">
+          <div class="quote">
+            <small>动作重点</small>
+            空袋子的演示慢一些，让大家看清楚没有东西。
+          </div>
+        </div>
+      </div>
+      <div class="section warn">
+        <h3><span class="dot"></span>容易犯错</h3>
+        <ul>
+          <li>空袋展示太快，观众没建立“里面真的没有东西”的印象。</li>
+          <li>盒子拿出来时角度歪，正面没有朝观众。</li>
+          <li>变完收道具时太急，反而最容易露馅。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="scene" id="s4">
+      <div class="scene-head">
+        <div class="scene-top">
+          <span class="scene-index">第四幕</span>
+          <span class="tag">魔术：空白书 → 线稿 → 彩色稿</span>
+        </div>
+        <h2>看弟弟是不是能够在魔法学校好好学习</h2>
+        <p>把空白页的书变成线稿，再变成彩色稿。重点是每次都先把书放桌上，再念咒语。</p>
+      </div>
+      <div class="section">
+        <h3><span class="dot"></span>流程速记</h3>
+        <ul>
+          <li>第一次展示空白页。</li>
+          <li>变之前先把书 <strong>放在桌子上</strong>，念咒语 <strong>appear</strong>。</li>
+          <li>翻出线稿页，翻的时候从 <strong>封皮后开始翻</strong>，而且要翻慢一点。</li>
+          <li>第二次变之前还是先放桌上，再念咒语 <strong>color</strong>。</li>
+          <li>最后翻出彩色稿。</li>
+        </ul>
+      </div>
+      <div class="section good">
+        <h3><span class="dot"></span>关键台词 / 咒语</h3>
+        <div class="quote-list">
+          <div class="quote">
+            <small>咒语 1</small>
+            appear
+          </div>
+          <div class="quote">
+            <small>咒语 2</small>
+            color
+          </div>
+        </div>
+      </div>
+      <div class="section warn">
+        <h3><span class="dot"></span>容易犯错</h3>
+        <ul>
+          <li>没把书先放桌上就直接变，动作看起来不稳。</li>
+          <li>翻页太快，观众没看清空白页 / 线稿 / 彩色稿的层次。</li>
+          <li>这里需要 <strong>多多练习</strong>，尤其是从封皮后开始翻这一点。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="scene" id="s5">
+      <div class="scene-head">
+        <div class="scene-top">
+          <span class="scene-index">第五幕</span>
+          <span class="tag">魔术：魔杖变花</span>
+        </div>
+        <h2>毕业前旁白 + 最后一个台上魔术</h2>
+        <p>第五幕前先加过场旁白，再做“魔杖变花”。</p>
+      </div>
+      <div class="section good">
+        <h3><span class="dot"></span>关键旁白</h3>
+        <div class="quote-list">
+          <div class="quote">
+            <small>过场旁白</small>
+            转眼间，小魔法师已经在学校学习了 3 年，马上就要毕业了。
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <h3><span class="dot"></span>流程速记</h3>
+        <ul>
+          <li>旁白结束后进入本幕。</li>
+          <li>妈妈拿着花盆给弟弟。</li>
+          <li>放花盆的动作要 <strong>慢慢放</strong>。</li>
+          <li>抽的动作要 <strong>快速抽出来</strong>。</li>
+        </ul>
+      </div>
+      <div class="section warn">
+        <h3><span class="dot"></span>容易犯错</h3>
+        <ul>
+          <li>放花盆和抽花盆速度反了，节奏会很怪。</li>
+          <li>过场旁白说完没停顿就直接做魔术，情绪转场不清楚。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="scene" id="s6">
+      <div class="scene-head">
+        <div class="scene-top">
+          <span class="scene-index">第六幕</span>
+          <span class="tag">魔术：袋子变礼物</span>
+        </div>
+        <h2>长台词收束 + 最后送礼物</h2>
+        <p>妈妈先问“最厉害的魔法是什么”，弟弟回答，再做最后一个袋子魔术。最后妈妈收口，两个人鞠躬。</p>
+      </div>
+      <div class="section">
+        <h3><span class="dot"></span>流程速记</h3>
+        <ul>
+          <li>妈妈先问弟弟：你这三年来，觉得最厉害的魔法是什么。</li>
+          <li>弟弟说完长台词，再接“我还有最后一个魔法送给大家”。</li>
+          <li>展示袋子的时候慢一点。</li>
+          <li>袋子里礼物 <strong>少放几个</strong>，别塞太满。</li>
+          <li>变完之后，妈妈补一句“结束之后发给大家礼物”，避免现场混乱。</li>
+          <li>最后妈妈点题祝福，两个人鞠躬。</li>
+        </ul>
+      </div>
+      <div class="section good">
+        <h3><span class="dot"></span>关键台词</h3>
+        <div class="quote-list">
+          <div class="quote">
+            <small>妈妈提问</small>
+            你这三年来，觉得最厉害的魔法是什么。
+          </div>
+          <div class="quote">
+            <small>弟弟长台词</small>
+            是每天都能跟小朋友们开心的玩耍和学习，是碰到了照顾我们的好老师们。
+          </div>
+          <div class="quote">
+            <small>弟弟接魔术</small>
+            我还有最后一个魔法送给大家。
+          </div>
+          <div class="quote">
+            <small>妈妈收口</small>
+            祝愿所有在座的小魔法师都能够在新的学校里好好学习，健康成长。
+          </div>
+        </div>
+      </div>
+      <div class="section warn">
+        <h3><span class="dot"></span>容易犯错</h3>
+        <ul>
+          <li>袋子展示太快，观众看不清“里面没东西”。</li>
+          <li>礼物放太多，操作容易乱，也更容易穿帮。</li>
+          <li>变完不先说明“结束之后发礼物”，小朋友容易立刻往前冲。</li>
+          <li>最后别忘了 <strong>两个人一起鞠躬</strong>。</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="footer">
+      排练建议：第二幕盒子、第三幕牛皮纸袋、第四幕翻书、第五幕花盆、第六幕礼物袋，都是高风险点，建议单独拆出来反复练。
+    </div>
+  </div>
+</body>
+</html>
