@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>西安长安拾光攻略</title>
+    <style>
+      :root {
+        --bg: #f5efe4;
+        --paper: rgba(255, 250, 243, 0.92);
+        --paper-strong: #fffaf2;
+        --ink: #1e2433;
+        --muted: #5f6678;
+        --line: rgba(30, 36, 51, 0.12);
+        --gold: #b88a3b;
+        --gold-soft: rgba(184, 138, 59, 0.14);
+        --red: #7d1f29;
+        --red-soft: rgba(125, 31, 41, 0.1);
+        --blue: #22324d;
+        --blue-soft: rgba(34, 50, 77, 0.1);
+        --teal: #315d5c;
+        --shadow: 0 20px 50px rgba(36, 33, 28, 0.14);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --max-width: 1200px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Iowan Old Style", "Noto Serif SC", "Songti SC", "STSong", serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(184, 138, 59, 0.18), transparent 30%),
+          radial-gradient(circle at top right, rgba(125, 31, 41, 0.16), transparent 32%),
+          linear-gradient(180deg, #f0e6d7 0%, #f7f2ea 30%, #efe7d9 100%);
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+        background-size: 44px 44px;
+        opacity: 0.18;
+        pointer-events: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .shell {
+        width: min(calc(100% - 32px), var(--max-width));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(16px);
+        background: rgba(245, 239, 228, 0.78);
+        border-bottom: 1px solid rgba(30, 36, 51, 0.08);
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand small {
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .brand strong {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .nav-chips {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+      }
+
+      .nav-chips::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-chips a {
+        white-space: nowrap;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.45);
+        transition: all 180ms ease;
+      }
+
+      .nav-chips a:hover,
+      .nav-chips a.active {
+        color: var(--red);
+        border-color: rgba(125, 31, 41, 0.18);
+        background: rgba(255, 250, 243, 0.96);
+        box-shadow: 0 8px 24px rgba(125, 31, 41, 0.12);
+      }
+
+      .hero {
+        padding: 44px 0 28px;
+      }
+
+      .hero-card {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 24px;
+        padding: 26px;
+        border-radius: 34px;
+        background:
+          linear-gradient(180deg, rgba(18, 24, 39, 0.08), transparent 26%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.32));
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-width: 0;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--red);
+        background: rgba(255, 250, 243, 0.92);
+        border: 1px solid rgba(125, 31, 41, 0.12);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.1;
+      }
+
+      h1 {
+        font-size: clamp(40px, 6vw, 74px);
+        letter-spacing: 0.03em;
+      }
+
+      .hero-subtitle {
+        font-size: clamp(18px, 2.6vw, 28px);
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .hero-lead {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.8;
+        color: #3e4558;
+        max-width: 720px;
+      }
+
+      .hero-tags,
+      .info-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .tag,
+      .stat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(30, 36, 51, 0.08);
+        font-size: 13px;
+        color: #40475a;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 14px;
+        font-weight: 700;
+        transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button-primary {
+        color: #fff8f0;
+        background: linear-gradient(135deg, #7d1f29, #b44539);
+        box-shadow: 0 16px 36px rgba(125, 31, 41, 0.22);
+      }
+
+      .button-secondary {
+        background: rgba(255, 250, 243, 0.8);
+        border-color: rgba(30, 36, 51, 0.1);
+      }
+
+      .hero-visual {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      .image-frame {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        min-height: 420px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+      }
+
+      .image-frame::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background:
+          linear-gradient(180deg, rgba(6, 11, 22, 0.08), transparent 26%),
+          linear-gradient(0deg, rgba(6, 11, 22, 0.66), transparent 40%);
+        pointer-events: none;
+      }
+
+      .image-caption {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        z-index: 1;
+        color: #f9f4eb;
+      }
+
+      .image-caption strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+
+      .image-caption p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+        color: rgba(249, 244, 235, 0.86);
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255, 250, 243, 0.78);
+        border: 1px solid rgba(30, 36, 51, 0.08);
+      }
+
+      .stat-card span {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      .stat-card strong {
+        font-size: 26px;
+      }
+
+      .section {
+        padding: 28px 0;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+
+      .section-header p {
+        margin: 10px 0 0;
+        max-width: 760px;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+
+      .section-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: 700;
+        background: var(--gold-soft);
+        color: var(--gold);
+      }
+
+      .section-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .section h2 {
+        font-size: clamp(28px, 4vw, 42px);
+      }
+
+      .card-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .overview-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .panel,
+      .overview-card,
+      .hotel-card,
+      .timeline-card,
+      .food-card,
+      .booking-card,
+      .budget-card,
+      .pitfall-card,
+      .link-card,
+      .spotlight-card {
+        border-radius: var(--radius-xl);
+        background: var(--paper);
+        border: 1px solid rgba(30, 36, 51, 0.08);
+        box-shadow: var(--shadow);
+      }
+
+      .overview-card {
+        position: relative;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .overview-card::before {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 4px;
+        content: "";
+        background: linear-gradient(90deg, rgba(184, 138, 59, 0.9), rgba(125, 31, 41, 0.9));
+      }
+
+      .overview-card small {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: var(--red);
+        letter-spacing: 0.08em;
+      }
+
+      .overview-card h3 {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      .overview-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.75;
+        font-size: 15px;
+      }
+
+      .overview-meta {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .meta-row {
+        display: flex;
+        gap: 10px;
+        font-size: 13px;
+      }
+
+      .meta-row strong {
+        min-width: 64px;
+        color: var(--ink);
+      }
+
+      .callout-row {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .panel {
+        padding: 22px;
+      }
+
+      .panel h3 {
+        font-size: 22px;
+        margin-bottom: 12px;
+      }
+
+      .panel p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .danger {
+        background:
+          linear-gradient(160deg, rgba(125, 31, 41, 0.98), rgba(67, 19, 24, 0.96));
+        color: #fff4ef;
+      }
+
+      .danger p,
+      .danger .list-inline,
+      .danger li {
+        color: rgba(255, 244, 239, 0.88);
+      }
+
+      .danger .tag {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.18);
+        color: #fff5ec;
+      }
+
+      .checklist,
+      .bullet-list,
+      .pitfall-list {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.9;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 18px;
+      }
+
+      .hotel-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+      }
+
+      .hotel-copy {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .hotel-copy h3 {
+        font-size: 30px;
+      }
+
+      .hotel-copy p {
+        margin: 0;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+
+      .hotel-visual {
+        position: relative;
+        min-height: 100%;
+      }
+
+      .hotel-visual .image-frame {
+        min-height: 100%;
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .day-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .day-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .day-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 14px;
+        border-radius: 999px;
+        background: rgba(255, 250, 243, 0.8);
+        border: 1px solid rgba(30, 36, 51, 0.1);
+        font-size: 13px;
+        color: #485066;
+      }
+
+      .timeline-card {
+        padding: 24px;
+      }
+
+      .timeline-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .timeline-head h3 {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+
+      .timeline-head p {
+        margin: 0;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+
+      .mini-badge {
+        padding: 9px 12px;
+        border-radius: 999px;
+        background: var(--gold-soft);
+        color: var(--gold);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .timeline {
+        position: relative;
+        display: grid;
+        gap: 16px;
+      }
+
+      .timeline::before {
+        position: absolute;
+        left: 94px;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        content: "";
+        background: linear-gradient(180deg, rgba(184, 138, 59, 0.6), rgba(34, 50, 77, 0.18));
+      }
+
+      .timeline-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .timeline-time {
+        position: sticky;
+        top: 92px;
+        padding-top: 2px;
+        font-size: 14px;
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      .timeline-content {
+        position: relative;
+        padding: 18px 18px 18px 20px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.56);
+        border: 1px solid rgba(30, 36, 51, 0.07);
+      }
+
+      .timeline-content::before {
+        position: absolute;
+        top: 21px;
+        left: -31px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        content: "";
+        background: var(--gold);
+        box-shadow: 0 0 0 8px rgba(184, 138, 59, 0.14);
+      }
+
+      .timeline-content strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+
+      .timeline-content p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .tips-grid,
+      .food-grid,
+      .booking-grid,
+      .budget-grid,
+      .pitfall-grid,
+      .links-grid,
+      .spotlight-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .tips-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .food-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .booking-grid,
+      .budget-grid,
+      .pitfall-grid,
+      .links-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .spotlight-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .spotlight-card {
+        overflow: hidden;
+      }
+
+      .spotlight-card .image-frame {
+        min-height: 240px;
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+      }
+
+      .spotlight-copy {
+        padding: 18px 18px 22px;
+      }
+
+      .spotlight-copy strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      .spotlight-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .food-card,
+      .booking-card,
+      .budget-card,
+      .pitfall-card,
+      .link-card {
+        padding: 20px;
+      }
+
+      .food-card small,
+      .booking-card small,
+      .budget-card small,
+      .link-card small {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--red);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+
+      .food-card strong,
+      .booking-card strong,
+      .budget-card strong,
+      .pitfall-card strong,
+      .link-card strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      .food-card p,
+      .booking-card p,
+      .budget-card p,
+      .pitfall-card p,
+      .link-card p {
+        margin: 0 0 14px;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .food-card .button,
+      .link-card .button {
+        width: fit-content;
+      }
+
+      .budget-bar {
+        position: relative;
+        height: 9px;
+        margin-top: 12px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(30, 36, 51, 0.08);
+      }
+
+      .budget-bar span {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--gold), #d3b06f);
+      }
+
+      .budget-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 18px;
+        padding: 18px 20px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(34, 50, 77, 0.96), rgba(66, 82, 118, 0.92));
+        color: #f7f3eb;
+      }
+
+      .budget-total strong {
+        margin: 0;
+        font-size: 32px;
+      }
+
+      .link-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .footer {
+        padding: 28px 0 64px;
+      }
+
+      .footer-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 24px;
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(255, 250, 243, 0.85), rgba(247, 239, 226, 0.85));
+        border: 1px solid rgba(30, 36, 51, 0.08);
+        box-shadow: var(--shadow);
+      }
+
+      .footer-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .footer-card strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      .back-top {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 30;
+        width: 52px;
+        height: 52px;
+        border: 0;
+        border-radius: 50%;
+        color: #fffaf1;
+        background: linear-gradient(135deg, #7d1f29, #b88a3b);
+        box-shadow: 0 16px 30px rgba(93, 36, 23, 0.25);
+        cursor: pointer;
+      }
+
+      @media (max-width: 1100px) {
+        .hero-card,
+        .split,
+        .hotel-card,
+        .callout-row {
+          grid-template-columns: 1fr;
+        }
+
+        .overview-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .tips-grid,
+        .booking-grid,
+        .budget-grid,
+        .pitfall-grid,
+        .links-grid,
+        .spotlight-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .shell {
+          width: min(calc(100% - 20px), var(--max-width));
+        }
+
+        .topbar-inner {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .hero {
+          padding-top: 26px;
+        }
+
+        .hero-card,
+        .timeline-card,
+        .food-card,
+        .booking-card,
+        .budget-card,
+        .pitfall-card,
+        .link-card,
+        .spotlight-copy,
+        .panel,
+        .hotel-copy,
+        .footer-card {
+          padding: 18px;
+        }
+
+        .image-frame {
+          min-height: 280px;
+        }
+
+        .hero-stats,
+        .overview-grid,
+        .tips-grid,
+        .food-grid,
+        .booking-grid,
+        .budget-grid,
+        .pitfall-grid,
+        .links-grid,
+        .spotlight-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-header {
+          flex-direction: column;
+          align-items: start;
+        }
+
+        .timeline::before {
+          left: 25px;
+        }
+
+        .timeline-item {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding-left: 0;
+        }
+
+        .timeline-time {
+          position: relative;
+          top: 0;
+          padding-left: 46px;
+        }
+
+        .timeline-content {
+          margin-left: 0;
+          padding-left: 18px;
+        }
+
+        .timeline-content::before {
+          left: 18px;
+          top: -22px;
+        }
+
+        .footer-card {
+          flex-direction: column;
+          align-items: start;
+        }
+
+        .back-top {
+          right: 16px;
+          bottom: 16px;
+          width: 48px;
+          height: 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <div class="brand">
+          <small>Chang'an Travel Web Guide</small>
+          <strong>西安长安拾光攻略</strong>
+        </div>
+        <nav class="nav-chips" id="nav-chips">
+          <a href="#hero">首页</a>
+          <a href="#overview">速览</a>
+          <a href="#prepare">准备</a>
+          <a href="#hotel">住宿</a>
+          <a href="#itinerary">逐日行程</a>
+          <a href="#food">美食</a>
+          <a href="#logistics">交通预约</a>
+          <a href="#budget">预算</a>
+          <a href="#notes">避坑</a>
+          <a href="#links">入口</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero shell" id="hero">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <div class="eyebrow">飞书攻略重排版 · Web / 手机双端适配</div>
+            <h1>长安拾光</h1>
+            <div class="hero-subtitle">西安 4 天 3 晚 · 好看好拍、地道美食、细节拉满的旅行说明书</div>
+            <p class="hero-lead">
+              页面完整承接飞书原攻略中的时间安排、门票、住宿、交通、预算、避坑与外链入口，并将长表格改造成更清晰的卡片与时间轴结构，方便出发前做决策，也适合路上随时翻阅。
+            </p>
+            <div class="hero-tags" id="hero-tags"></div>
+            <div class="actions">
+              <a class="button button-primary" href="#itinerary">查看逐日详细行程</a>
+              <a
+                class="button button-secondary"
+                href="https://p-mira-img-sign-sgnontt.byteintl.net/tos-mya-i-xobrcjvdq7/80fa24cd495140c5ba1935c163e7b1c7.html~tplv-xobrcjvdq7-image.image?lk3s=3523e930&x-orig-authkey=miraorigin&x-orig-expires=1784692800&x-orig-sign=ge0USaft8CcT6QTz78ITDdlgLk4="
+                target="_blank"
+                rel="noreferrer"
+                >打开旅行画册</a
+              >
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="image-frame">
+              <img
+                id="hero-image"
+                alt="西安钟楼雨夜主视觉"
+              />
+              <div class="image-caption">
+                <strong>雨后钟楼、城墙暮色与大唐夜游</strong>
+                <p>整体视觉以“夜色长安 + 旅行画册”展开，既保留攻略工具性，也保留适合出片的城市情绪。</p>
+              </div>
+            </div>
+            <div class="hero-stats" id="hero-stats"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" id="overview">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">01</span>
+              <h2>四天速览</h2>
+            </div>
+            <p>先看每天主题、主线动线和夜间亮点，再决定重点展开哪一天。</p>
+          </div>
+        </div>
+        <div class="card-grid overview-grid" id="overview-grid"></div>
+      </section>
+
+      <section class="section shell" id="prepare">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">02</span>
+              <h2>天气与准备</h2>
+            </div>
+            <p>原攻略里最关键的天气风险与穿搭提示已经拆成可快速查阅的准备清单。</p>
+          </div>
+        </div>
+        <div class="callout-row">
+          <div class="panel danger">
+            <h3>关键预警</h3>
+            <p>
+              7/16 白天最高 39 ℃、体感 45 ℃，紫外线指数 11 极强；18:00 前后有 19.8 mm 强雷阵雨，概率 90%。
+              Day 1 已调整为室内优先动线，15 时前尽量避开户外暴晒。
+            </p>
+            <div class="info-tags" style="margin-top: 16px;">
+              <span class="tag">日出 05:44</span>
+              <span class="tag">日落 19:57</span>
+              <span class="tag">平均湿度 45–70%</span>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>准备摘要</h3>
+            <ul class="checklist">
+              <li>穿浅色棉麻或速干上衣，女生可备素色汉服用于大唐不夜城或芙蓉园拍摄。</li>
+              <li>兵马俑与城墙步行较多，优先软底运动鞋或老爹鞋。</li>
+              <li>随身带 SPF50+ 防晒、帽子、墨镜、小风扇和一件薄开衫。</li>
+              <li>7/16 傍晚必须带折叠伞，并准备一双备用鞋放在酒店。</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tips-grid" id="tips-grid" style="margin-top: 16px;"></div>
+      </section>
+
+      <section class="section shell" id="hotel">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">03</span>
+              <h2>住宿建议</h2>
+            </div>
+            <p>以位置、舒适度和行程兼容度为核心，首选钟楼回民街亚朵，兼顾机场往返与核心景点。</p>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-copy">
+            <div class="eyebrow">携程 4.9 / 5 · 2039 条点评</div>
+            <h3>西安钟楼回民街亚朵酒店</h3>
+            <p>
+              地址位于西安莲湖区北大街 188 号，距离钟楼地铁站 400 米、北大街地铁站 390 米、回民街步行 5 分钟，到碑林博物馆约 1.5 公里，到机场约 35.4 公里。
+            </p>
+            <div class="info-tags">
+              <span class="tag">2025 年新开</span>
+              <span class="tag">深夜粥免费</span>
+              <span class="tag">非遗手工体验</span>
+              <span class="tag">早餐含西安小吃</span>
+            </div>
+            <div class="panel" style="padding: 18px; box-shadow: none;">
+              <p>
+                推荐房型：知室大床 / 双床，3 晚含税约 <strong style="color: var(--red);">¥2,400</strong>。
+                入住 14:00 后，退房 14:00 前，前台支持寄存行李。
+              </p>
+            </div>
+            <div class="actions">
+              <a class="button button-primary" href="https://hotels.ctrip.com/hotels/126735110.html" target="_blank" rel="noreferrer">查看携程详情</a>
+              <a class="button button-secondary" href="#links">查看更多平台入口</a>
+            </div>
+            <p>备选方案：若更看重陕历博和大唐不夜城步行圈，可考虑西安大雁塔亚朵酒店。</p>
+          </div>
+          <div class="hotel-visual">
+            <div class="image-frame">
+              <img id="hotel-image" alt="西安酒店与城市场景配图" />
+              <div class="image-caption">
+                <strong>住在钟楼附近，动线更省心</strong>
+                <p>钟楼、回民街、城墙与地铁换乘都在舒适步行或短打车范围内，适合作为四日 basecamp。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" id="itinerary">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">04</span>
+              <h2>逐日详细行程</h2>
+            </div>
+            <p>每一天都按时间轴展开，保留原攻略中的票价、路线、吃饭建议与摄影提醒。</p>
+          </div>
+        </div>
+        <div class="day-nav" id="day-nav"></div>
+        <div class="day-grid" id="day-grid"></div>
+      </section>
+
+      <section class="section shell" id="spotlight">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">05</span>
+              <h2>场景插图</h2>
+            </div>
+            <p>配图用于帮助快速建立场景感，不替代攻略本身的决策信息。</p>
+          </div>
+        </div>
+        <div class="spotlight-grid" id="spotlight-grid"></div>
+      </section>
+
+      <section class="section shell" id="food">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">06</span>
+              <h2>必吃美食清单</h2>
+            </div>
+            <p>把原攻略里的店名、推荐门店、招牌菜和点评入口拆成更适合手机点按的店铺卡片。</p>
+          </div>
+        </div>
+        <div class="food-grid" id="food-grid"></div>
+      </section>
+
+      <section class="section shell" id="logistics">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">07</span>
+              <h2>门票、交通与预约</h2>
+            </div>
+            <p>这一段最适合出发前一口气看完，避免到了现场才补课。</p>
+          </div>
+        </div>
+        <div class="split">
+          <div>
+            <div class="booking-grid" id="booking-grid"></div>
+          </div>
+          <div class="panel">
+            <h3>市内交通</h3>
+            <ul class="bullet-list">
+              <li>地铁：北大街站是 1 号线和 2 号线换乘枢纽，覆盖钟楼、大雁塔、行政中心；4 号线直达大唐芙蓉园。</li>
+              <li>景区直通车：钟楼地铁站 D 口 8:00 起发车，兵马俑 + 华清宫一日游约 ¥60/人。</li>
+              <li>机场往返：机场大巴钟楼线或陕历博·大雁塔专线 ¥25；地铁 14 号线转 2 号线约 ¥8；网约车约 ¥130。</li>
+            </ul>
+            <div class="panel" style="margin-top: 16px; padding: 18px; box-shadow: none;">
+              <h3 style="font-size: 18px;">预约节奏</h3>
+              <p>
+                陕历博免费票提前 5 天早 8 点放号，兵马俑也建议提前预约；《长恨歌》建议直接定 A/B 区，不把热门演出拖到现场。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" id="budget">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">08</span>
+              <h2>预算参考</h2>
+            </div>
+            <p>按两位成人、不含机票的口径整理，方便你迅速判断重投入在什么地方。</p>
+          </div>
+        </div>
+        <div class="budget-grid" id="budget-grid"></div>
+        <div class="budget-total">
+          <div>
+            <span>两人合计</span>
+            <strong>约 ¥7,220</strong>
+          </div>
+          <p style="margin: 0; color: rgba(247, 243, 235, 0.78); line-height: 1.8;">
+            大头集中在住宿与门票演出。预算不敏感的话，最值得保留的投入是舒适酒店和《长恨歌》观演区位。
+          </p>
+        </div>
+      </section>
+
+      <section class="section shell" id="notes">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">09</span>
+              <h2>避坑与注意事项</h2>
+            </div>
+            <p>这一段直接提炼自原攻略，是最值得在出发当天再看一次的部分。</p>
+          </div>
+        </div>
+        <div class="pitfall-grid" id="pitfall-grid"></div>
+      </section>
+
+      <section class="section shell" id="links">
+        <div class="section-header">
+          <div>
+            <div class="section-title-wrap">
+              <span class="section-number">10</span>
+              <h2>平台快捷入口</h2>
+            </div>
+            <p>页面内所有链接均可直接跳转，适合在制定行程时边看边订。</p>
+          </div>
+        </div>
+        <div class="links-grid" id="links-grid"></div>
+      </section>
+    </main>
+
+    <footer class="footer shell">
+      <div class="footer-card">
+        <div>
+          <strong>祝你们在长安留下好看也好吃的四天。</strong>
+          <p>
+            这版网页按飞书攻略内容重排，保留了关键门票、外链、预算与提醒信息。最适合的使用方式是出发前看全局，路上用手机按锚点快速翻具体板块。
+          </p>
+        </div>
+        <a class="button button-primary" href="#hero">回到顶部</a>
+      </div>
+    </footer>
+
+    <button class="back-top" type="button" id="back-top" aria-label="回到顶部">↑</button>
+
+    <script>
+      const buildImageUrl = (prompt, imageSize) =>
+        `https://copilot-sg-og.byteintl.net/api/ide/v1/text_to_image?prompt=${encodeURIComponent(prompt)}&image_size=${imageSize}`;
+
+      const heroStats = [
+        { label: "行程长度", value: "4 天 3 晚" },
+        { label: "出行人数", value: "2 位成人" },
+        { label: "核心预算", value: "约 ¥7,220" }
+      ];
+
+      const heroTags = [
+        "7/16 中午到达",
+        "7/19 晚班机返程",
+        "首次到访西安",
+        "住宿舒适优先",
+        "偏好好看好拍",
+        "偏好地道美食"
+      ];
+
+      const overviewDays = [
+        {
+          day: "Day 1",
+          date: "7/16（周四）中午到",
+          theme: "初 · 入长安",
+          route: "咸阳机场 → 亚朵 → 碑林博物馆 → 回民街 → 大唐西市 / 大悦城",
+          highlight: "钟楼灯影与雨中倒影",
+          risk: "高温 + 雷雨，全天按室内避雨版执行"
+        },
+        {
+          day: "Day 2",
+          date: "7/17（周五）全天",
+          theme: "兵 · 探秦皇",
+          route: "兵马俑 → 临潼午餐 → 华清宫 → 《长恨歌》",
+          highlight: "骊山实景演出",
+          risk: "全天户外，注意补水与防晒"
+        },
+        {
+          day: "Day 3",
+          date: "7/18（周六）全天",
+          theme: "盛 · 观唐韵",
+          route: "陕历博 → 长安大牌档 → 大雁塔 → 大唐不夜城",
+          highlight: "喷泉、汉服、不倒翁小姐姐",
+          risk: "陕历博预约很抢手，建议提前锁定"
+        },
+        {
+          day: "Day 4",
+          date: "7/19（周日）晚班机",
+          theme: "别 · 长安意",
+          route: "大唐芙蓉园 → 永兴坊 → 明城墙骑行 → 酒店取行李 → 机场",
+          highlight: "园林与城墙两种收尾气质",
+          risk: "返程晚高峰，至少提前 3 小时出发"
+        }
+      ];
+
+      const prepCards = [
+        {
+          title: "穿搭建议",
+          detail: "浅色棉麻或速干上衣更适合西安盛夏；大唐不夜城、芙蓉园适合带一套素色汉服。"
+        },
+        {
+          title: "鞋与防晒",
+          detail: "兵马俑、城墙步行量大，穿软底运动鞋；防晒霜建议 3 小时补涂一次。"
+        },
+        {
+          title: "雨具与备份",
+          detail: "7/16 傍晚一定带折叠伞，酒店放一双备用鞋，避免雨后继续赶行程时难受。"
+        }
+      ];
+
+      const days = [
+        {
+          id: "day-1",
+          badge: "室内避雨版",
+          title: "Day 1 · 初入长安",
+          summary:
+            "白天暴晒、傍晚强雨，所以 Day 1 的核心不是硬冲景点，而是把落地后的休整、室内文化馆、回民街吃饭和夜色拍照串成一条轻压力动线。",
+          timeline: [
+            {
+              time: "12:30",
+              title: "咸阳机场 T3 落地",
+              details: "机场大巴钟楼线 ¥25/人，约 1 小时直达；打车约 ¥130，45 分钟。"
+            },
+            {
+              time: "14:00",
+              title: "亚朵 Check-in",
+              details: "先放行李、补充空调午休，把折叠伞塞进随身包。"
+            },
+            {
+              time: "15:00–17:15",
+              title: "碑林博物馆",
+              details: "门票 ¥50，室内空调，适合避开 39 ℃ 高温；可重点看景教碑、颜真卿碑刻、昭陵六骏拓片。"
+            },
+            {
+              time: "17:45–19:30",
+              title: "回民街晚餐",
+              details: "首选老孙家泡馍，不排队又想拍照可选长安大牌档（大悦城店）。"
+            },
+            {
+              time: "19:30–21:30",
+              title: "大悦城 / 大唐西市 二选一",
+              details: "把雨最大时段放在室内商圈或博物馆里度过，等 21 点后雨势减弱再走。"
+            },
+            {
+              time: "21:45",
+              title: "钟楼灯影散步",
+              details: "雨中倒影最容易出片，可尝试玻璃反射和地面积水构图。"
+            }
+          ]
+        },
+        {
+          id: "day-2",
+          badge: "秦风重场",
+          title: "Day 2 · 兵探秦皇",
+          summary:
+            "这天是体力和视觉都最强的一天，白天看兵马俑与华清宫，晚上把压轴留给《长恨歌》实景演出。",
+          timeline: [
+            {
+              time: "07:00",
+              title: "酒店自助早餐",
+              details: "全天户外，先补足碳水和水分。"
+            },
+            {
+              time: "08:00",
+              title: "钟楼地铁站出发",
+              details: "可选临潼一日游直通车约 ¥60/人，或地铁 9 号线到华清宫再打车。"
+            },
+            {
+              time: "09:00–12:30",
+              title: "秦始皇帝陵博物院",
+              details: "建议顺序：铜车马馆 → 一号坑 → 三号坑 → 二号坑；门票 ¥120，预约必做。"
+            },
+            {
+              time: "13:00",
+              title: "临潼午餐",
+              details: "石榴汁和陕西凉皮是稳妥选择，景区门口老字号即可。"
+            },
+            {
+              time: "15:00–18:30",
+              title: "华清宫",
+              details: "门票 ¥120，可看长生殿、九龙湖、骊山缆车与西安事变旧址。"
+            },
+            {
+              time: "20:10",
+              title: "《长恨歌》山水实景",
+              details: "¥298/人起，骊山为幕、九龙湖为台，建议直接订贵宾 B 或 A 区。"
+            }
+          ]
+        },
+        {
+          id: "day-3",
+          badge: "唐韵高光",
+          title: "Day 3 · 盛观唐韵",
+          summary:
+            "如果说 Day 2 是历史震撼，那 Day 3 就是典型的盛唐氛围日：馆藏、塔影、夜游和汉服全部集中在这一天。",
+          timeline: [
+            {
+              time: "09:00–12:00",
+              title: "陕西历史博物馆",
+              details: "免费票秒空，没抢到就买珍宝馆或大唐遗宝专题票；必看三彩载乐骆驼俑、舞马衔杯银壶、兽首玛瑙杯。"
+            },
+            {
+              time: "12:30",
+              title: "长安大牌档（赛格国际店）",
+              details: "妃子笑、毛笔酥、葫芦鸡和油泼扯面都适合拍照和打卡。"
+            },
+            {
+              time: "15:30",
+              title: "大慈恩寺 · 大雁塔",
+              details: "门票 ¥50，登塔另 30；北广场拍塔剪影效果最佳。"
+            },
+            {
+              time: "19:00",
+              title: "大雁塔音乐喷泉",
+              details: "周六 21:00 场，建议至少提前 30 分钟卡前排。"
+            },
+            {
+              time: "20:30",
+              title: "大唐不夜城",
+              details: "汉服全套 ¥199–399，重点看不倒翁小姐姐、悬浮铜人、花车巡游。"
+            }
+          ]
+        },
+        {
+          id: "day-4",
+          badge: "从容收尾",
+          title: "Day 4 · 别长安意",
+          summary:
+            "最后一天把节奏放得更舒展：先去更清幽的芙蓉园，再用永兴坊和城墙骑行收尾，最后从钟楼线稳妥返机场。",
+          timeline: [
+            {
+              time: "08:00–11:30",
+              title: "大唐芙蓉园",
+              details: "门票 ¥120，紫云楼、芳林苑与木偶戏都值得慢逛；园内租汉服写真更安静。"
+            },
+            {
+              time: "12:30",
+              title: "永兴坊午餐",
+              details: "摔碗酒、biangbiang 面、镜糕、肉夹馍都可一次打卡。"
+            },
+            {
+              time: "15:00–17:00",
+              title: "明城墙 · 永宁门",
+              details: "门票 ¥54，自行车 45/2h；环城约 13.7 km，不想骑也可以只逛南门段。"
+            },
+            {
+              time: "17:30",
+              title: "酒店取行李",
+              details: "亚朵前台支持寄存，回民街可顺手买黄桂柿子饼和水晶饼。"
+            },
+            {
+              time: "18:30",
+              title: "机场大巴钟楼线",
+              details: "约 60–90 分钟，建议至少在航班起飞前 3 小时出发。"
+            }
+          ]
+        }
+      ];
+
+      const spotlightCards = [
+        {
+          title: "兵马俑日",
+          text: "用温暖但克制的博物馆色调对应 Day 2 的厚重历史感。",
+          size: "landscape_16_9",
+          prompt:
+            "realistic travel website editorial photo, Xi'an Terracotta Warriors museum interior, warm stone textures, cinematic natural light, visitors scale, premium travel brochure aesthetic, highly detailed, no text"
+        },
+        {
+          title: "不夜城夜游",
+          text: "更艳丽、更热闹的夜景图适合衔接大唐不夜城与汉服拍照氛围。",
+          size: "landscape_16_9",
+          prompt:
+            "realistic Xi'an Datang Everbright City at night, Tang dynasty inspired costumes, glowing lanterns, lively street performance atmosphere, luxury travel editorial style, richly detailed, no text"
+        },
+        {
+          title: "城墙暮色",
+          text: "最后一天的收尾图保留一点余韵，让页面结尾更像旅行画册的尾页。",
+          size: "landscape_16_9",
+          prompt:
+            "realistic Xi'an ancient city wall at sunset, couple cycling, soft golden sky, summer travel atmosphere, elegant editorial photography, cinematic composition, no text"
+        }
+      ];
+
+      const foods = [
+        {
+          name: "老孙家泡馍",
+          branch: "西羊市 40 号",
+          signature: "羊肉泡馍 · 糖蒜辣子",
+          url: "https://www.dianping.com/search/keyword/17/0_老孙家饭庄"
+        },
+        {
+          name: "秦豫肉夹馍",
+          branch: "东木头市店",
+          signature: "白吉馍 + 腊汁肉",
+          url: "https://www.dianping.com/search/keyword/17/0_秦豫肉夹馍"
+        },
+        {
+          name: "定家小酥肉",
+          branch: "大皮院西口 223 号",
+          signature: "粉蒸小酥肉 + 米饭",
+          url: "https://www.dianping.com/search/keyword/17/0_定家小酥肉"
+        },
+        {
+          name: "贾三灌汤包",
+          branch: "北院门 93 号",
+          signature: "牛羊肉灌汤包 · 八宝甜稀饭",
+          url: "https://www.dianping.com/search/keyword/17/0_贾三灌汤包"
+        },
+        {
+          name: "盛志望麻酱酿皮铺",
+          branch: "大皮院 & 北广济街",
+          signature: "手工酿皮 · 麻酱重味",
+          url: "https://www.dianping.com/search/keyword/17/0_盛志望麻酱酿皮"
+        },
+        {
+          name: "长安大牌档",
+          branch: "赛格 / 大悦城 / 南大街",
+          signature: "妃子笑、毛笔酥、葫芦鸡",
+          url: "https://www.dianping.com/search/keyword/17/0_长安大牌档"
+        },
+        {
+          name: "子午路张记肉夹馍",
+          branch: "翠华路店（陕历博旁）",
+          signature: "肉夹馍 · 三合一凉皮",
+          url: "https://www.dianping.com/search/keyword/17/0_子午路张记肉夹馍"
+        },
+        {
+          name: "魏家凉皮",
+          branch: "回民街 / 各分店",
+          signature: "秘制凉皮 · 肉夹馍套餐",
+          url: "https://www.dianping.com/search/keyword/17/0_魏家凉皮"
+        }
+      ];
+
+      const bookings = [
+        {
+          title: "陕西历史博物馆",
+          note: "微信搜“陕西历史博物馆”公众号，免费票每天 8:00 放 5 天后号。"
+        },
+        {
+          title: "兵马俑",
+          note: "微信搜“秦始皇帝陵博物院”公众号预约，身份证入园，门票 ¥120。"
+        },
+        {
+          title: "《长恨歌》",
+          note: "建议直接走华清宫官方公众号或大麦，优先锁 A/B 区。"
+        },
+        {
+          title: "碑林博物馆",
+          note: "现场购票即可，Day 1 下午不用提前预约。"
+        },
+        {
+          title: "华清宫 / 芙蓉园 / 城墙",
+          note: "现场买票即可，也可以提前在携程或美团下电子票。"
+        }
+      ];
+
+      const budgets = [
+        { title: "住宿", amount: "¥2,400", ratio: 33, detail: "亚朵钟楼回民街 3 晚（含双早）" },
+        { title: "门票 + 演出", amount: "¥1,944", ratio: 27, detail: "碑林、兵马俑、华清宫、长恨歌、陕历博、芙蓉园、城墙" },
+        { title: "市内交通", amount: "¥380", ratio: 5, detail: "直通车、机场大巴、地铁与打车" },
+        { title: "餐饮", amount: "¥1,600", ratio: 22, detail: "4 天 3 正餐 + 网红打卡" },
+        { title: "汉服与体验", amount: "¥900", ratio: 13, detail: "汉服写真、城墙自行车、伴手礼" }
+      ];
+
+      const pitfalls = [
+        "7/16 傍晚强降雨概率高，落地时就把折叠伞和防水袋准备好。",
+        "13:00–15:00 不要暴晒硬逛，碑林博物馆正好承担空调避暑功能。",
+        "陕历博免费票秒空，抢不到直接买 30 元珍宝馆票性价比最高。",
+        "回民街主街价格偏高，想吃更地道就转进大皮院、西羊市、北广济街。",
+        "兵马俑只从景区正门进，不理会低价一日游和野导推销。",
+        "大唐不夜城散场后网约车会堵，预留至少 30 分钟等车时间。",
+        "华清宫看完《长恨歌》统一走东门出，演出前先在景区内吃饭更稳妥。",
+        "汉服租拍优先选点评 4.8+ 且明码标价的商家。",
+        "紫外线非常强，兵马俑和城墙无遮挡，帽子和冰袖都值得带。"
+      ];
+
+      const linkGroups = [
+        {
+          title: "酒店比价",
+          description: "住宿相关入口集中在这里，方便快速切换平台。",
+          links: [
+            { text: "携程 · 亚朵钟楼回民街", url: "https://hotels.ctrip.com/hotels/126735110.html" },
+            { text: "美团酒店", url: "https://www.meituan.com/hotel/" }
+          ]
+        },
+        {
+          title: "景区购票",
+          description: "适合统一对比门票、开放时间和景区攻略。",
+          links: [
+            { text: "携程门票 · 西安", url: "https://piao.ctrip.com/dest/xian120/" },
+            { text: "马蜂窝 · 西安", url: "https://www.mafengwo.cn/travel-scenic-spot/mafengwo/10099.html" }
+          ]
+        },
+        {
+          title: "餐厅点评",
+          description: "总入口适合补搜临时想吃的店，单店入口见上方美食卡片。",
+          links: [{ text: "大众点评 · 西安美食", url: "https://www.dianping.com/xian/food" }]
+        },
+        {
+          title: "火车与机场",
+          description: "返程和城际交通都在这里查。",
+          links: [
+            { text: "12306", url: "https://www.12306.cn" },
+            { text: "咸阳机场官网", url: "https://www.xxia.com/" }
+          ]
+        },
+        {
+          title: "灵感延伸",
+          description: "原攻略建议继续在小红书搜“西安”“回民街”“大唐不夜城”，在抖音搜“兵马俑攻略”。",
+          links: []
+        }
+      ];
+
+      const renderHero = () => {
+        document.getElementById("hero-tags").innerHTML = heroTags
+          .map((tag) => `<span class="tag">${tag}</span>`)
+          .join("");
+
+        document.getElementById("hero-stats").innerHTML = heroStats
+          .map(
+            (stat) => `
+              <div class="stat-card">
+                <span>${stat.label}</span>
+                <strong>${stat.value}</strong>
+              </div>
+            `
+          )
+          .join("");
+      };
+
+      const renderOverview = () => {
+        document.getElementById("overview-grid").innerHTML = overviewDays
+          .map(
+            (item) => `
+              <article class="overview-card">
+                <small>${item.day} · ${item.date}</small>
+                <h3>${item.theme}</h3>
+                <p>${item.route}</p>
+                <div class="overview-meta">
+                  <div class="meta-row"><strong>亮点</strong><span>${item.highlight}</span></div>
+                  <div class="meta-row"><strong>提醒</strong><span>${item.risk}</span></div>
+                </div>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderPrep = () => {
+        document.getElementById("tips-grid").innerHTML = prepCards
+          .map(
+            (item) => `
+              <article class="panel">
+                <h3>${item.title}</h3>
+                <p>${item.detail}</p>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderDays = () => {
+        document.getElementById("day-nav").innerHTML = days
+          .map((day) => `<a class="day-link" href="#${day.id}">${day.title}</a>`)
+          .join("");
+
+        document.getElementById("day-grid").innerHTML = days
+          .map(
+            (day) => `
+              <article class="timeline-card" id="${day.id}">
+                <div class="timeline-head">
+                  <div>
+                    <h3>${day.title}</h3>
+                    <p>${day.summary}</p>
+                  </div>
+                  <span class="mini-badge">${day.badge}</span>
+                </div>
+                <div class="timeline">
+                  ${day.timeline
+                    .map(
+                      (item) => `
+                        <div class="timeline-item">
+                          <div class="timeline-time">${item.time}</div>
+                          <div class="timeline-content">
+                            <strong>${item.title}</strong>
+                            <p>${item.details}</p>
+                          </div>
+                        </div>
+                      `
+                    )
+                    .join("")}
+                </div>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderSpotlights = () => {
+        document.getElementById("spotlight-grid").innerHTML = spotlightCards
+          .map(
+            (card, index) => `
+              <article class="spotlight-card">
+                <div class="image-frame">
+                  <img src="${buildImageUrl(card.prompt, card.size)}" alt="${card.title}配图" loading="${index === 0 ? "eager" : "lazy"}" />
+                </div>
+                <div class="spotlight-copy">
+                  <strong>${card.title}</strong>
+                  <p>${card.text}</p>
+                </div>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderFoods = () => {
+        document.getElementById("food-grid").innerHTML = foods
+          .map(
+            (food) => `
+              <article class="food-card">
+                <small>推荐门店 · ${food.branch}</small>
+                <strong>${food.name}</strong>
+                <p>${food.signature}</p>
+                <a class="button button-secondary" href="${food.url}" target="_blank" rel="noreferrer">打开大众点评</a>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderBookings = () => {
+        document.getElementById("booking-grid").innerHTML = bookings
+          .map(
+            (item) => `
+              <article class="booking-card">
+                <small>提前处理</small>
+                <strong>${item.title}</strong>
+                <p>${item.note}</p>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderBudget = () => {
+        document.getElementById("budget-grid").innerHTML = budgets
+          .map(
+            (item) => `
+              <article class="budget-card">
+                <small>预算分配</small>
+                <strong>${item.title}</strong>
+                <p>${item.detail}</p>
+                <div class="meta-row"><strong>金额</strong><span>${item.amount}</span></div>
+                <div class="budget-bar"><span style="width: ${item.ratio}%;"></span></div>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderPitfalls = () => {
+        document.getElementById("pitfall-grid").innerHTML = pitfalls
+          .map(
+            (item, index) => `
+              <article class="pitfall-card">
+                <strong>提醒 ${String(index + 1).padStart(2, "0")}</strong>
+                <p>${item}</p>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const renderLinks = () => {
+        document.getElementById("links-grid").innerHTML = linkGroups
+          .map(
+            (group) => `
+              <article class="link-card">
+                <small>快捷入口</small>
+                <strong>${group.title}</strong>
+                <p>${group.description}</p>
+                <div class="link-stack">
+                  ${
+                    group.links.length
+                      ? group.links
+                          .map(
+                            (link) => `
+                              <a class="button button-secondary" href="${link.url}" target="_blank" rel="noreferrer">${link.text}</a>
+                            `
+                          )
+                          .join("")
+                      : '<span class="tag">小红书 / 抖音关键词已写入说明</span>'
+                  }
+                </div>
+              </article>
+            `
+          )
+          .join("");
+      };
+
+      const bindImages = () => {
+        document.getElementById("hero-image").src = buildImageUrl(
+          "realistic Xi'an Bell Tower after summer rain at night, reflective wet street, warm lantern glow, elegant Chinese travel magazine cover style, cinematic composition, highly detailed, no text",
+          "landscape_16_9"
+        );
+        document.getElementById("hotel-image").src = buildImageUrl(
+          "realistic Xi'an old city district near Bell Tower, refined boutique hotel atmosphere, warm interior lights, travel editorial aesthetic, sophisticated and inviting, no text",
+          "portrait_16_9"
+        );
+      };
+
+      const activateNav = () => {
+        const navLinks = [...document.querySelectorAll(".nav-chips a")];
+        const sections = navLinks
+          .map((link) => document.querySelector(link.getAttribute("href")))
+          .filter(Boolean);
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (!visible) return;
+            navLinks.forEach((link) =>
+              link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`)
+            );
+          },
+          { rootMargin: "-20% 0px -60% 0px", threshold: [0.1, 0.4, 0.7] }
+        );
+
+        sections.forEach((section) => observer.observe(section));
+      };
+
+      const bindBackTop = () => {
+        const backTop = document.getElementById("back-top");
+        backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+      };
+
+      renderHero();
+      renderOverview();
+      renderPrep();
+      renderDays();
+      renderSpotlights();
+      renderFoods();
+      renderBookings();
+      renderBudget();
+      renderPitfalls();
+      renderLinks();
+      bindImages();
+      activateNav();
+      bindBackTop();
+    </script>
+  </body>
+</html>
