@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>西安鼓楼地铁站附近地道美食筛选报告</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --panel: rgba(255, 252, 246, 0.88);
+      --panel-strong: rgba(255, 248, 239, 0.96);
+      --text: #2b221d;
+      --muted: #6f6258;
+      --line: rgba(92, 66, 42, 0.14);
+      --accent: #8f2d19;
+      --accent-soft: rgba(143, 45, 25, 0.1);
+      --gold: #bb7b28;
+      --shadow: 0 18px 50px rgba(76, 54, 34, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(187, 123, 40, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(143, 45, 25, 0.14), transparent 24%),
+        linear-gradient(180deg, #fbf7f0 0%, var(--bg) 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(90, 70, 52, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(90, 70, 52, 0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 90%);
+    }
+
+    .page {
+      width: min(1160px, calc(100% - 32px));
+      margin: 28px auto 48px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 34px 34px 30px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(255, 249, 242, 0.94), rgba(255, 244, 233, 0.9));
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "鼓楼 · 钟楼 · 西一路 · 案板街";
+      position: absolute;
+      top: 18px;
+      right: -18px;
+      transform: rotate(8deg);
+      padding: 8px 18px;
+      background: rgba(143, 45, 25, 0.08);
+      color: rgba(143, 45, 25, 0.78);
+      font-size: 12px;
+      letter-spacing: 1.6px;
+      border: 1px solid rgba(143, 45, 25, 0.12);
+      border-radius: 999px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 16px 0 12px;
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .grid.metrics {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .metric,
+    .panel,
+    .food-card,
+    .logic-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .metric {
+      padding: 20px 22px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-value {
+      margin-top: 8px;
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .metric-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .panel {
+      padding: 22px;
+    }
+
+    .panel p,
+    .panel li {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .panel ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .food-card {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255, 252, 246, 0.96), rgba(255, 248, 239, 0.92));
+    }
+
+    .food-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .food-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .food-tag {
+      flex-shrink: 0;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(187, 123, 40, 0.12);
+      color: #8e5815;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .food-area {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .food-desc {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(143, 45, 25, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      color: #6d4934;
+      font-size: 12px;
+    }
+
+    .food-note {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(92, 66, 42, 0.16);
+      color: #5f4a3d;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .logic-card {
+      padding: 20px 22px;
+    }
+
+    .logic-card h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .logic-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding: 18px 22px;
+      border-radius: 20px;
+      background: rgba(255, 248, 239, 0.88);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      box-shadow: var(--shadow);
+    }
+
+    .source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .source {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(43, 34, 29, 0.05);
+      color: #5c4c43;
+      font-size: 12px;
+      border: 1px solid rgba(43, 34, 29, 0.08);
+    }
+
+    @media (max-width: 980px) {
+      .grid.metrics,
+      .food-grid,
+      .logic-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 18px, 1160px);
+        margin-top: 12px;
+      }
+
+      .hero {
+        padding: 22px 18px 20px;
+      }
+
+      .hero::after {
+        display: none;
+      }
+
+      .grid.metrics,
+      .food-grid,
+      .logic-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .food-card,
+      .logic-card,
+      .metric {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">Xiaohongshu Food Scan</div>
+      <h1>西安鼓楼地铁站附近<br />地道美食筛选报告</h1>
+      <p>
+        这版只保留具体店铺，不做路线推荐。整理时已经尽量避开明显营销号、空心种草文和错城结果，
+        下面留下来的内容更适合拿来直接决定“这一口吃什么”。
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">鼓楼附近值得记住的店</h2>
+          <div class="section-subtitle">按店来列，每家只保留最实用的内容：位置、重点吃什么、风味特点和吃前提示。</div>
+        </div>
+      </div>
+      <div class="food-grid">
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">马老三肉丁胡辣汤</h3>
+            <div class="food-tag">西一路</div>
+          </div>
+          <div class="food-area">适合：早餐、热汤、想吃本地清真口味</div>
+          <div class="food-desc">
+            这家适合拿来开启西安早晨。主角是
+            <strong>牛骨汤底的肉丁胡辣汤</strong>，汤色厚、香气直，肉丁切得扎实，
+            配一张 <strong>葱花饼</strong> 会更完整，属于一口热汤下肚就很有西安街头感的早餐。
+          </div>
+          <div class="chips">
+            <span class="chip">肉丁胡辣汤</span>
+            <span class="chip">葱花饼</span>
+            <span class="chip">清真早餐</span>
+            <span class="chip">西一路店</span>
+          </div>
+          <div class="food-note">
+            吃前提示：更推荐把重点放在 <strong>胡辣汤和葱花饼</strong> 上，别把期待值放到其他配角小吃；店里节奏偏快，体验更像老馆子日常。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">育辉砂锅</h3>
+            <div class="food-tag">西一路</div>
+          </div>
+          <div class="food-area">适合：午晚饭、热乎砂锅、偏老西安口味</div>
+          <div class="food-desc">
+            这是偏老派的砂锅味道，适合想吃一顿热乎正餐的时候来。推荐把重点放在
+            <strong>三鲜砂锅</strong> 上，汤底醇厚，明火慢炖出来的香气比较稳，
+            配料层次也比普通快餐砂锅更丰富。
+          </div>
+          <div class="chips">
+            <span class="chip">三鲜砂锅</span>
+            <span class="chip">丸子砂锅</span>
+            <span class="chip">带鱼砂锅</span>
+            <span class="chip">老店</span>
+          </div>
+          <div class="food-note">
+            吃前提示：它不是那种便宜猛冲型小店，部分口味和服务评价会比较两极；如果来，优先试经典砂锅，不必把每样都点一轮。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">五星剁馅水饺卤猪蹄</h3>
+            <div class="food-tag">西一路</div>
+          </div>
+          <div class="food-area">适合：正餐、想吃手工饺子或顺带点猪蹄</div>
+          <div class="food-desc">
+            这家最有记忆点的是“现做感”。重点吃
+            <strong>剁馅水饺</strong>，皮和馅都偏手工路线，咬开是扎实的肉香；
+            如果两个人一起，可以顺带加一份 <strong>卤猪蹄</strong>，风格是软烂入味、胶质感重。
+          </div>
+          <div class="chips">
+            <span class="chip">剁馅水饺</span>
+            <span class="chip">卤猪蹄</span>
+            <span class="chip">手工现包</span>
+            <span class="chip">总店</span>
+          </div>
+          <div class="food-note">
+            吃前提示：这家更适合当一顿正儿八经的正餐来吃，不是边走边尝的小吃店；猪蹄适合分着点，单人点太容易吃撑。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">严太婆锅魁</h3>
+            <div class="food-tag">西一路</div>
+          </div>
+          <div class="food-area">适合：边走边吃、加餐、想吃档口小吃</div>
+          <div class="food-desc">
+            这是那种路过就想顺手买一个的香气型小店。锅魁刚出炉时
+            <strong>外壳酥、内里带面香</strong>，重点吃法不是空口啃，而是试试
+            <strong>耳片夹锅魁</strong> 或凉菜口味，层次会更丰富。
+          </div>
+          <div class="chips">
+            <span class="chip">锅魁</span>
+            <span class="chip">耳片夹锅魁</span>
+            <span class="chip">凉粉口味</span>
+            <span class="chip">档口店</span>
+          </div>
+          <div class="food-note">
+            吃前提示：现烤现吃最好，放久了酥脆感会掉得很快；如果只买一个，优先从 <strong>耳片口味</strong> 开始更稳。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">柳巷面</h3>
+            <div class="food-tag">案板街</div>
+          </div>
+          <div class="food-area">适合：午饭、面食、想吃经典清真面馆</div>
+          <div class="food-desc">
+            这是典型的老牌清真面馆气质。重点就是一碗
+            <strong>手工扯面</strong>，面条偏硬朗，不是软趴趴那种顺口面，而是越嚼越能出麦香和筋性。
+          </div>
+          <div class="chips">
+            <span class="chip">手工扯面</span>
+            <span class="chip">清真面馆</span>
+            <span class="chip">案板街</span>
+            <span class="chip">老牌</span>
+          </div>
+          <div class="food-note">
+            吃前提示：更适合本来就喜欢偏硬、偏筋道口感的人；如果你习惯南方软面，第一口可能会觉得有点硬。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">海家麻花油茶</h3>
+            <div class="food-tag">西大街</div>
+          </div>
+          <div class="food-area">适合：早餐、加餐、体验西安传统小吃</div>
+          <div class="food-desc">
+            这家更像一口老西安式的点心体验。重点不是单独喝油茶，而是
+            <strong>油茶一定配麻花</strong>，酥脆和浓稠碰在一起，才是它真正迷人的地方。
+          </div>
+          <div class="chips">
+            <span class="chip">油茶麻花</span>
+            <span class="chip">老店</span>
+            <span class="chip">两人分食合适</span>
+            <span class="chip">传统小吃</span>
+          </div>
+          <div class="food-note">
+            吃前提示：适合两个人分着试，不太适合当饱腹正餐；如果第一次吃，不用点太多，先感受它的传统风味就够了。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">赵记素斋绿豆馅饼</h3>
+            <div class="food-tag">钟楼小区</div>
+          </div>
+          <div class="food-area">适合：顺手买点心、带走、排队不久的小吃</div>
+          <div class="food-desc">
+            这是钟楼小区里很适合顺手买一个的点心。重点吃的是
+            <strong>刚出炉的绿豆馅饼</strong>，外皮酥松，里面的绿豆馅偏绵，不是齁甜路线，吃起来更舒服。
+          </div>
+          <div class="chips">
+            <span class="chip">绿豆馅饼</span>
+            <span class="chip">钟楼小区西大门内</span>
+            <span class="chip">趁热吃</span>
+            <span class="chip">小吃</span>
+          </div>
+          <div class="food-note">
+            吃前提示：这类点心最怕放凉，最好现买现吃；如果不是很饿，买一个当加餐会比当正餐更合适。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">晓薛莉卤面</h3>
+            <div class="food-tag">竹笆市</div>
+          </div>
+          <div class="food-area">适合：简餐、一个人吃面、想找居民区口味</div>
+          <div class="food-desc">
+            这是很有居民区气质的一碗面。重点是
+            <strong>卤面本身的家常香</strong>，豆角、土豆、肉丝都焖进卤里，
+            面条裹上汁之后味道很足，配上一口生蒜，会更有老西安吃法的味道。
+          </div>
+          <div class="chips">
+            <span class="chip">卤面</span>
+            <span class="chip">竹笆市钟楼小区内</span>
+            <span class="chip">加面</span>
+            <span class="chip">配生蒜</span>
+          </div>
+          <div class="food-note">
+            吃前提示：它不是精致派面馆，更像扎实顶饱的家常馆子；如果你想找的是“老小区里的一碗面”，它会很对路。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">爱烨裤带面馆</h3>
+            <div class="food-tag">钟鼓楼周边</div>
+          </div>
+          <div class="food-area">适合：第一次来西安、想先吃稳妥面食</div>
+          <div class="food-desc">
+            这家更像“第一次来西安也比较稳”的面馆。重点吃
+            <strong>油泼裤带面</strong>，辣子香、面条宽，整体接受度高，不容易踩到特别偏门的口味。
+          </div>
+          <div class="chips">
+            <span class="chip">裤带面</span>
+            <span class="chip">油泼面</span>
+            <span class="chip">游客友好</span>
+            <span class="chip">复盘帖高频</span>
+          </div>
+          <div class="food-note">
+            吃前提示：如果你已经连续吃了几顿重口小吃，它会是比较稳的回归选项；但若专门追求特别古早的街巷感，它不算最强那一类。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">秦豫肉夹馍 / 子午路张记肉夹馍</h3>
+            <div class="food-tag">钟鼓楼周边</div>
+          </div>
+          <div class="food-area">适合：路过解决一顿、对比两家经典肉夹馍</div>
+          <div class="food-desc">
+            肉夹馍这类店最值得看的就是细微差别。整体上，
+            <strong>秦豫</strong> 更偏向馍香和整体平衡，
+            <strong>子午路张记</strong> 则名气更大、风味更直给，吃起来会更重一点。
+          </div>
+          <div class="chips">
+            <span class="chip">肉夹馍</span>
+            <span class="chip">对比向</span>
+            <span class="chip">秦豫偏稳</span>
+            <span class="chip">子午路偏名气</span>
+          </div>
+          <div class="food-note">
+            吃前提示：如果你怕踩雷、只想先吃一个稳妥版本，先试 <strong>秦豫</strong> 更保险；如果你就想试最有名的那口，再去子午路也行。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">费萨尔烤肉 / 马波烤肉</h3>
+            <div class="food-tag">钟鼓楼周边</div>
+          </div>
+          <div class="food-area">适合：晚上吃烤肉、多人分着点</div>
+          <div class="food-desc">
+            这一组适合晚上来点烟火气。整体上，
+            <strong>费萨尔</strong> 更适合先点羊肉串和豆皮，味道更顺；
+            <strong>马波</strong> 则可以把重点放在掌中宝、牛三样这类更有存在感的部位。
+          </div>
+          <div class="chips">
+            <span class="chip">羊肉串</span>
+            <span class="chip">牛三样</span>
+            <span class="chip">涮豆皮</span>
+            <span class="chip">夜宵</span>
+          </div>
+          <div class="food-note">
+            吃前提示：两家都更适合多人分着点，单人去容易点不出层次；如果你不喜欢偏咸口，点单时可以更谨慎一点。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">马洪小炒泡馍 / 刘信明羊肉泡馍</h3>
+            <div class="food-tag">泡馍备选</div>
+          </div>
+          <div class="food-area">适合：想试泡馍，但又怕只踩游客店</div>
+          <div class="food-desc">
+            如果你想认真试一次泡馍，这组比景区打卡店更值得记。
+            <strong>马洪小炒泡馍</strong> 的特点是人气高、风味轻一些；
+            <strong>刘信明羊肉泡馍</strong> 则更有存在感，酸辣调味更明亮，牛肉块也更扎实。
+          </div>
+          <div class="chips">
+            <span class="chip">小炒泡馍</span>
+            <span class="chip">羊肉泡馍</span>
+            <span class="chip">酸辣口</span>
+            <span class="chip">牛肉块大</span>
+          </div>
+          <div class="food-note">
+            吃前提示：如果你平时口味清淡，可以先从 <strong>马洪</strong> 试起；如果你想吃得更有记忆点，<strong>刘信明</strong> 会更鲜明。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">东府葫芦澄城水盆羊肉</h3>
+            <div class="food-tag">补充正餐</div>
+          </div>
+          <div class="food-area">适合：想换一种羊肉做法、吃正餐</div>
+          <div class="food-desc">
+            这家适合在面、馍、烤肉之外换一种羊肉吃法。重点可以放在
+            <strong>纯瘦水盆羊肉</strong>，汤清但不寡，羊肉本身香气足，配上泡菜会更有层次。
+          </div>
+          <div class="chips">
+            <span class="chip">水盆羊肉</span>
+            <span class="chip">纯瘦版</span>
+            <span class="chip">汤底好喝</span>
+            <span class="chip">正餐向</span>
+          </div>
+          <div class="food-note">
+            吃前提示：它的魅力在汤和肉本身，不在重调味；如果你想吃的是那种非常猛烈刺激的味型，这家会更克制一些。
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="food-top">
+            <h3 class="food-title">洒金桥胖子甑糕 / 刘明柿子糊塌</h3>
+            <div class="food-tag">小吃补位</div>
+          </div>
+          <div class="food-area">适合：早上排点小吃、饭后甜口补位</div>
+          <div class="food-desc">
+            这是很适合收尾的一组甜口小吃。
+            <strong>胖子甑糕</strong> 走的是软糯、枣香慢慢出来的路子；
+            <strong>柿子糊塌</strong> 则更像热乎乎的炸甜点，外层酥，里面软，刚出锅会特别迷人。
+          </div>
+          <div class="chips">
+            <span class="chip">甑糕</span>
+            <span class="chip">柿子糊塌</span>
+            <span class="chip">甜口</span>
+            <span class="chip">顺带买</span>
+          </div>
+          <div class="food-note">
+            吃前提示：两样都适合“尝一尝”，不太适合当主食猛吃；尤其柿子糊塌，趁热最好，放凉就少了一半灵魂。
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+          <h2 class="section-title">这份清单怎么用</h2>
+          <div class="section-subtitle">如果你只是想快速决定吃什么，先看这三条就够了。</div>
+          <div class="section-subtitle">不展开点名，只保留你后续自己也能复用的判断标准。</div>
+        </div>
+      </div>
+      <div class="logic-grid">
+          <h3>1. 早餐先看西一路</h3>
+          <h3>1. 看正文是不是空心</h3>
+            如果你早上就在鼓楼附近活动，先在
+            <strong>马老三肉丁胡辣汤</strong>、
+            <strong>严太婆锅魁</strong>、
+            <strong>海家麻花油茶</strong> 里挑，会比较容易吃到西安本地早餐的味道。
+            但没有店名、具体位置、价格、排队、哪道菜一般，这类内容会直接降权。
+          </p>
+        </article>
+          <h3>2. 正餐优先看面和砂锅</h3>
+          <h3>2. 看有没有真实缺点</h3>
+            想吃一顿扎实的，优先看
+            <strong>育辉砂锅</strong>、
+            <strong>柳巷面</strong>、
+            <strong>晓薛莉卤面</strong>、
+            <strong>爱烨裤带面馆</strong>。这几家更适合正儿八经坐下来吃。
+            全程只有彩虹屁、没有任何保留意见的内容，更像营销或模板种草。
+          </p>
+        </article>
+          <h3>3. 小吃和夜宵单独留肚子</h3>
+          <h3>3. 看重点在味道还是在包装</h3>
+            <strong>赵记素斋绿豆馅饼</strong>、
+            <strong>胖子甑糕</strong>、
+            <strong>刘明柿子糊塌</strong> 更适合顺手买；
+            晚上想吃得热闹一点，再看 <strong>费萨尔烤肉 / 马波烤肉</strong>。
+            只要城市标签、菜系、地理线索不对，哪怕互动高，也会直接剔除。
+          </p>
+        </article>
+      </div>
+
+    <section class="section">
+      <div class="panel">
+        <h2 class="section-title">一句话版结论</h2>
+        <p>
+          如果你只想看具体店，不想看路线，那这页优先记住的就是：
+          <strong>马老三肉丁胡辣汤、育辉砂锅、五星剁馅水饺卤猪蹄、严太婆锅魁、柳巷面、海家麻花油茶、赵记素斋绿豆馅饼、晓薛莉卤面</strong>。
+          这批店比景区型大店更接近“鼓楼附近真实会吃到的内容”。
+        </p>
+        <div class="source-list">
+          <span class="source">来源类型：土著帖</span>
+          <span class="source">来源类型：游客复盘帖</span>
+          <span class="source">来源类型：街巷老店帖</span>
+          <span class="source">处理方式：正文级复核</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      说明：这份页面保留的是筛选后的店铺级摘要，不是完整原帖转录。重点是让你快速知道
+      “具体吃哪家、重点吃什么、每家更像哪一种风味”。
+    </div>
+  </main>
+</body>
+</html>
